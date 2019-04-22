@@ -1,0 +1,72 @@
+server:
+  port: 8081
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 1024
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/jorian-framework?useUnicode=yes&characterEncoding=UTF8
+    username: root
+    password: root
+    druid:
+      initialSize: 5
+      minIdle: 5
+      maxActive: 20
+      maxWait: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 1
+      testWhileIdle: true
+      testOnBorrow: true
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      filters: stat,wall
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+      stat-view-servlet:
+        allow: 127.0.0.1
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    timeout: 10s
+    lettuce:
+      pool:
+        min-idle: 0
+        max-idle: 8
+        max-active: 8
+        max-wait: -1ms
+  aop:
+    proxy-target-class: true
+    auto: true
+#  mybatis:
+#     type-aliases-package: cn.jorian.jorianframework.core.entity
+#     mapper-locations: classpath:/mappers/*Mapper.xml
+#     configuration:
+#        mapUnderscoreToCamelCase: true
+
+#  #静态页面引擎
+  freemarker:
+    # 禁用模板缓存
+     cache: false
+    # 编码格式
+     charset: UTF-8
+    # freemarker模板后缀 默认是 .ftl
+     suffix: .html
+    # 是否为此技术启用MVC视图分辨率。
+     enabled: true
+    # Content-Type值
+     content-type: text/html
+    # #模板加载路径 按需配置 ,默认路径是 classpath:/templates/
+     template-loader-path: classpath:/templates/
+  #设定静态文件路径，js,css等
+files:
+  path: ${file-path:d:/files}
+
+
+
+
+
+
+
