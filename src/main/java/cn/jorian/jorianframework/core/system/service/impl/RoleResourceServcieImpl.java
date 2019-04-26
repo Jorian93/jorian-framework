@@ -15,4 +15,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class RoleResourceServcieImpl extends ServiceImpl<RoleResourceMapper, SysRoleResource> implements RoleResourceService {
+
 }

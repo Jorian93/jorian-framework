@@ -13,7 +13,7 @@ import java.util.List;
  * @Description:
  */
 @Data
-public class SysUser extends BaseModel implements Serializable {
+public class SysUser extends BaseModel {
 
     String nickname;
     String username;

@@ -1,16 +1,44 @@
 package cn.jorian.jorianframework.core.system.entity;
 
 import cn.jorian.jorianframework.common.model.BaseModel;
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
-import java.io.Serializable;
+import java.util.List;
 
 /**
- * @Auther: jorian
- * @Date: 2019/4/17 09:07
- * @Description:
+ * <p>
+ *
+ * </p>
+ *
+ * @author jorian
+ * @since 2019-04-24
  */
 @Data
-public class SysResource extends BaseModel implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
+public class SysResource extends BaseModel {
+
+    private String pid;
+
+    private String name;
+
+    private String icon;
+
+    private String url;
+
+    private Integer type;
+
+    private String permission;
+
+    private Integer sort;
+
+    @TableField("isVerify")
+    private Boolean isVerify;
+    @TableField(exist =false)
+    List<SysResource> children;
+
 
 }

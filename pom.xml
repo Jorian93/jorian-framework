@@ -56,6 +56,8 @@
             <artifactId>mybatis-plus-generator</artifactId>
             <version>3.1.0</version>
         </dependency>
+        <!--mp-plus-分页插件-->
+
         <!--velocity 代码生成器需要模板引擎-->
         <dependency>
             <groupId>org.apache.velocity</groupId>

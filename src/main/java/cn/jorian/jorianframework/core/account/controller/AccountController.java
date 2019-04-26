@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Api(value = "账户操作")
+@Api(tags = "账户管理")
 @RequestMapping("/account")
 public class AccountController {
 
@@ -31,11 +31,13 @@ public class AccountController {
         accountService.login(loginDTO);
         return new SystemResponse(ResponseCode.SIGN_IN_SUCCESS,((JToken)SecurityUtils.getSubject().getPrincipal()).getToken());
     }
+
     @ApiOperation(value="登出")
     @RequestMapping(method = RequestMethod.DELETE)
     public SystemResponse logout(){
         return new SystemResponse(ResponseCode.SIGN_OUT_SUCCESS);
     }
+
     @ApiOperation(value="获取当前用户")
     @RequestMapping(method = RequestMethod.GET)
     public  SystemResponse getCurrentUser(){

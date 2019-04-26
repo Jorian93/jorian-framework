@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
  * @Description:
  */
 @Data
-public class BaseModel {
+public class BaseModel implements Serializable {
     private static final long serialVersionUID = 177030063138338860L;
     @TableId(value = "id", type = IdType.ID_WORKER_STR)
     private String id;

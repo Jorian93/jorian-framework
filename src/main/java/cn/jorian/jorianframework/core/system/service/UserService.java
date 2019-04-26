@@ -1,6 +1,7 @@
 package cn.jorian.jorianframework.core.system.service;
 
 import cn.jorian.jorianframework.core.system.dto.UserAddDTO;
+import cn.jorian.jorianframework.core.system.dto.UserFindDTO;
 import cn.jorian.jorianframework.core.system.entity.SysUser;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -29,4 +30,8 @@ public interface UserService  extends IService<SysUser> {
      * 根据用户名查找对象
      */
     SysUser findUserByUsername(String username);
+
+    Object getList(UserFindDTO roleFindDTO);
+
+    Object getTree();
 }

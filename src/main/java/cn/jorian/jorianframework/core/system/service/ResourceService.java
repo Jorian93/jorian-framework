@@ -1,7 +1,15 @@
 package cn.jorian.jorianframework.core.system.service;
 
+import cn.jorian.jorianframework.core.system.dto.ResourceAddDTO;
+import cn.jorian.jorianframework.core.system.dto.ResourceFindDTO;
 import cn.jorian.jorianframework.core.system.entity.SysResource;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @Auther: jorian
@@ -9,4 +17,28 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @Description:
  */
 public interface ResourceService extends IService<SysResource> {
+
+    /**
+     * 新增
+     */
+    void add(ResourceAddDTO userAddDTO);
+    /**
+     * 删除
+     */
+    void delete(String id);
+    /**
+     * 更新
+     */
+    void update(SysResource sysResource);
+
+    /**
+     * 获取资源列表
+     * @return
+     */
+    IPage<SysResource> getList(ResourceFindDTO resourceFindDTO);
+    /**
+     * 获取资源树
+     * @return
+     */
+    List<SysResource> getTree();
 }

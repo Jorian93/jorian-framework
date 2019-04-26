@@ -14,10 +14,10 @@ import java.util.List;
  * @Description:
  */
 @Data
-public class SysRole extends BaseModel implements Serializable {
+public class SysRole extends BaseModel {
 
     private String name;
-    private String describtion;
+    private String description;
 
     @TableField(exist = false) //数据库没有此字段
     private List<SysResource> resources;

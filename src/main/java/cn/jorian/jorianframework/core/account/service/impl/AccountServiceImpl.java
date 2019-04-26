@@ -56,7 +56,6 @@ public class AccountServiceImpl  extends ServiceImpl<UserMapper,SysUser> impleme
         }
         String username = JTokenUtil.get(token,"username");
         SysUser findUser = this.getOne(new QueryWrapper<SysUser>().eq("username",username));
-
         return findUser;
     }
 }
