@@ -45,13 +45,19 @@ public class ResourceController {
     }
     @ApiOperation("资源列表查询")
     @RequestMapping(value="resource/list",method = RequestMethod.GET)
-    public SystemResponse resourceList(ResourceFindDTO resourceFindDTO){
+    public SystemResponse resourceList(@RequestBody @Validated @ApiParam(value = "资源查询条件")ResourceFindDTO resourceFindDTO){
         return new SystemResponse(ResponseCode.SUCCESS, resourceService.getList(resourceFindDTO));
     }
     @ApiOperation("资源树查询")
     @RequestMapping(value="resource/tree",method = RequestMethod.GET)
     public SystemResponse resourceTree(){
         return new SystemResponse(ResponseCode.SUCCESS,resourceService.getTree());
+    }
+
+    @ApiOperation("按角色查询资源树")
+    @RequestMapping(value="resource/tree/{rid}",method = RequestMethod.GET)
+    public SystemResponse resourceUserTree(@PathVariable("rid") String rid){
+        return new SystemResponse(ResponseCode.SUCCESS,resourceService.getUserTree(rid));
     }
 
 

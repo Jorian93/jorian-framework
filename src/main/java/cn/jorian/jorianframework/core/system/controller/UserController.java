@@ -34,27 +34,27 @@ public class UserController {
  }
 
  @ApiOperation("删除用户")
- @RequestMapping(value = "role/{id}", method = RequestMethod.DELETE)
+ @RequestMapping(value = "user/{id}", method = RequestMethod.DELETE)
  public SystemResponse roleDelete(@PathVariable("id") @ApiParam(value = "用户id") String id) {
   userService.delete(id);
   return new SystemResponse(ResponseCode.SUCCESS);
  }
 
  @ApiOperation("更新用户")
- @RequestMapping(value = "role", method = RequestMethod.PUT)
+ @RequestMapping(value = "user", method = RequestMethod.PUT)
  public SystemResponse roleUpdate(@RequestBody @Validated @ApiParam(value = "用户更新数据") SysUser sysUser) {
-  userService.updateById(sysUser);
+  userService.update(sysUser);
   return new SystemResponse(ResponseCode.SUCCESS);
  }
 
  @ApiOperation("用户列表查询")
- @RequestMapping(value = "role/list", method = RequestMethod.GET)
+ @RequestMapping(value = "user/list", method = RequestMethod.GET)
  public SystemResponse roleList(UserFindDTO roleFindDTO) {
   return new SystemResponse(ResponseCode.SUCCESS, userService.getList(roleFindDTO));
  }
 
  @ApiOperation("用户树查询")
- @RequestMapping(value = "role/tree", method = RequestMethod.GET)
+ @RequestMapping(value = "user/tree", method = RequestMethod.GET)
  public SystemResponse roleTree() {
   return new SystemResponse(ResponseCode.SUCCESS, userService.getTree());
 

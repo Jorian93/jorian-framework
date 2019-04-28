@@ -1,20 +1,28 @@
 package cn.jorian.jorianframework.core.system.service.impl;
 
 import cn.jorian.jorianframework.common.exception.ServiceException;
+import cn.jorian.jorianframework.common.model.ElementTree;
 import cn.jorian.jorianframework.core.system.dto.ResourceAddDTO;
 import cn.jorian.jorianframework.core.system.dto.ResourceFindDTO;
 import cn.jorian.jorianframework.core.system.entity.SysResource;
+import cn.jorian.jorianframework.core.system.entity.SysRole;
+import cn.jorian.jorianframework.core.system.entity.SysRoleResource;
 import cn.jorian.jorianframework.core.system.mapper.ResourceMapper;
 import cn.jorian.jorianframework.core.system.service.ResourceService;
+import cn.jorian.jorianframework.core.system.service.RoleResourceService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sun.org.apache.bcel.internal.generic.NEWARRAY;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.w3c.dom.ls.LSInput;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,6 +35,9 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, SysResource> implements ResourceService {
+    @Autowired
+    RoleResourceService roleResourceService;
+
     @Override
     public void add(ResourceAddDTO resourceAddDTO) {
         SysResource findReource = this.getOne(new QueryWrapper<SysResource>().eq("url",resourceAddDTO.getUrl()));
@@ -50,6 +61,8 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, SysResource
             throw new ServiceException("要删除的资源不存在");
         }
         this.removeById(id);
+        //删除角色资源表
+        roleResourceService.remove(new QueryWrapper<SysRoleResource>().eq("resourceId",findResource.getId()));
     }
 
     @Override
@@ -87,9 +100,41 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, SysResource
                 .orderByAsc("sort");
         List<SysResource> resourcesTree = this.list(wrapper);
         if(resourcesTree!=null && resourcesTree.size()>0){
-            resourcesTree.forEach(this::findAllChild);
+            resourcesTree.forEach(item ->{
+                this.findAllChild(item);
+            }) ;
         }
         return resourcesTree;
+    }
+
+    @Override
+    public List<ElementTree> getElementTree() {
+        QueryWrapper<SysResource> wrapper = new QueryWrapper<>();
+        wrapper.eq("pid",0)
+                .or()
+                .isNull("pid")
+                .orderByAsc("sort");
+        List<SysResource> resourcesTree = this.list(wrapper);
+        List<ElementTree> elementTrees = new ArrayList<>();
+        if(resourcesTree!=null && resourcesTree.size()>0){
+            resourcesTree.forEach(item ->{
+                ElementTree elementTree = new ElementTree();
+                elementTree.setId(item.getId());
+                elementTree.setLable(item.getName());
+                this.findAllElementChild(item,elementTree);
+            }) ;
+        }
+        return elementTrees;
+    }
+
+    @Override
+    public List<String> getUserTree(String rid) {
+        List<SysRoleResource> sysRoleResources = roleResourceService.list(new QueryWrapper<SysRoleResource>().eq("roleId",rid));
+        List<String> sysResourceIds = new ArrayList<>();
+        sysRoleResources.forEach(sysRoleResource -> {
+            sysResourceIds.add(sysRoleResource.getResourceId());
+        });
+        return sysResourceIds;
     }
 
 
@@ -101,5 +146,22 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, SysResource
         if(resources!=null && resources.size()>0){
             resources.forEach(this::findAllChild);
         }
+    }
+    public void findAllElementChild(SysResource resource,ElementTree elementTree){
+        QueryWrapper<SysResource> wrapper = new QueryWrapper<>();
+        wrapper.eq("pid",resource.getId()).orderByAsc("sort");
+        List<SysResource> resources = this.list(wrapper);
+        resource.setChildren(resources);
+        List<ElementTree> elementTrees = new ArrayList<>();
+        if(resources!=null && resources.size()>0){
+            resources.forEach(item-> {
+                ElementTree elementTree1 = new ElementTree();
+                elementTree1.setId(item.getId());
+                elementTree1.setLable(item.getName());
+                elementTrees.add(elementTree1);
+                this.findAllElementChild(item,elementTree1);
+            });
+        }
+        elementTree.setChildren(elementTrees);
     }
 }

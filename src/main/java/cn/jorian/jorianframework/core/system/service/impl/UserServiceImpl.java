@@ -3,6 +3,7 @@ package cn.jorian.jorianframework.core.system.service.impl;
 import cn.jorian.jorianframework.common.exception.ServiceException;
 import cn.jorian.jorianframework.core.system.dto.UserAddDTO;
 import cn.jorian.jorianframework.core.system.dto.UserFindDTO;
+import cn.jorian.jorianframework.core.system.entity.SysRole;
 import cn.jorian.jorianframework.core.system.entity.SysUser;
 import cn.jorian.jorianframework.core.system.entity.SysUserRole;
 import cn.jorian.jorianframework.core.system.mapper.UserMapper;
@@ -11,6 +12,7 @@ import cn.jorian.jorianframework.core.system.service.UserRoleService;
 import cn.jorian.jorianframework.core.system.service.UserService;
 import cn.jorian.jorianframework.common.utils.EncryptPassword;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
@@ -20,7 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
-
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -36,7 +39,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
     RoleService roleService;
     @Autowired
     UserRoleService userRoleService;
-
     @Override
     public void add(UserAddDTO userAddDTO) {
         SysUser findUser = this.findUserByUsername(userAddDTO.getUsername());
@@ -51,19 +53,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
         findUser.setPassword(MD5Password);//密码加密后的user
         try{
             this.save(findUser);
+            //插入用户角色表
+            try{
+                userAddDTO.getRoles().forEach((item)->{
+                    SysUser newUser = this.getOne(new QueryWrapper<SysUser>().eq("username",userAddDTO.getUsername()));
+                    userRoleService.save(new SysUserRole()
+                            .setUid(newUser.getId())
+                            .setRid(item.getId()));
+                });
+            }catch (Exception e){
+                throw new ServiceException("用户角色表修改失败",e);
+            }
         }catch(Exception e){
-            throw new ServiceException("用户插入失败",e);
-        }
-        //插入用户角色表
-        try{
-            userAddDTO.getRoles().forEach((item)->{
-                SysUser newUser = this.getOne(new QueryWrapper<SysUser>().eq("name",userAddDTO.getUsername()));
-                userRoleService.save(new SysUserRole()
-                        .setUid(newUser.getId())
-                        .setRid(item.getId()));
-            });
-        }catch (Exception e){
-            throw new ServiceException("用户角色表修改失败",e);
+            throw new ServiceException("用户保存失败",e);
         }
     }
 
@@ -92,9 +94,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
             throw new ServiceException("更新的资源不存在");
         }
         BeanUtils.copyProperties(sysUser,findUser);
+        findUser.setUpdateTime(LocalDateTime.now());
         this.updateById(findUser);
         //先删除再保存角色关系表
-        userRoleService.remove(new QueryWrapper<SysUserRole>().eq("uid",findUser.getId()));
+        userRoleService.remove(new QueryWrapper<SysUserRole>().eq("uid",sysUser.getId()));
         sysUser.getRoles().forEach((item)->{
             userRoleService.save(new SysUserRole()
                     .setUid(sysUser.getId())
@@ -108,20 +111,37 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
     }
 
     @Override
-    public Object getList(UserFindDTO userFindDTO) {
+    public IPage<SysUser> getList(UserFindDTO userFindDTO) {
         SysUser sysResource =new SysUser();
         BeanUtils.copyProperties(userFindDTO,sysResource);
         QueryWrapper<SysUser> queryWrapper =new QueryWrapper<>();
-        if(StringUtils.isEmpty(userFindDTO.getUsername())){
+        if(!StringUtils.isEmpty(userFindDTO.getUsername())){
             queryWrapper.eq("username",userFindDTO.getUsername());
         }
-        if(StringUtils.isEmpty(userFindDTO.getStatus())){
-            queryWrapper.eq("status",userFindDTO.getStatus()) ;
+        if(!StringUtils.isEmpty(userFindDTO.getStatus())){
+            queryWrapper.eq("status",userFindDTO.getStatus());
         }
-        if(StringUtils.isEmpty(userFindDTO.getId())){
-            queryWrapper.eq("id",userFindDTO.getId()) ;
+        if(!StringUtils.isEmpty(userFindDTO.getNickname())){
+            queryWrapper.eq("nickname",userFindDTO.getNickname());
         }
-        return this.page(new Page<>(userFindDTO.getPage(),userFindDTO.getLimit()),null);
+        if(!StringUtils.isEmpty(userFindDTO.getNickname())){
+            queryWrapper.eq("company",userFindDTO.getCompany());
+        }
+
+        IPage<SysUser> pagedata = this.page(new Page<>(userFindDTO.getPage(),userFindDTO.getLimit()),queryWrapper);
+        //填充角色
+        pagedata.getRecords().forEach(item->{
+            List<SysRole> sysRoleList = new ArrayList<>();
+            List<SysUserRole> userRoleList = userRoleService.list(new QueryWrapper<SysUserRole>().eq("uid",item.getId()));
+            userRoleList.forEach(userRole->{
+            SysRole sysRole = roleService.getById(userRole.getRid());
+                sysRoleList.add(sysRole);
+            });
+                item.setRoles(sysRoleList);
+        });
+        return pagedata;
+
+
     }
 
     @Override

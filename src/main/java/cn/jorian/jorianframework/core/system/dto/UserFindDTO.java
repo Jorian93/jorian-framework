@@ -11,8 +11,9 @@ import lombok.Data;
 @Data
 public class UserFindDTO extends PageDTO {
 
-    private String id;
+    private String nickname;
     private String username;
+    private String company;
     private Boolean status;
 
 }

@@ -6,9 +6,11 @@ import cn.jorian.jorianframework.core.system.dto.RoleFindDTO;
 import cn.jorian.jorianframework.core.system.entity.SysResource;
 import cn.jorian.jorianframework.core.system.entity.SysRole;
 import cn.jorian.jorianframework.core.system.entity.SysRoleResource;
+import cn.jorian.jorianframework.core.system.entity.SysUserRole;
 import cn.jorian.jorianframework.core.system.mapper.RoleMapper;
 import cn.jorian.jorianframework.core.system.service.RoleResourceService;
 import cn.jorian.jorianframework.core.system.service.RoleService;
+import cn.jorian.jorianframework.core.system.service.UserRoleService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -31,6 +33,8 @@ import java.time.LocalDateTime;
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, SysRole> implements RoleService {
     @Autowired
     RoleResourceService roleResourceService;
+    @Autowired
+    UserRoleService userRoleService;
     @Override
     public void add(RoleAddDTO roleAddDTO) {
         SysRole findRole = this.getOne(new QueryWrapper<SysRole>().eq("name",roleAddDTO.getName()));
@@ -63,19 +67,20 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, SysRole> implements
             throw new ServiceException("要删除的资源不存在");
         }
         this.removeById(id);
-        //并删除角色关系表
+        //并删除角色资源关系表
         roleResourceService.remove(new QueryWrapper<SysRoleResource>().eq("roleId",id));
+        //并删除用户角色关系表
+        userRoleService.remove(new QueryWrapper<SysUserRole>().eq("rid",id));
 
     }
     @Override
     public void update(SysRole sysRole) {
-
         if(sysRole==null){
-            throw new ServiceException("不能保存空的资源");
+            throw new ServiceException("不能保存空的角色");
         }
         SysRole findRole = this.getById(sysRole.getId());
         if(findRole ==null) {
-            throw new ServiceException("更新的资源不存在");
+            throw new ServiceException("更新的角色不存在");
         }
         BeanUtils.copyProperties(sysRole,findRole);
         this.updateById(findRole);
@@ -97,6 +102,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, SysRole> implements
             queryWrapper.eq("name",roleFindDTO.getName()) ;
         }
         return this.page(new Page<>(roleFindDTO.getPage(),roleFindDTO.getLimit()),queryWrapper);
+
     }
 
     @Override

@@ -1,5 +1,6 @@
 package cn.jorian.jorianframework.core.system.service;
 
+import cn.jorian.jorianframework.common.model.ElementTree;
 import cn.jorian.jorianframework.core.system.dto.ResourceAddDTO;
 import cn.jorian.jorianframework.core.system.dto.ResourceFindDTO;
 import cn.jorian.jorianframework.core.system.entity.SysResource;
@@ -41,4 +42,8 @@ public interface ResourceService extends IService<SysResource> {
      * @return
      */
     List<SysResource> getTree();
+
+    List<String> getUserTree(String rid);
+
+    List<ElementTree> getElementTree();
 }

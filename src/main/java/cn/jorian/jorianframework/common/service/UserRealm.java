@@ -85,10 +85,9 @@ public class UserRealm extends AuthorizingRealm {
                         info.addRole(role.getName());
                         if(role.getResources()!=null){
                             role.getResources().forEach(v->{
-                                info.addStringPermission("[system]");
-                                /*if(!"".equals(v.getPermission().trim())){
+                                if(!"".equals(v.getPermission().trim())){
                                     info.addStringPermission(v.getPermission());
-                                }*/
+                                }
                             });
                         }
                     });

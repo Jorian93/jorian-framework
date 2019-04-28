@@ -17,17 +17,19 @@ import java.util.List;
 @Data
 public class UserAddDTO {
     @NotBlank(message = "用户名不能为空")
-    @Pattern(regexp = "^(\\w){4,16}$",message = "用户名应为[A-Za-z0-9_]组成的4-16位字符！")
+    @Pattern(regexp = "^[a-zA-Z][a-zA-Z0-9]{3,15}$",message = "用户名应为以字母开头，大小写字母及数字组成的4-16位字符！")
     private String username;
 
+    @NotBlank(message = "昵称不能为空")
+    private String nickname;
+
     @NotBlank(message = "密码不能为空")
-    @Pattern(regexp = "^(\\w){6,18}$",message = "密码应为[A-Za-z0-9_]组成的6-18位字符！")
+    @Pattern(regexp = "^[a-zA-Z0-9]{4,10}$",message = "密码应为大小写字母及数字组成的4-10位字符！")
     private String password;
 
-    @NotNull(message = "手机号不能为空")
-    private Integer phone;
+    @NotBlank(message = "手机号不能为空")
+    private String phone;
 
-    @NotNull(message = "状态标识不能为空")
     private Integer status;
 
     @Size(min = 1, message = "请至少选择一个角色")
