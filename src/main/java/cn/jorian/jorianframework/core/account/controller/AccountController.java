@@ -5,8 +5,6 @@ import cn.jorian.jorianframework.common.response.SystemResponse;
 import cn.jorian.jorianframework.config.jwt.JToken;
 import cn.jorian.jorianframework.core.account.dto.LoginDTO;
 import cn.jorian.jorianframework.core.account.service.AccountService;
-import cn.jorian.jorianframework.core.system.entity.SysResource;
-import cn.jorian.jorianframework.core.system.entity.SysUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -17,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @Api(tags = "账户管理")
@@ -38,21 +34,19 @@ public class AccountController {
     @ApiOperation(value="登出")
     @RequestMapping(method = RequestMethod.DELETE)
     public SystemResponse logout(){
-        return new SystemResponse(ResponseCode.SIGN_OUT_SUCCESS);
+        return new SystemResponse(ResponseCode.SUCCESS);
     }
 
     @ApiOperation(value="获取当前用户")
     @RequestMapping(method = RequestMethod.GET)
     public  SystemResponse getCurrentUser(){
-        SysUser currentuser = accountService.getCurrentUser();
-        return new SystemResponse(ResponseCode.SUCCESS,currentuser);
+        return new SystemResponse(ResponseCode.SUCCESS,accountService.getCurrentUser());
     }
 
     @ApiOperation(value="获取当前用户路由表")
     @RequestMapping(value="/routers",method = RequestMethod.GET)
     public SystemResponse getCurrentUserResource(){
-        List<SysResource> routers = accountService.getCurrentUserResource();
-        return new SystemResponse(ResponseCode.SUCCESS,routers);
+        return new SystemResponse(ResponseCode.SUCCESS, accountService.getCurrentUserResource());
     }
 
 }

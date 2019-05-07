@@ -25,9 +25,15 @@ public class SysResource extends BaseModel {
 
     private String name;
 
+    private String title;
+
     private String icon;
 
-    private String url;
+    private String path;
+
+    private String redirect;
+
+    private String component;
 
     private Integer type;
 

@@ -1,6 +1,6 @@
 package cn.jorian.jorianframework.core.system.mapper;
 
-import cn.jorian.jorianframework.core.system.entity.SysLogs;
+import cn.jorian.jorianframework.core.system.entity.SysLog;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author jorian
- * @since 2019-04-24
+ * @since 2019-05-07
  */
-public interface LogsMapper extends BaseMapper<SysLogs> {
+public interface LogMapper extends BaseMapper<SysLog> {
 
 }

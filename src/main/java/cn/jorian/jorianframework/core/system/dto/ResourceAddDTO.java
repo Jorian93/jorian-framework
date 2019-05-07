@@ -20,13 +20,21 @@ public class ResourceAddDTO {
     @NotBlank(message = "父级不能为空")
     private String pid;
 
-    @NotBlank(message = "资源名不能为空")
+    @NotBlank(message = "组件名不能为空")
     private String name;
+
+    @NotBlank(message = "资源名不能为空")
+    private String title;
 
     private String icon;
 
     @NotBlank(message = "资源路由不能为空")
-    private String url;
+    private String path;
+
+    @NotBlank(message = "组件地址不能为空")
+    private String component;
+
+    private String redirect;
 
     private Integer type;
 

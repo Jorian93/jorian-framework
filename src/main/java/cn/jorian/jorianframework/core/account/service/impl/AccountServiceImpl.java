@@ -5,6 +5,7 @@ import cn.jorian.jorianframework.common.response.ResponseCode;
 import cn.jorian.jorianframework.common.utils.JTokenUtil;
 import cn.jorian.jorianframework.config.jwt.JToken;
 import cn.jorian.jorianframework.core.account.dto.LoginDTO;
+import cn.jorian.jorianframework.core.account.dto.Router;
 import cn.jorian.jorianframework.core.account.service.AccountService;
 
 import cn.jorian.jorianframework.core.system.entity.*;
@@ -14,7 +15,6 @@ import cn.jorian.jorianframework.core.system.service.RoleResourceService;
 import cn.jorian.jorianframework.core.system.service.RoleService;
 import cn.jorian.jorianframework.core.system.service.UserRoleService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
@@ -24,9 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import javax.annotation.Resource;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Auther: jorian
@@ -91,72 +91,136 @@ public class AccountServiceImpl  extends ServiceImpl<UserMapper,SysUser> impleme
     }
 
     @Override
-    public List<SysResource> getCurrentUserResource() {
+    public List<Router> getCurrentUserResource() {
+            String token = ((JToken) SecurityUtils.getSubject().getPrincipal()).getToken();
 
-        String token = ((JToken)SecurityUtils.getSubject().getPrincipal()).getToken();
         if(token==null){
             throw new ServiceException("token不存在或者已过期");
         }
         String username = JTokenUtil.get(token,"username");
         SysUser findUser = this.getOne(new QueryWrapper<SysUser>().eq("username",username));
-        List<SysResource> resources = new ArrayList<>();
         //根据用户id查找用户角色列表
         List<SysUserRole> userRoles = userRoleService.list(new QueryWrapper<SysUserRole>().eq("uid",findUser.getId()));
+        List <SysResource> resources = new ArrayList<>();
         userRoles.forEach(userRole -> {
             //根据用户角色表的角色id列表
             List<SysRoleResource> roleResources = roleResourceService.list(new QueryWrapper<SysRoleResource>().eq("roleId",userRole.getRid()));
             roleResources.forEach(roleResource ->{
-                List<SysResource> resources1 = resourceService.list(new QueryWrapper<SysResource>().eq("id",roleResource.getResourceId()));
-                resources1.forEach(resource ->{
-                    if(!resources.contains(resource)){
-                        resources.add(resource);
-                    }
+                //根据角色得到多个资源表
+                List <SysResource> resources1 = resourceService.list(new QueryWrapper<SysResource>().eq("id",roleResource.getResourceId()));
+                //定义条件集合,过滤资源表
+                List<String> ids = new ArrayList<>();
+               resources.forEach(resource->{
+                   ids.add(resource.getId());
+               });
+               if(ids.isEmpty()){
+                   resources.addAll(resources1);
+               }else{
+                   resources1.stream()
+                           .filter(s -> !(ids.contains(s.getId())))
+                           .collect(Collectors.toList());
+
+                   resources.addAll(resources1);
+               }
+
                 });
-            });
         });
-
         //组织成树结构
-         List<SysResource> treeList = new ArrayList<>();
-         resources.forEach(item ->{
-         //添加一级
-             if(item.getPid()=="0"){
-                treeList.add(item);
-             }
-        });
-
+        List<SysResource> treeList = new ArrayList<>();
+        List<Router> routers = new ArrayList<>();
+        if(resources.size()>0){
+            resources.forEach(item ->{
+                //添加一级,layout
+                if("0".equals(item.getPid())){
+                    treeList.add(item);
+                }
+            });
+        }
          //给爸爸找儿子
         addChildrenToParrent(treeList,resources);
 
-        /*treeList.forEach(item ->{
-            List<SysResource> children = new ArrayList<>();
-             resources.forEach(r ->{
-                if(item.getId()==r.getPid()){
-                    children.add(r);
 
-                }
-            });
-            item.setChildren(children);
-        });*/
+      /* ***Test
 
-        return  treeList;
+        List<Router> asyncRouters = new ArrayList<>();
+        Router router =new Router();
+        router.setPath("/system");
+        router.setName("System");
+        router.setRedirect("/system/user");
+        router.setComponent("@/layout");
+        Map<String,String> meta = new HashMap<>();
+        meta.put("title","系统管理");
+        meta.put("icon","system");
+        router.setMeta(meta);
+
+        List<Router> childrenC = new ArrayList<>();
+
+        List<Router> children = new ArrayList<>();
+        Router routerC =new Router();
+        routerC.setPath("user");
+        routerC.setName("User");
+        routerC.setComponent("/system/user/index");
+        Map<String,String> metaC = new HashMap<>();
+        metaC.put("title","用户管理");
+        metaC.put("icon","user");
+        routerC.setMeta(metaC);
+        routerC.setChildren(childrenC);
+        children.add(routerC);
+
+        Router routerC1 =new Router();
+        routerC1.setPath("role");
+        routerC1.setName("Role");
+        routerC1.setComponent("/system/role/index");
+        Map<String,String> metaC1 = new HashMap<>();
+        metaC1.put("title","角色管理");
+        metaC1.put("icon","role");
+        routerC1.setMeta(metaC1);
+        routerC1.setChildren(childrenC);
+        children.add(routerC1);
+        router.setChildren(children);
+        asyncRouters.add(router);*/
+
+        //准换成路由树
+        routers = this.toRouterTree(treeList);
+
+        return  routers;
     }
-
     public void addChildrenToParrent(List<SysResource> operationList,List<SysResource> allResource){
-
         //得到二级
         operationList.forEach(item ->{
             List<SysResource> children = new ArrayList<>();
             allResource.forEach(r ->{
-                if(item.getId()==r.getPid()){
+                if(item.getId().equals(r.getPid())){
                     children.add(r);
                 }
             });
+            this.addChildrenToParrent(children,allResource);
             item.setChildren(children);
         });
-
-
     }
 
+    public List<Router> toRouterTree(List<SysResource> resourceList){
+
+       List<Router> res = new ArrayList<>();
+        resourceList.forEach(resource -> {
+           Router route = new Router();
+           route.setPath(resource.getPath());
+           route.setName(resource.getName());
+           route.setRedirect(resource.getRedirect());
+           route.setComponent(resource.getComponent());
+           Map<String,String> meta = new HashMap<>();
+           meta.put("title",resource.getTitle());
+           meta.put("icon",resource.getIcon());
+           route.setMeta(meta);
+           List<Router> children = new ArrayList<>();
+            if (!resource.getChildren().isEmpty()) {
+                children=toRouterTree(resource.getChildren());
+            }
+            route.setChildren(children);
+            res.add(route);
+        });
+        return res;
+    }
 
 
 }

@@ -106,7 +106,7 @@ public class MybatisPlusGeneratorConfig {
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
         //strategy.setSuperControllerClass("cn.jorian.jorianframework.common.controller.BaseController;");//设置父Controller
-        String [] tableName = {"sys_user","sys_user_role","sys_role","sys_role_resource","sys_resource","sys_logs"};
+        String [] tableName = {"sys_log"};
         strategy.setInclude(tableName);
 
         strategy.setControllerMappingHyphenStyle(true);

@@ -60,9 +60,13 @@ spring:
      content-type: text/html
     # #模板加载路径 按需配置 ,默认路径是 classpath:/templates/
      template-loader-path: classpath:/templates/
-  #设定静态文件路径，js,css等
+    #设定静态文件路径，js,css等
 files:
   path: ${file-path:d:/files}
+  url: "image.com"
+
+
+
 
 
 

@@ -40,7 +40,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, SysResource
 
     @Override
     public void add(ResourceAddDTO resourceAddDTO) {
-        SysResource findReource = this.getOne(new QueryWrapper<SysResource>().eq("url",resourceAddDTO.getUrl()));
+        SysResource findReource = this.getOne(new QueryWrapper<SysResource>().eq("path",resourceAddDTO.getPath()));
         if(findReource!=null){
             throw new ServiceException("该资源路径已存在");
         }

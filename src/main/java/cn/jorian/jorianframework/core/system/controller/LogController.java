@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/system")
-public class LogsController {
+public class LogController {
 
 }
 
