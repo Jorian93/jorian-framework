@@ -19,9 +19,9 @@ public class CreateJwtToken {
 
     public String generateToken(String uid,String username,String secret){
         Date date = new Date(System.currentTimeMillis()+EXPIRE_TIME);
-        Algorithm algorithm = null;//加密算法加密后的盐
+        Algorithm algorithm = null;
         try {
-            algorithm = Algorithm.HMAC256(secret);
+            algorithm = Algorithm.HMAC256(secret);//加密盐
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

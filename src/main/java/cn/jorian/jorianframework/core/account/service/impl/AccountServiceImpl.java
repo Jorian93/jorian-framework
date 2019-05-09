@@ -2,19 +2,20 @@ package cn.jorian.jorianframework.core.account.service.impl;
 
 import cn.jorian.jorianframework.common.exception.ServiceException;
 import cn.jorian.jorianframework.common.response.ResponseCode;
+import cn.jorian.jorianframework.common.utils.EncryptPassword;
 import cn.jorian.jorianframework.common.utils.JTokenUtil;
 import cn.jorian.jorianframework.config.jwt.JToken;
 import cn.jorian.jorianframework.core.account.dto.LoginDTO;
+import cn.jorian.jorianframework.core.account.dto.RestPasswordDTO;
 import cn.jorian.jorianframework.core.account.dto.Router;
 import cn.jorian.jorianframework.core.account.service.AccountService;
 
 import cn.jorian.jorianframework.core.system.entity.*;
 import cn.jorian.jorianframework.core.system.mapper.UserMapper;
-import cn.jorian.jorianframework.core.system.service.ResourceService;
-import cn.jorian.jorianframework.core.system.service.RoleResourceService;
-import cn.jorian.jorianframework.core.system.service.RoleService;
-import cn.jorian.jorianframework.core.system.service.UserRoleService;
+import cn.jorian.jorianframework.core.system.service.*;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
@@ -24,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -48,6 +48,8 @@ public class AccountServiceImpl  extends ServiceImpl<UserMapper,SysUser> impleme
     @Autowired
     RoleService roleService;
 
+    @Autowired
+    UserService userService;
 
     @Override
     public void login(LoginDTO loginDTO) {
@@ -119,10 +121,8 @@ public class AccountServiceImpl  extends ServiceImpl<UserMapper,SysUser> impleme
                    resources1.stream()
                            .filter(s -> !(ids.contains(s.getId())))
                            .collect(Collectors.toList());
-
                    resources.addAll(resources1);
                }
-
                 });
         });
         //组织成树结构
@@ -138,53 +138,24 @@ public class AccountServiceImpl  extends ServiceImpl<UserMapper,SysUser> impleme
         }
          //给爸爸找儿子
         addChildrenToParrent(treeList,resources);
-
-
-      /* ***Test
-
-        List<Router> asyncRouters = new ArrayList<>();
-        Router router =new Router();
-        router.setPath("/system");
-        router.setName("System");
-        router.setRedirect("/system/user");
-        router.setComponent("@/layout");
-        Map<String,String> meta = new HashMap<>();
-        meta.put("title","系统管理");
-        meta.put("icon","system");
-        router.setMeta(meta);
-
-        List<Router> childrenC = new ArrayList<>();
-
-        List<Router> children = new ArrayList<>();
-        Router routerC =new Router();
-        routerC.setPath("user");
-        routerC.setName("User");
-        routerC.setComponent("/system/user/index");
-        Map<String,String> metaC = new HashMap<>();
-        metaC.put("title","用户管理");
-        metaC.put("icon","user");
-        routerC.setMeta(metaC);
-        routerC.setChildren(childrenC);
-        children.add(routerC);
-
-        Router routerC1 =new Router();
-        routerC1.setPath("role");
-        routerC1.setName("Role");
-        routerC1.setComponent("/system/role/index");
-        Map<String,String> metaC1 = new HashMap<>();
-        metaC1.put("title","角色管理");
-        metaC1.put("icon","role");
-        routerC1.setMeta(metaC1);
-        routerC1.setChildren(childrenC);
-        children.add(routerC1);
-        router.setChildren(children);
-        asyncRouters.add(router);*/
-
         //准换成路由树
         routers = this.toRouterTree(treeList);
 
         return  routers;
     }
+
+    @Override
+    public void resetPassword(RestPasswordDTO resetPasswordDTO) {
+
+        SysUser findUser = this.getOne(new QueryWrapper<SysUser>().eq("username",resetPasswordDTO.getUsername()));
+        if(findUser == null) {
+            throw new ServiceException("用户不存在");
+        }
+        //明文转密文
+        String MD5Password = EncryptPassword.ENCRYPT_MD5(resetPasswordDTO.getUsername(),resetPasswordDTO.getNewPassword(),2);
+        userService.update(new UpdateWrapper<SysUser>().set("password",MD5Password));
+    }
+
     public void addChildrenToParrent(List<SysResource> operationList,List<SysResource> allResource){
         //得到二级
         operationList.forEach(item ->{
@@ -200,7 +171,6 @@ public class AccountServiceImpl  extends ServiceImpl<UserMapper,SysUser> impleme
     }
 
     public List<Router> toRouterTree(List<SysResource> resourceList){
-
        List<Router> res = new ArrayList<>();
         resourceList.forEach(resource -> {
            Router route = new Router();

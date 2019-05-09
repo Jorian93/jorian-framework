@@ -25,12 +25,12 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     //
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-        log.info("permission vification run...");
+        log.info("===权限filter执行=====");
         HttpServletResponse response1 = (HttpServletResponse)response;
         if(!this.isLoginAttempt(request,response)){
             this.writerResponse(response1, ResponseCode.PERMISSIN_FAIL.code,ResponseCode.PERMISSIN_FAIL.msg);
             //重定向到登录页
-
+            return false;
         }
         try {
             this.executeLogin(request,response);
@@ -39,7 +39,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
             writerResponse(response1, ResponseCode.SIGN_IN_USERNAME_PASSWORD_FAIL.code,ResponseCode.SIGN_IN_USERNAME_PASSWORD_FAIL.msg);
         }
         Subject subject = getSubject(request, response);
-        if(null != mappedValue){
+        if(mappedValue != null ){   //权限标识
             String[] value = (String[])mappedValue;
             for (String permission : value) {
                 if(permission==null || "".equals(permission.trim())){
@@ -51,7 +51,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
             }
         }
         if (null == subject.getPrincipal()) {//无凭证示没有登录，返回登录提示
-            writerResponse(response1,ResponseCode.TOKEN_EXPIRED.code,ResponseCode.TOKEN_EXPIRED.msg);
+            writerResponse(response1,ResponseCode.NO_SIGN_IN_FAIL.code,ResponseCode.NO_SIGN_IN_FAIL.msg);
         }else{
             writerResponse(response1,ResponseCode.PERMISSIN_FAIL.code,ResponseCode.PERMISSIN_FAIL.msg);
         }
@@ -62,12 +62,11 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     @Override
     protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
         String token = this.getAuthzHeader(request);
-        System.out.println(token);
         return token != null;
     }
     @Override
     protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
-        return LoginService.executeLogin(request);
+        return LoginService.isLogin(request);
     }
     //
     @Override

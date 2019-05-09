@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.cache.Cache;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
@@ -19,6 +20,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.Set;
 
 /**
  * @Auther: jorian
@@ -45,25 +49,34 @@ public class UserRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+        log.info("====Shiro认证执行======");
         JToken jToken =  (JToken) token;
-        String username = jToken.getUsername() != null?jToken.getUsername(): JTokenUtil.get(jToken.getToken(),"username");
-
-        if(username==null){
-            throw new ServiceException(ResponseCode.SIGN_IN_USERNAME_PASSWORD_EMPTY.msg);
+        String tk = jToken.getToken();
+        String username = jToken.getUsername()!=null?jToken.getUsername():JTokenUtil.get(jToken.getToken(),"username");
+        SysUser sysUser = new SysUser();
+        if(StringUtils.isEmpty(username)){
+                throw new ServiceException(ResponseCode.SIGN_IN_USERNAME_PASSWORD_EMPTY.msg);
         }
-        SysUser findUser = userService.getOne(new QueryWrapper<SysUser>().eq("username",username));
-        if(findUser==null){
-            throw new AuthenticationException();
-        }else if(findUser.getStatus()== Dict.USER_LOCK.key){
-            throw new ServiceException("用户被锁定");
-        }else{
-         //4.对用户信息进行封装
-           String tk = new CreateJwtToken().generateToken(findUser.getId(),findUser.getUsername(),findUser.getPassword());
-           jToken.setToken(tk);
-           return new SimpleAuthenticationInfo(jToken, //principal(用户身份)
-                   findUser.getPassword(),//hashedCredentials(已经加密的密码)
-                    this.getName());//realm name
+        try {
+                sysUser = userService.getOne(new QueryWrapper<SysUser>()
+                        .eq("username",username)
+                        .select("id,username,status,password"));
+        }catch (Exception e){
+                throw new ServiceException(e.getMessage());
         }
+        if(sysUser==null){
+                throw new AuthenticationException();
+        }
+        if(sysUser.getStatus()== Dict.USER_LOCK.key){
+                throw new ServiceException("用户被锁定");
+        }
+        //生成token，此时的jToken是明文账号密码+token
+        if(tk==null) tk= new CreateJwtToken().generateToken(sysUser.getId(),sysUser.getUsername(),sysUser.getPassword());
+        jToken.setToken(tk);
+        //4.对用户信息进行封装
+        return new SimpleAuthenticationInfo(jToken, //principal(用户身份)
+               sysUser.getPassword(),//hashedCredentials(已经加密的密码)
+               this.getName());//realm name
     }
 
     /**
@@ -73,42 +86,32 @@ public class UserRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        log.info("Shiro授权执行");
+        log.info("======Shiro授权执行=====");
         JToken jToken = new JToken();
         BeanUtils.copyProperties(principalCollection.getPrimaryPrincipal(),jToken);
-        if(jToken.getUsername()!=null){
+        String username = jToken.getUsername()!=null?jToken.getUsername():JTokenUtil.get(jToken.getToken(),"username");
+        if(username!=null){
             SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-            SysUser findUser = userService.findUserByUsername(jToken.getUsername());
-            if(findUser!=null){
-                if(findUser.getRoles()!=null){
-                    findUser.getRoles().forEach(role->{
-                        info.addRole(role.getName());
-                        if(role.getResources()!=null){
-                            role.getResources().forEach(v->{
-                                if(!"".equals(v.getPermission().trim())){
-                                    info.addStringPermission(v.getPermission());
-                                }
-                            });
-                        }
-                    });
-                }
+            Set<String> pSet = userService.getUserPermissions(username);
+            info.setStringPermissions(pSet);
+            //System.out.println(info.getStringPermissions());
                 return info;
-            }
+        }else{
+            throw new DisabledAccountException("用户信息异常，请重新登录！");
         }
-        throw new DisabledAccountException("用户信息异常，请重新登录！");
     }
-    /*public void clearAuthByUserId(String uid,Boolean author, Boolean out){
-        //获取所有session
-        Cache<Object, Object> cache = cacheManager
-                .getCache(MyRealm.class.getName()+".authorizationCache");
-        cache.remove(uid);
-    }
+//    public void clearAuthByUserId(String uid,Boolean author, Boolean out){
+//        //获取所有session
+//        Cache<Object, Object> cache = cacheManager
+//                .getCache(MyRealm.class.getName()+".authorizationCache");
+//        cache.remove(uid);
+//    }
+//
+//    public void clearAuthByUserIdCollection(List<String> userList, Boolean author, Boolean out){
+//        Cache<Object, Object> cache = cacheManager
+//                .getCache(MyRealm.class.getName()+".authorizationCache");
+//        userList.forEach(cache::remove);
+//    }
 
-    public void clearAuthByUserIdCollection(List<String> userList, Boolean author, Boolean out){
-        Cache<Object, Object> cache = cacheManager
-                .getCache(MyRealm.class.getName()+".authorizationCache");
-        userList.forEach(cache::remove);
-    }
-*/
 
 }

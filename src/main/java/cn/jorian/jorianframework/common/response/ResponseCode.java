@@ -14,6 +14,7 @@ public enum  ResponseCode {
  FAIL(-1,"操作失败"),
  SIGN_IN_SUCCESS(200,"登录成功"),
  SIGN_IN_FAIL(207,"登录失败"),
+ NO_SIGN_IN_FAIL(208,"未登录，请重新登录"),
  SIGN_IN_USERNAME_PASSWORD_FAIL(200,"用户名或密码错误"),
  USER_ISLOCKED(206,"用户已被锁定"),
  SIGN_IN_USERNAME_PASSWORD_EMPTY(201,"用户名或密码为空"),

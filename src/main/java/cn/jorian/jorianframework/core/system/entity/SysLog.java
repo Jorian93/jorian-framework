@@ -22,13 +22,13 @@ public class SysLog extends BaseModel {
 
     private String username;
 
-    private String uid;
+    private String nickname;
 
     private String ip;
 
     private Integer ajax;
 
-    private String uri;
+    private String api;
 
     private String params;
 
@@ -37,6 +37,5 @@ public class SysLog extends BaseModel {
     private String classMethod;
 
     private String actionName;
-
 
 }

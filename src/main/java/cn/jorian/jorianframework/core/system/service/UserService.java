@@ -3,7 +3,11 @@ package cn.jorian.jorianframework.core.system.service;
 import cn.jorian.jorianframework.core.system.dto.UserAddDTO;
 import cn.jorian.jorianframework.core.system.dto.UserFindDTO;
 import cn.jorian.jorianframework.core.system.entity.SysUser;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * @Auther: jorian
@@ -31,7 +35,9 @@ public interface UserService  extends IService<SysUser> {
      */
     SysUser findUserByUsername(String username);
 
-    Object getList(UserFindDTO roleFindDTO);
+    IPage<SysUser> getList(UserFindDTO userFindDTO);
 
-    Object getTree();
+    List<SysUser> getTree();
+
+    Set<String> getUserPermissions(String username);
 }

@@ -1,15 +1,12 @@
 package cn.jorian.jorianframework.core.system.service.impl;
 
 import cn.jorian.jorianframework.common.exception.ServiceException;
+import cn.jorian.jorianframework.core.account.dto.Router;
 import cn.jorian.jorianframework.core.system.dto.UserAddDTO;
 import cn.jorian.jorianframework.core.system.dto.UserFindDTO;
-import cn.jorian.jorianframework.core.system.entity.SysRole;
-import cn.jorian.jorianframework.core.system.entity.SysUser;
-import cn.jorian.jorianframework.core.system.entity.SysUserRole;
+import cn.jorian.jorianframework.core.system.entity.*;
 import cn.jorian.jorianframework.core.system.mapper.UserMapper;
-import cn.jorian.jorianframework.core.system.service.RoleService;
-import cn.jorian.jorianframework.core.system.service.UserRoleService;
-import cn.jorian.jorianframework.core.system.service.UserService;
+import cn.jorian.jorianframework.core.system.service.*;
 import cn.jorian.jorianframework.common.utils.EncryptPassword;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -23,7 +20,10 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
@@ -39,6 +39,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
     RoleService roleService;
     @Autowired
     UserRoleService userRoleService;
+    @Autowired
+    RoleResourceService roleResourceService;
+    @Autowired
+    ResourceService resourceService;
+
     @Override
     public void add(UserAddDTO userAddDTO) {
         SysUser findUser = this.findUserByUsername(userAddDTO.getUsername());
@@ -75,7 +80,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
             throw new ServiceException("请输入要删除的用户id");
         }
         SysUser findUser = this.getById(id);
-        this.getById(id);
+        //this.getById(id);
         if(findUser == null) {
             throw new ServiceException("要删除的用户不存在");
         }
@@ -107,7 +112,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
 
     @Override
     public SysUser findUserByUsername(String username) {
-        return null;
+        SysUser findUser = this.getOne(new QueryWrapper<SysUser>().eq("username",username));
+        //根据用户id查找用户角色列表
+        List <SysRole> roles = new ArrayList<>();
+        List<SysUserRole> userRoles = userRoleService.list(new QueryWrapper<SysUserRole>().eq("uid",findUser.getId()));
+        List <SysResource> resources = new ArrayList<>();
+        userRoles.forEach(userRole -> {
+            SysRole sysRole = roleService.getById(userRole.getRid());
+            //根据用户角色表的角色id列表
+            List<SysRoleResource> roleResources = roleResourceService.list(new QueryWrapper<SysRoleResource>().eq("roleId",userRole.getRid()));
+            roleResources.forEach(roleResource ->{
+                //根据角色得到多个资源表
+                List <SysResource> resources1 = resourceService.list(new QueryWrapper<SysResource>().eq("id",roleResource.getResourceId()));
+                sysRole.setResources(resources1);
+                roles.add(sysRole);
+            });
+            findUser.setRoles(roles);
+        });
+        //组装资源
+        return findUser;
     }
 
     @Override
@@ -145,9 +168,34 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
     }
 
     @Override
-    public Object getTree() {
+    public List<SysUser> getTree() {
         //TODO !!
         return null;
+    }
+
+    @Override
+    public Set<String> getUserPermissions(String username) {
+
+        SysUser findUser = this.getOne(new QueryWrapper<SysUser>().eq("username",username));
+        //根据用户id查找用户角色列表
+        List<SysUserRole> userRoles = userRoleService.list(new QueryWrapper<SysUserRole>().eq("uid",findUser.getId()));
+        //资源总表
+        List<SysResource> resources = new ArrayList<>();
+        userRoles.forEach(userRole -> {
+            //根据用户角色表的角色id列表
+            List<SysRoleResource> roleResources = roleResourceService.list(new QueryWrapper<SysRoleResource>().eq("roleId",userRole.getRid()));
+            roleResources.forEach(roleResource ->{
+                //根据角色得到多个资源表
+                List <SysResource> resources1 = resourceService.list(new QueryWrapper<SysResource>().eq("id",roleResource.getResourceId()));
+                resources.addAll(resources1);
+            });
+        });
+        //总表去重
+        Set<String> pSet=new HashSet<String>();
+        resources.forEach(resource->{
+            pSet.add(resource.getPermission());
+        });
+        return pSet;
     }
 
 }

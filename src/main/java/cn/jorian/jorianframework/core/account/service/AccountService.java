@@ -2,6 +2,7 @@ package cn.jorian.jorianframework.core.account.service;
 
 
 import cn.jorian.jorianframework.core.account.dto.LoginDTO;
+import cn.jorian.jorianframework.core.account.dto.RestPasswordDTO;
 import cn.jorian.jorianframework.core.account.dto.Router;
 import cn.jorian.jorianframework.core.system.entity.SysUser;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -19,4 +20,6 @@ public interface AccountService extends IService<SysUser> {
     SysUser getCurrentUser();
 
     List<Router> getCurrentUserResource();
+
+    void resetPassword(RestPasswordDTO resetPasswordDTO);
 }

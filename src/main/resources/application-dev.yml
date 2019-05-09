@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8085
   compression:
     enabled: true
     mime-types: application/json,application/xml,text/html,text/xml,text/plain
@@ -7,7 +7,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/jorian-framework?useUnicode=yes&characterEncoding=UTF8
+    url: jdbc:mysql://127.0.0.1:3306/jorian_framework?useUnicode=yes&characterEncoding=UTF8
     username: root
     password: root
     druid:

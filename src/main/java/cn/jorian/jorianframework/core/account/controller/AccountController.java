@@ -1,9 +1,11 @@
 package cn.jorian.jorianframework.core.account.controller;
 
+import cn.jorian.jorianframework.common.annotation.Log;
 import cn.jorian.jorianframework.common.response.ResponseCode;
 import cn.jorian.jorianframework.common.response.SystemResponse;
 import cn.jorian.jorianframework.config.jwt.JToken;
 import cn.jorian.jorianframework.core.account.dto.LoginDTO;
+import cn.jorian.jorianframework.core.account.dto.RestPasswordDTO;
 import cn.jorian.jorianframework.core.account.service.AccountService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,6 +28,7 @@ public class AccountController {
 
     @ApiOperation(value = "登录")
     @RequestMapping(method = RequestMethod.POST)
+    @Log("登入")
     public SystemResponse login(@RequestBody @Validated @ApiParam(value = "登录数据",required = true) LoginDTO loginDTO){
         accountService.login(loginDTO);
         return new SystemResponse(ResponseCode.SIGN_IN_SUCCESS,((JToken)SecurityUtils.getSubject().getPrincipal()).getToken());
@@ -33,7 +36,16 @@ public class AccountController {
 
     @ApiOperation(value="登出")
     @RequestMapping(method = RequestMethod.DELETE)
+    @Log("登出")
     public SystemResponse logout(){
+        return new SystemResponse(ResponseCode.SUCCESS);
+    }
+
+    @ApiOperation(value="重置密码")
+    @RequestMapping(value = "/restPassword",method = RequestMethod.PUT)
+    @Log("重置密码")
+    public SystemResponse restPassword(@RequestBody @Validated @ApiParam(value = "新旧密码数据",required = true) RestPasswordDTO resetPasswordDTO){
+        accountService.resetPassword(resetPasswordDTO);
         return new SystemResponse(ResponseCode.SUCCESS);
     }
 

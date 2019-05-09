@@ -18,7 +18,13 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class LoginService {
 
-    public static boolean executeLogin(ServletRequest request){
+
+    /**
+     * 普通的登入校验
+     * @param request
+     * @return
+     */
+    public static boolean isLogin(ServletRequest request){
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String token = httpServletRequest.getHeader("J-Token");
         if(token==null || "".equals(token.trim())){
@@ -30,13 +36,9 @@ public class LoginService {
         try {
             subject.login(jToken);
         }catch (DisabledAccountException e){
-            if(e.getMessage().equals("verifyFail")){
+            if(e.getMessage().equals("token error")){
                 throw new ServiceException(ResponseCode.TOKEN_EXPIRED.msg,e,false,false);
             }
-            throw new ServiceException(ResponseCode.TOKEN_EXPIRED.msg,e,false,false);
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new ServiceException(ResponseCode.TOKEN_EXPIRED.msg,e,false,false);
         }
         // 如果没有抛出异常则代表登入成功，返回true
         return true;
