@@ -14,5 +14,6 @@ public class PicUploadResult {
  private  String height;
  private  String width;
  private String Url;
+ private  String msg;
 
 }

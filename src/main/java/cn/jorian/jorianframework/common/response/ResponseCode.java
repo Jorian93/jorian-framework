@@ -22,6 +22,8 @@ public enum  ResponseCode {
  PERMISSIN_FAIL(203,"没有足够的权限,请重新登录"),
  TOKEN_EXPIRED(204,"凭证过期，请重新登录"),
  TOKEN_AUTHENTICATION_FAIL(205,"凭证校验失败"),
+  UPLOAD_FAIL(-1,"凭证过期，请重新登录"),
+  UPLOAD_SUCCESS(200,"凭证过期，请重新登录"),
     ;
 
  public Integer code;
