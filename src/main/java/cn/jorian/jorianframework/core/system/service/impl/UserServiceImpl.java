@@ -1,13 +1,12 @@
 package cn.jorian.jorianframework.core.system.service.impl;
 
 import cn.jorian.jorianframework.common.exception.ServiceException;
-import cn.jorian.jorianframework.core.account.dto.Router;
+import cn.jorian.jorianframework.common.utils.EncryptPassword;
 import cn.jorian.jorianframework.core.system.dto.UserAddDTO;
 import cn.jorian.jorianframework.core.system.dto.UserFindDTO;
 import cn.jorian.jorianframework.core.system.entity.*;
 import cn.jorian.jorianframework.core.system.mapper.UserMapper;
 import cn.jorian.jorianframework.core.system.service.*;
-import cn.jorian.jorianframework.common.utils.EncryptPassword;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -23,7 +22,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 
 /**
@@ -46,7 +44,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
 
     @Override
     public void add(UserAddDTO userAddDTO) {
-        SysUser findUser = this.findUserByUsername(userAddDTO.getUsername());
+
+        SysUser findUser = this.getOne(new QueryWrapper<SysUser>().eq("username",userAddDTO.getUsername()));
         if(findUser!=null){
           throw new ServiceException("用户已存在");
         }

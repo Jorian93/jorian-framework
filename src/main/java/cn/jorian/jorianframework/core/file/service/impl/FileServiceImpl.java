@@ -1,6 +1,7 @@
 package cn.jorian.jorianframework.core.file.service.impl;
 
 import cn.jorian.jorianframework.common.model.PicUploadResult;
+import cn.jorian.jorianframework.common.response.ResponseCode;
 import cn.jorian.jorianframework.core.file.service.FileService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,7 +42,8 @@ public class FileServiceImpl implements FileService {
     //判断是否为正确的图片类型
 		if(!type.matches("^.*(jpg|png|gif)$")){
         //表明图片的格式不正确
-        result.setError(-1);
+        result.setError(ResponseCode.UPLOAD_FAIL.code);
+        result.setMsg("图片的格式不正确");
         return result;
     }
 
@@ -54,15 +56,15 @@ public class FileServiceImpl implements FileService {
         //判断是否为一个正确的图片
         if(height ==0 || width ==0){
             //表示不是一张图片
-            result.setError(-1);
+            result.setError(ResponseCode.UPLOAD_FAIL.code);
+            result.setMsg("图片非法");
             return result;
         }
 
         /**
          * 1.如果程序执行到这里,表示上传的图片是一个正确的格式 则进行如果操作
          * 2.准备磁盘路径和访问路径
-         * 3.url:image.jt.com/yyyy/MM/dd/HH/mm/3位随即数+文件名
-         * 4.
+         *
          */
         result.setHeight(height+"");
         result.setWidth(width+"");
@@ -76,7 +78,7 @@ public class FileServiceImpl implements FileService {
         //生成三位随机数				0-899 + 100 =100-999
         int randomNum = new Random().nextInt(900) + 100;
 
-        //形成url访问路径 image.jt.com/yyyy/MM/dd/HH/123456.jpg
+        //形成url访问路径 image.com   /yyyy/MM/dd/HH/123456.jpg
         String imageUrl = urlPath + "/"+datePath + "/"+randomNum + fileName;
         result.setUrl(imageUrl);
 
@@ -96,10 +98,11 @@ public class FileServiceImpl implements FileService {
     } catch (Exception e) {
         e.printStackTrace();
         //表示文件上传失败
-        result.setError(-1);
+        result.setError(ResponseCode.UPLOAD_FAIL.code);
+        result.setMsg("网络错误！");
         return result;
     }
-        result.setError(200);
+        result.setError(ResponseCode.UPLOAD_SUCCESS.code);//成功
 		return result;
 }
 }

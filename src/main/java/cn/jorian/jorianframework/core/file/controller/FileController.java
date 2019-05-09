@@ -1,6 +1,6 @@
 package cn.jorian.jorianframework.core.file.controller;
 
-import cn.jorian.jorianframework.common.response.ResponseCode;
+import cn.jorian.jorianframework.common.model.PicUploadResult;
 import cn.jorian.jorianframework.common.response.SystemResponse;
 import cn.jorian.jorianframework.core.file.service.FileService;
 import io.swagger.annotations.Api;
@@ -26,6 +26,7 @@ public class FileController{
     @RequestMapping(method = RequestMethod.POST)
     @ApiOperation(value = "文件上传")
     public SystemResponse uploadFile(MultipartFile file){
-        return new SystemResponse(fileService.save(file).getError(),ResponseCode.SUCCESS.msg,fileService.save(file));
+        PicUploadResult picUploadResult = fileService.save(file);
+        return new SystemResponse(picUploadResult.getError(),picUploadResult.getMsg(),picUploadResult);
     }
 }
