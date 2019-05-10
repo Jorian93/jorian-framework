@@ -24,7 +24,7 @@ public class LoginService {
      * @param request
      * @return
      */
-    public static boolean isLogin(ServletRequest request){
+    public static boolean executeLogin(ServletRequest request){
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String token = httpServletRequest.getHeader("J-Token");
         if(token==null || "".equals(token.trim())){

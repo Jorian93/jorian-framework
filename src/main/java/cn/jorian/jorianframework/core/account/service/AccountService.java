@@ -15,7 +15,7 @@ import java.util.List;
  * @Description:
  */
 public interface AccountService extends IService<SysUser> {
-    void login(LoginDTO loginDTO);
+    String login(LoginDTO loginDTO);
 
     SysUser getCurrentUser();
 

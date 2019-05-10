@@ -1,7 +1,6 @@
-package cn.jorian.jorianframework.common.service;
+package cn.jorian.jorianframework.common.realm;
 
 import cn.jorian.jorianframework.common.exception.ServiceException;
-import cn.jorian.jorianframework.common.model.Dict;
 import cn.jorian.jorianframework.common.response.ResponseCode;
 import cn.jorian.jorianframework.common.utils.CreateJwtToken;
 import cn.jorian.jorianframework.common.utils.JTokenUtil;
@@ -12,7 +11,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.cache.Cache;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
@@ -52,7 +50,7 @@ public class UserRealm extends AuthorizingRealm {
         log.info("====Shiro认证执行======");
         JToken jToken =  (JToken) token;
         String tk = jToken.getToken();
-        String username = jToken.getUsername()!=null?jToken.getUsername():JTokenUtil.get(jToken.getToken(),"username");
+        String username = jToken.getUsername()!=null?jToken.getUsername(): JTokenUtil.get(jToken.getToken(),"username");
         SysUser sysUser = new SysUser();
         if(StringUtils.isEmpty(username)){
                 throw new ServiceException(ResponseCode.SIGN_IN_USERNAME_PASSWORD_EMPTY.msg);
@@ -61,14 +59,14 @@ public class UserRealm extends AuthorizingRealm {
                 sysUser = userService.getOne(new QueryWrapper<SysUser>()
                         .eq("username",username)
                         .select("id,username,status,password"));
-        }catch (Exception e){
-                throw new ServiceException(e.getMessage());
+        }catch (ServiceException e){
+            throw new DisabledAccountException(e.getMessage());
         }
         if(sysUser==null){
-                throw new AuthenticationException();
+            throw new DisabledAccountException(ResponseCode.SIGN_IN_USERNAME_PASSWORD_FAIL.msg);
         }
-        if(sysUser.getStatus()== Dict.USER_LOCK.key){
-                throw new ServiceException("用户被锁定");
+        if(sysUser.getStatus()!=1){
+            throw new DisabledAccountException(ResponseCode.USER_ISLOCKED.msg);
         }
         //生成token，此时的jToken是明文账号密码+token
         if(tk==null) tk= new CreateJwtToken().generateToken(sysUser.getId(),sysUser.getUsername(),sysUser.getPassword());
@@ -89,7 +87,7 @@ public class UserRealm extends AuthorizingRealm {
         log.info("======Shiro授权执行=====");
         JToken jToken = new JToken();
         BeanUtils.copyProperties(principalCollection.getPrimaryPrincipal(),jToken);
-        String username = jToken.getUsername()!=null?jToken.getUsername():JTokenUtil.get(jToken.getToken(),"username");
+        String username = jToken.getUsername()!=null?jToken.getUsername(): JTokenUtil.get(jToken.getToken(),"username");
         if(username!=null){
             SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
             Set<String> pSet = userService.getUserPermissions(username);

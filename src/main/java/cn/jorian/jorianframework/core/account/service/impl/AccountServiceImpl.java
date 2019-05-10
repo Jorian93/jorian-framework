@@ -52,25 +52,28 @@ public class AccountServiceImpl  extends ServiceImpl<UserMapper,SysUser> impleme
     UserService userService;
 
     @Override
-    public void login(LoginDTO loginDTO) {
+    public String login(LoginDTO loginDTO) {
         if(StringUtils.isEmpty(loginDTO)){
-
         }
         if( "".equals(loginDTO.getUsername()) || "".equals(loginDTO.getPassword()) ){
             throw new ServiceException(ResponseCode.SIGN_IN_USERNAME_PASSWORD_EMPTY.msg);
         }
         JToken token = new JToken(null,loginDTO.getUsername(),loginDTO.getPassword());
         Subject subject = SecurityUtils.getSubject();
-        try {
+        try{
             subject.login(token);
             if(!subject.isAuthenticated()){
                 throw new ServiceException(ResponseCode.TOKEN_AUTHENTICATION_FAIL.msg);
             }
         }catch (DisabledAccountException e){
-            throw new ServiceException(ResponseCode.USER_ISLOCKED.msg,e);
+            throw new ServiceException(e.getMessage(),ResponseCode.SIGN_IN_FAIL.code,e);
+
         }catch (Exception e){
             throw new ServiceException(ResponseCode.SIGN_IN_FAIL.msg,e);
         }
+        //登陆完成，返回token
+        String jToken = ((JToken)SecurityUtils.getSubject().getPrincipal()).getToken();
+        return jToken;
     }
 
     @Override

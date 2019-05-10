@@ -30,8 +30,8 @@ public class AccountController {
     @RequestMapping(method = RequestMethod.POST)
     @Log("登入")
     public SystemResponse login(@RequestBody @Validated @ApiParam(value = "登录数据",required = true) LoginDTO loginDTO){
-        accountService.login(loginDTO);
-        return new SystemResponse(ResponseCode.SIGN_IN_SUCCESS,((JToken)SecurityUtils.getSubject().getPrincipal()).getToken());
+
+        return new SystemResponse(ResponseCode.SIGN_IN_SUCCESS,accountService.login(loginDTO));
     }
 
     @ApiOperation(value="登出")

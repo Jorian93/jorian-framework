@@ -1,5 +1,6 @@
 package cn.jorian.jorianframework.config.jwt;
 
+import cn.jorian.jorianframework.common.exception.ServiceException;
 import cn.jorian.jorianframework.common.response.ResponseCode;
 import cn.jorian.jorianframework.common.response.SystemResponse;
 import cn.jorian.jorianframework.core.account.service.impl.LoginService;
@@ -28,15 +29,15 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         log.info("===权限filter执行=====");
         HttpServletResponse response1 = (HttpServletResponse)response;
         if(!this.isLoginAttempt(request,response)){
-            this.writerResponse(response1, ResponseCode.PERMISSIN_FAIL.code,ResponseCode.PERMISSIN_FAIL.msg);
+            this.writerResponse(response1, ResponseCode.PERMISSIN_FAIL.code, ResponseCode.PERMISSIN_FAIL.msg);
             //重定向到登录页
             return false;
         }
         try {
             this.executeLogin(request,response);
-        } catch (Exception e) {
-            e.printStackTrace();
-            writerResponse(response1, ResponseCode.SIGN_IN_USERNAME_PASSWORD_FAIL.code,ResponseCode.SIGN_IN_USERNAME_PASSWORD_FAIL.msg);
+        }catch (ServiceException e){
+            writerResponse(response1,e.getStatus(),e.getMessage());
+            return false;
         }
         Subject subject = getSubject(request, response);
         if(mappedValue != null ){   //权限标识
@@ -51,26 +52,26 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
             }
         }
         if (null == subject.getPrincipal()) {//无凭证示没有登录，返回登录提示
-            writerResponse(response1,ResponseCode.NO_SIGN_IN_FAIL.code,ResponseCode.NO_SIGN_IN_FAIL.msg);
+            writerResponse(response1, ResponseCode.NO_SIGN_IN_FAIL.code, ResponseCode.NO_SIGN_IN_FAIL.msg);
         }else{
-            writerResponse(response1,ResponseCode.PERMISSIN_FAIL.code,ResponseCode.PERMISSIN_FAIL.msg);
+            writerResponse(response1, ResponseCode.PERMISSIN_FAIL.code, ResponseCode.PERMISSIN_FAIL.msg);
         }
         return false;
     }
 
     //是否带权限标志J-Token
     @Override
-    protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
+    protected boolean isLoginAttempt(ServletRequest request, ServletResponse response){
         String token = this.getAuthzHeader(request);
         return token != null;
     }
     @Override
-    protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
-        return LoginService.isLogin(request);
+    protected boolean executeLogin(ServletRequest request, ServletResponse response) {
+        return LoginService.executeLogin(request);
     }
     //
     @Override
-    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
+    protected boolean onAccessDenied(ServletRequest request, ServletResponse response){
         return false;
     }
 

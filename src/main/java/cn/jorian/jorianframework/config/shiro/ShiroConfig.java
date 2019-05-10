@@ -1,8 +1,7 @@
 package cn.jorian.jorianframework.config.shiro;
 
-import cn.jorian.jorianframework.common.service.UserRealm;
+import cn.jorian.jorianframework.common.realm.UserRealm;
 import cn.jorian.jorianframework.config.jwt.JwtFilter;
-import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -30,7 +29,7 @@ public class ShiroConfig {
 
         ShiroFilterFactoryBean shiroFilterFactoryBean =new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        shiroFilterFactoryBean.setLoginUrl("/");
+        shiroFilterFactoryBean.setLoginUrl("/account");
         //过滤链
         Map<String, String> filterChainDefinitionMap = new HashMap<>();
         //其余需要拦截
