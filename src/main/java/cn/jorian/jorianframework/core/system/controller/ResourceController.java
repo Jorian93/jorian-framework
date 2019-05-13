@@ -61,7 +61,7 @@ public class ResourceController {
     }
 
     @ApiOperation("按角色查询资源树")
-    @RequestMapping(value="resource/tree/{rid}",method = RequestMethod.GET)
+    @RequestMapping(value="resource/{rid}",method = RequestMethod.GET)
     @Log("查看角色资源")
     public SystemResponse resourceUserTree(@PathVariable("rid") String rid){
         return new SystemResponse(ResponseCode.SUCCESS,resourceService.getUserTree(rid));
