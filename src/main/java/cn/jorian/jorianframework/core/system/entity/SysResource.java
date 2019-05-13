@@ -43,6 +43,9 @@ public class SysResource extends BaseModel {
 
     @TableField("isVerify")
     private Boolean isVerify;
+
+    private Boolean hidden;
+
     @TableField(exist =false)
     List<SysResource> children;
 

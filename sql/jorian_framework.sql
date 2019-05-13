@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50519
 File Encoding         : 65001
 
-Date: 2019-05-10 16:23:47
+Date: 2019-05-13 16:43:39
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -553,6 +553,58 @@ INSERT INTO `sys_log` VALUES ('1126517709295255554', null, null, '127.0.0.1', '1
 INSERT INTO `sys_log` VALUES ('1126517730426159106', null, null, '127.0.0.1', '1', '/system/resource/tree', '[]', 'GET', 'cn.jorian.jorianframework.core.system.controller.ResourceController.resourceTree()', '查询资源树', '2019-05-10 00:02:11', null);
 INSERT INTO `sys_log` VALUES ('1126517754706984961', null, null, '127.0.0.1', '1', '/system/resource/1125650815872815106', '[\"1125650815872815106\"]', 'DELETE', 'cn.jorian.jorianframework.core.system.controller.ResourceController.resourceDelete()', '删除资源', '2019-05-10 00:02:17', null);
 INSERT INTO `sys_log` VALUES ('1126517754837008385', null, null, '127.0.0.1', '1', '/system/resource/tree', '[]', 'GET', 'cn.jorian.jorianframework.core.system.controller.ResourceController.resourceTree()', '查询资源树', '2019-05-10 00:02:17', null);
+INSERT INTO `sys_log` VALUES ('1127746235071606786', 'jorian4', 'jorian4', '127.0.0.1', '1', '/account', '[{\"password\":\"******\",\"username\":\"jorian4\"}]', 'POST', 'cn.jorian.jorianframework.core.account.controller.AccountController.login()', '登入', '2019-05-13 09:23:49', null);
+INSERT INTO `sys_log` VALUES ('1127746251748159490', null, null, '127.0.0.1', '1', '/system/role/list', '[{\"limit\":10,\"page\":1,\"sort\":false}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.RoleController.roleList()', '角色列表查询', '2019-05-13 09:23:53', null);
+INSERT INTO `sys_log` VALUES ('1127746251798491138', null, null, '127.0.0.1', '1', '/system/user/list', '[{\"company\":\"\",\"limit\":20,\"nickname\":\"\",\"page\":1,\"sort\":false,\"username\":\"\"}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.UserController.roleList()', '查询用户列表', '2019-05-13 09:23:53', null);
+INSERT INTO `sys_log` VALUES ('1127746259297906690', null, null, '127.0.0.1', '1', '/system/resource/tree', '[]', 'GET', 'cn.jorian.jorianframework.core.system.controller.ResourceController.resourceTree()', '查询资源树', '2019-05-13 09:23:55', null);
+INSERT INTO `sys_log` VALUES ('1127746268156276738', null, null, '127.0.0.1', '1', '/system/role/list', '[{\"limit\":20,\"name\":\"\",\"page\":1,\"sort\":false}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.RoleController.roleList()', '角色列表查询', '2019-05-13 09:23:57', null);
+INSERT INTO `sys_log` VALUES ('1127746268181442562', null, null, '127.0.0.1', '1', '/system/resource/tree', '[]', 'GET', 'cn.jorian.jorianframework.core.system.controller.ResourceController.resourceTree()', '查询资源树', '2019-05-13 09:23:57', null);
+INSERT INTO `sys_log` VALUES ('1127746276117065730', null, null, '127.0.0.1', '1', '/system/log/list', '[{\"limit\":20,\"page\":1,\"sort\":false,\"username\":\"\"}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.LogController.roleList()', '查询日志', '2019-05-13 09:23:59', null);
+INSERT INTO `sys_log` VALUES ('1127746285080293377', null, null, '127.0.0.1', '1', '/system/role/list', '[{\"limit\":20,\"name\":\"\",\"page\":1,\"sort\":false}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.RoleController.roleList()', '角色列表查询', '2019-05-13 09:24:01', null);
+INSERT INTO `sys_log` VALUES ('1127746285105459201', null, null, '127.0.0.1', '1', '/system/resource/tree', '[]', 'GET', 'cn.jorian.jorianframework.core.system.controller.ResourceController.resourceTree()', '查询资源树', '2019-05-13 09:24:01', null);
+INSERT INTO `sys_log` VALUES ('1127746290830684162', null, null, '127.0.0.1', '1', '/system/resource/1', '[\"1\"]', 'GET', 'cn.jorian.jorianframework.core.system.controller.ResourceController.resourceUserTree()', '查看角色资源', '2019-05-13 09:24:02', null);
+INSERT INTO `sys_log` VALUES ('1127746301656182786', null, null, '127.0.0.1', '1', '/system/resource/2', '[\"2\"]', 'GET', 'cn.jorian.jorianframework.core.system.controller.ResourceController.resourceUserTree()', '查看角色资源', '2019-05-13 09:24:05', null);
+INSERT INTO `sys_log` VALUES ('1127746435227987969', null, null, '127.0.0.1', '1', '/system/resource/2', '[\"2\"]', 'GET', 'cn.jorian.jorianframework.core.system.controller.ResourceController.resourceUserTree()', '查看角色资源', '2019-05-13 09:24:37', null);
+INSERT INTO `sys_log` VALUES ('1127746539376750594', null, null, '127.0.0.1', '1', '/system/role/2', '[\"2\"]', 'DELETE', 'cn.jorian.jorianframework.core.system.controller.RoleController.roleDelete()', '删除角色', '2019-05-13 09:25:02', null);
+INSERT INTO `sys_log` VALUES ('1127746554631434241', null, null, '127.0.0.1', '1', '/system/log/list', '[{\"limit\":20,\"page\":1,\"sort\":false,\"username\":\"\"}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.LogController.roleList()', '查询日志', '2019-05-13 09:25:05', null);
+INSERT INTO `sys_log` VALUES ('1127746736102191106', null, null, '127.0.0.1', '1', '/system/role/list', '[{\"limit\":20,\"name\":\"\",\"page\":1,\"sort\":false}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.RoleController.roleList()', '角色列表查询', '2019-05-13 09:25:49', null);
+INSERT INTO `sys_log` VALUES ('1127746736207048705', null, null, '127.0.0.1', '1', '/system/resource/tree', '[]', 'GET', 'cn.jorian.jorianframework.core.system.controller.ResourceController.resourceTree()', '查询资源树', '2019-05-13 09:25:49', null);
+INSERT INTO `sys_log` VALUES ('1127746762035572737', null, null, '127.0.0.1', '1', '/system/log/list', '[{\"limit\":20,\"page\":1,\"sort\":false,\"username\":\"\"}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.LogController.roleList()', '查询日志', '2019-05-13 09:25:55', null);
+INSERT INTO `sys_log` VALUES ('1127746782315032578', null, null, '127.0.0.1', '1', '/system/role/list', '[{\"limit\":20,\"name\":\"\",\"page\":1,\"sort\":false}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.RoleController.roleList()', '角色列表查询', '2019-05-13 09:26:00', null);
+INSERT INTO `sys_log` VALUES ('1127746782361169921', null, null, '127.0.0.1', '1', '/system/resource/tree', '[]', 'GET', 'cn.jorian.jorianframework.core.system.controller.ResourceController.resourceTree()', '查询资源树', '2019-05-13 09:26:00', null);
+INSERT INTO `sys_log` VALUES ('1127746876183556098', null, null, '127.0.0.1', '1', '/system/role/list', '[{\"limit\":10,\"page\":1,\"sort\":false}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.RoleController.roleList()', '角色列表查询', '2019-05-13 09:26:22', null);
+INSERT INTO `sys_log` VALUES ('1127746876212916226', null, null, '127.0.0.1', '1', '/system/user/list', '[{\"company\":\"\",\"limit\":20,\"nickname\":\"\",\"page\":1,\"sort\":false,\"username\":\"\"}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.UserController.roleList()', '查询用户列表', '2019-05-13 09:26:22', null);
+INSERT INTO `sys_log` VALUES ('1127746910639763457', null, null, '127.0.0.1', '1', '/system/user/1125609610363441154', '[\"1125609610363441154\"]', 'DELETE', 'cn.jorian.jorianframework.core.system.controller.UserController.roleDelete()', '删除用户', '2019-05-13 09:26:30', null);
+INSERT INTO `sys_log` VALUES ('1127746943896399874', null, null, '127.0.0.1', '1', '/system/resource/tree', '[]', 'GET', 'cn.jorian.jorianframework.core.system.controller.ResourceController.resourceTree()', '查询资源树', '2019-05-13 09:26:38', null);
+INSERT INTO `sys_log` VALUES ('1127746949281886209', null, null, '127.0.0.1', '1', '/system/role/list', '[{\"limit\":20,\"name\":\"\",\"page\":1,\"sort\":false}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.RoleController.roleList()', '角色列表查询', '2019-05-13 09:26:39', null);
+INSERT INTO `sys_log` VALUES ('1127746949298663425', null, null, '127.0.0.1', '1', '/system/resource/tree', '[]', 'GET', 'cn.jorian.jorianframework.core.system.controller.ResourceController.resourceTree()', '查询资源树', '2019-05-13 09:26:39', null);
+INSERT INTO `sys_log` VALUES ('1127747013186301954', null, null, '127.0.0.1', '1', '/system/role', '[{\"description\":\"admin2\",\"name\":\"admin2\",\"resources\":[{\"id\":\"1121348570280771586\"},{\"id\":\"1121348591713665026\"},{\"id\":\"1121792385039306754\"},{\"id\":\"1122396157441470466\"},{\"id\":\"1125650097057189889\"}]}]', 'POST', 'cn.jorian.jorianframework.core.system.controller.RoleController.roleAdd()', '新增角色', '2019-05-13 09:26:55', null);
+INSERT INTO `sys_log` VALUES ('1127747103699382273', null, null, '127.0.0.1', '1', '/system/role', '[{\"description\":\"admin3\",\"name\":\"admin3\",\"resources\":[{\"id\":\"1121348570280771586\"},{\"id\":\"1121348591713665026\"},{\"id\":\"1121792385039306754\"},{\"id\":\"1122396157441470466\"},{\"id\":\"1125650097057189889\"}]}]', 'POST', 'cn.jorian.jorianframework.core.system.controller.RoleController.roleAdd()', '新增角色', '2019-05-13 09:27:16', null);
+INSERT INTO `sys_log` VALUES ('1127749159231303682', null, null, '127.0.0.1', '1', '/system/resource/tree', '[]', 'GET', 'cn.jorian.jorianframework.core.system.controller.ResourceController.resourceTree()', '查询资源树', '2019-05-13 09:35:26', null);
+INSERT INTO `sys_log` VALUES ('1127749159248080898', null, null, '127.0.0.1', '1', '/system/role/list', '[{\"limit\":20,\"name\":\"\",\"page\":1,\"sort\":false}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.RoleController.roleList()', '角色列表查询', '2019-05-13 09:35:26', null);
+INSERT INTO `sys_log` VALUES ('1127749493991288833', null, null, '127.0.0.1', '1', '/system/resource/1127747013114998785', '[\"1127747013114998785\"]', 'GET', 'cn.jorian.jorianframework.core.system.controller.ResourceController.resourceUserTree()', '查看角色资源', '2019-05-13 09:36:46', null);
+INSERT INTO `sys_log` VALUES ('1127749528019677186', 'jorian4', 'jorian4', '127.0.0.1', '1', '/account', '[{\"password\":\"******\",\"username\":\"jorian4\"}]', 'POST', 'cn.jorian.jorianframework.core.account.controller.AccountController.login()', '登入', '2019-05-13 09:36:54', null);
+INSERT INTO `sys_log` VALUES ('1127749528845955074', null, null, '127.0.0.1', '1', '/system/role/list', '[{\"limit\":20,\"name\":\"\",\"page\":1,\"sort\":false}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.RoleController.roleList()', '角色列表查询', '2019-05-13 09:36:54', null);
+INSERT INTO `sys_log` VALUES ('1127749528892092417', null, null, '127.0.0.1', '1', '/system/resource/tree', '[]', 'GET', 'cn.jorian.jorianframework.core.system.controller.ResourceController.resourceTree()', '查询资源树', '2019-05-13 09:36:54', null);
+INSERT INTO `sys_log` VALUES ('1127749574320599042', 'jorian4', 'jorian4', '127.0.0.1', '1', '/account', '[{\"password\":\"******\",\"username\":\"jorian4\"}]', 'POST', 'cn.jorian.jorianframework.core.account.controller.AccountController.login()', '登入', '2019-05-13 09:37:05', null);
+INSERT INTO `sys_log` VALUES ('1127749575088156673', null, null, '127.0.0.1', '1', '/system/role/list', '[{\"limit\":20,\"name\":\"\",\"page\":1,\"sort\":false}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.RoleController.roleList()', '角色列表查询', '2019-05-13 09:37:05', null);
+INSERT INTO `sys_log` VALUES ('1127749575109128194', null, null, '127.0.0.1', '1', '/system/resource/tree', '[]', 'GET', 'cn.jorian.jorianframework.core.system.controller.ResourceController.resourceTree()', '查询资源树', '2019-05-13 09:37:05', null);
+INSERT INTO `sys_log` VALUES ('1127749628376788994', null, null, '127.0.0.1', '1', '/system/role', '[{\"description\":\"admin\",\"name\":\"admin4\",\"resources\":[{\"id\":\"1121348570280771586\"},{\"id\":\"1121348591713665026\"},{\"id\":\"1121792385039306754\"},{\"id\":\"1122396157441470466\"},{\"id\":\"1125650097057189889\"}]}]', 'POST', 'cn.jorian.jorianframework.core.system.controller.RoleController.roleAdd()', '新增角色', '2019-05-13 09:37:18', null);
+INSERT INTO `sys_log` VALUES ('1127751798211883009', null, null, '127.0.0.1', '1', '/system/resource/tree', '[]', 'GET', 'cn.jorian.jorianframework.core.system.controller.ResourceController.resourceTree()', '查询资源树', '2019-05-13 09:45:55', null);
+INSERT INTO `sys_log` VALUES ('1127751806839566338', null, null, '127.0.0.1', '1', '/system/log/list', '[{\"limit\":20,\"page\":1,\"sort\":false,\"username\":\"\"}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.LogController.roleList()', '查询日志', '2019-05-13 09:45:58', null);
+INSERT INTO `sys_log` VALUES ('1127751831221055490', null, null, '127.0.0.1', '1', '/system/log/list', '[{\"limit\":20,\"page\":1,\"sort\":false,\"username\":\"\"}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.LogController.roleList()', '查询日志', '2019-05-13 09:46:03', null);
+INSERT INTO `sys_log` VALUES ('1127751842285629442', null, null, '127.0.0.1', '1', '/system/resource/tree', '[]', 'GET', 'cn.jorian.jorianframework.core.system.controller.ResourceController.resourceTree()', '查询资源树', '2019-05-13 09:46:06', null);
+INSERT INTO `sys_log` VALUES ('1127751847859859458', null, null, '127.0.0.1', '1', '/system/user/list', '[{\"company\":\"\",\"limit\":20,\"nickname\":\"\",\"page\":1,\"sort\":false,\"username\":\"\"}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.UserController.roleList()', '查询用户列表', '2019-05-13 09:46:07', null);
+INSERT INTO `sys_log` VALUES ('1127751847868248065', null, null, '127.0.0.1', '1', '/system/role/list', '[{\"limit\":10,\"page\":1,\"sort\":false}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.RoleController.roleList()', '角色列表查询', '2019-05-13 09:46:07', null);
+INSERT INTO `sys_log` VALUES ('1127751852981104642', null, null, '127.0.0.1', '1', '/system/log/list', '[{\"limit\":20,\"page\":1,\"sort\":false,\"username\":\"\"}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.LogController.roleList()', '查询日志', '2019-05-13 09:46:09', null);
+INSERT INTO `sys_log` VALUES ('1127751908543049729', null, null, '127.0.0.1', '1', '/system/resource/tree', '[]', 'GET', 'cn.jorian.jorianframework.core.system.controller.ResourceController.resourceTree()', '查询资源树', '2019-05-13 09:46:22', null);
+INSERT INTO `sys_log` VALUES ('1127752034246340610', null, null, '127.0.0.1', '1', '/system/log/list', '[{\"limit\":20,\"page\":1,\"sort\":false,\"username\":\"\"}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.LogController.roleList()', '查询日志', '2019-05-13 09:46:52', null);
+INSERT INTO `sys_log` VALUES ('1127752054492246017', null, null, '127.0.0.1', '1', '/system/role/list', '[{\"limit\":10,\"page\":1,\"sort\":false}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.RoleController.roleList()', '角色列表查询', '2019-05-13 09:46:57', null);
+INSERT INTO `sys_log` VALUES ('1127752054500634625', null, null, '127.0.0.1', '1', '/system/user/list', '[{\"company\":\"\",\"limit\":20,\"nickname\":\"\",\"page\":1,\"sort\":false,\"username\":\"\"}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.UserController.roleList()', '查询用户列表', '2019-05-13 09:46:57', null);
+INSERT INTO `sys_log` VALUES ('1127752069918896129', null, null, '127.0.0.1', '1', '/system/resource/tree', '[]', 'GET', 'cn.jorian.jorianframework.core.system.controller.ResourceController.resourceTree()', '查询资源树', '2019-05-13 09:47:00', null);
+INSERT INTO `sys_log` VALUES ('1127752414090899458', null, null, '127.0.0.1', '1', '/system/role/list', '[{\"limit\":20,\"name\":\"\",\"page\":1,\"sort\":false}]', 'GET', 'cn.jorian.jorianframework.core.system.controller.RoleController.roleList()', '角色列表查询', '2019-05-13 09:48:22', null);
+INSERT INTO `sys_log` VALUES ('1127752414137036801', null, null, '127.0.0.1', '1', '/system/resource/tree', '[]', 'GET', 'cn.jorian.jorianframework.core.system.controller.ResourceController.resourceTree()', '查询资源树', '2019-05-13 09:48:22', null);
+INSERT INTO `sys_log` VALUES ('1127752443492970498', null, null, '127.0.0.1', '1', '/system/resource/tree', '[]', 'GET', 'cn.jorian.jorianframework.core.system.controller.ResourceController.resourceTree()', '查询资源树', '2019-05-13 09:48:29', null);
 
 -- ----------------------------
 -- Table structure for sys_resource
@@ -573,17 +625,18 @@ CREATE TABLE `sys_resource` (
   `isVerify` tinyint(1) DEFAULT NULL COMMENT '是否校验',
   `createTime` datetime DEFAULT NULL,
   `updateTime` datetime DEFAULT NULL,
+  `hidden` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of sys_resource
 -- ----------------------------
-INSERT INTO `sys_resource` VALUES ('1121348570280771586', '0', '系统管理', 'System', 'system', '/system/user', '/system', '@/layout', '1', '[system]', '0', '1', '2019-04-25 17:41:47', '2019-04-25 17:41:47');
-INSERT INTO `sys_resource` VALUES ('1121348591713665026', '1121348570280771586', '用户管理', 'User', 'user', null, '/user', '/system/user/index', '1', '[system:user]', '1', '1', '2019-04-25 17:41:52', '2019-04-25 17:41:52');
-INSERT INTO `sys_resource` VALUES ('1121792385039306754', '1121348570280771586', '资源管理', 'Resource', 'permission', null, '/resource', '/system/resource/index', '1', '[system:resource]', '3', '1', '2019-04-26 23:05:21', '2019-04-26 23:05:21');
-INSERT INTO `sys_resource` VALUES ('1122396157441470466', '1121348570280771586', '角色管理', 'Role', 'role', null, '/role', '/system/role/index', '1', '[system:role]', '45', '1', '2019-04-28 15:04:31', '2019-04-28 15:04:31');
-INSERT INTO `sys_resource` VALUES ('1125650097057189889', '1121348570280771586', '日志管理', 'Log ', 'bug', null, '/log', '/system/log/index', '1', '[system:log]', '10005', '1', '2019-05-07 14:34:31', '2019-05-07 14:34:31');
+INSERT INTO `sys_resource` VALUES ('1121348570280771586', '0', '系统管理', 'System', 'system', '/system/user', '/system', '@/layout', '1', '[system]', '0', '1', '2019-04-25 17:41:47', '2019-04-25 17:41:47', null);
+INSERT INTO `sys_resource` VALUES ('1121348591713665026', '1121348570280771586', '用户管理', 'User', 'user', null, '/user', '/system/user/index', '1', '[system:user]', '1', '1', '2019-04-25 17:41:52', '2019-04-25 17:41:52', null);
+INSERT INTO `sys_resource` VALUES ('1121792385039306754', '1121348570280771586', '资源管理', 'Resource', 'permission', null, '/resource', '/system/resource/index', '1', '[system:resource]', '3', '1', '2019-04-26 23:05:21', '2019-04-26 23:05:21', null);
+INSERT INTO `sys_resource` VALUES ('1122396157441470466', '1121348570280771586', '角色管理', 'Role', 'role', null, '/role', '/system/role/index', '1', '[system:role]', '45', '1', '2019-04-28 15:04:31', '2019-04-28 15:04:31', null);
+INSERT INTO `sys_resource` VALUES ('1125650097057189889', '1121348570280771586', '日志管理', 'Log ', 'bug', null, '/log', '/system/log/index', '1', '[system:log]', '10005', '1', '2019-05-07 14:34:31', '2019-05-07 14:34:31', null);
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -603,7 +656,9 @@ CREATE TABLE `sys_role` (
 -- Records of sys_role
 -- ----------------------------
 INSERT INTO `sys_role` VALUES ('1', 'ADMIN', '管理员', '2017-05-01 13:25:39', '2017-10-05 21:59:18');
-INSERT INTO `sys_role` VALUES ('2', 'ARTICLE', '编辑文章', '2017-05-01 13:25:39', '2017-10-05 21:59:18');
+INSERT INTO `sys_role` VALUES ('1127747013114998785', 'admin2', 'admin2', '2019-05-13 09:26:55', '2019-05-13 09:26:55');
+INSERT INTO `sys_role` VALUES ('1127747103653244930', 'admin3', 'admin3', '2019-05-13 09:27:16', '2019-05-13 09:27:16');
+INSERT INTO `sys_role` VALUES ('1127749628334845953', 'admin4', 'admin', '2019-05-13 09:37:18', '2019-05-13 09:37:18');
 
 -- ----------------------------
 -- Table structure for sys_role_resource
@@ -624,6 +679,21 @@ INSERT INTO `sys_role_resource` VALUES ('1125650888371359745', '1', '11213485917
 INSERT INTO `sys_role_resource` VALUES ('1125650888371359746', '1', '1121792385039306754');
 INSERT INTO `sys_role_resource` VALUES ('1125650888379748354', '1', '1122396157441470466');
 INSERT INTO `sys_role_resource` VALUES ('1125650888379748355', '1', '1125650097057189889');
+INSERT INTO `sys_role_resource` VALUES ('1127747013123387394', '1127747013114998785', '1121348570280771586');
+INSERT INTO `sys_role_resource` VALUES ('1127747013140164610', '1127747013114998785', '1121348591713665026');
+INSERT INTO `sys_role_resource` VALUES ('1127747013140164611', '1127747013114998785', '1121792385039306754');
+INSERT INTO `sys_role_resource` VALUES ('1127747013148553218', '1127747013114998785', '1122396157441470466');
+INSERT INTO `sys_role_resource` VALUES ('1127747013156941826', '1127747013114998785', '1125650097057189889');
+INSERT INTO `sys_role_resource` VALUES ('1127747103661633537', '1127747103653244930', '1121348570280771586');
+INSERT INTO `sys_role_resource` VALUES ('1127747103670022145', '1127747103653244930', '1121348591713665026');
+INSERT INTO `sys_role_resource` VALUES ('1127747103678410753', '1127747103653244930', '1121792385039306754');
+INSERT INTO `sys_role_resource` VALUES ('1127747103678410754', '1127747103653244930', '1122396157441470466');
+INSERT INTO `sys_role_resource` VALUES ('1127747103686799362', '1127747103653244930', '1125650097057189889');
+INSERT INTO `sys_role_resource` VALUES ('1127749628343234562', '1127749628334845953', '1121348570280771586');
+INSERT INTO `sys_role_resource` VALUES ('1127749628351623169', '1127749628334845953', '1121348591713665026');
+INSERT INTO `sys_role_resource` VALUES ('1127749628351623170', '1127749628334845953', '1121792385039306754');
+INSERT INTO `sys_role_resource` VALUES ('1127749628360011777', '1127749628334845953', '1122396157441470466');
+INSERT INTO `sys_role_resource` VALUES ('1127749628368400385', '1127749628334845953', '1125650097057189889');
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -652,7 +722,6 @@ CREATE TABLE `sys_user` (
 -- Records of sys_user
 -- ----------------------------
 INSERT INTO `sys_user` VALUES ('1122380033870000129', 'jorian4', '2a3a8a2f710d3a9f95f6a09dc745dc86', '飞哥', 'http://image.com/2019/05/08/12/6341d4a9ee41e8d38aeb0ffa3008a203885.jpg', '18525463256', null, null, null, '0', '1', '2019-04-28 14:00:27', '2019-05-08 12:45:45', null);
-INSERT INTO `sys_user` VALUES ('1125609610363441154', 'article', 'fa73aefd7cc112312cb6b6b26848df7c', '大编辑', 'http://image.com/2019/05/08/11/4274a561e3a9564847968113dac43a3323e.jpg', '18552365234', null, null, null, '0', '1', '2019-05-07 11:53:38', '2019-05-08 11:18:24', null);
 INSERT INTO `sys_user` VALUES ('1126407805504192514', 'jorianye', '476575131ed95856b7c50908f912d1c2', '若流风之回雪', null, '18523657845', null, null, null, '0', '1', '2019-05-09 16:45:22', '2019-05-09 16:45:22', null);
 
 -- ----------------------------
@@ -669,7 +738,6 @@ CREATE TABLE `sys_user_role` (
 -- ----------------------------
 -- Records of sys_user_role
 -- ----------------------------
-INSERT INTO `sys_user_role` VALUES ('1125963132871299073', '1125609610363441154', '2');
 INSERT INTO `sys_user_role` VALUES ('1125985113960255490', '1122380033870000129', '1');
 INSERT INTO `sys_user_role` VALUES ('1126407805558718465', '1126407805504192514', '1');
 

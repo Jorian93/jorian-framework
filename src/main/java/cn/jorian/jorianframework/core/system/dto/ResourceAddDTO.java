@@ -44,4 +44,6 @@ public class ResourceAddDTO {
     private Integer sort;
 
     private Boolean isVerify;
+
+    private Boolean hidden;
 }

@@ -107,25 +107,6 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, SysResource
         return resourcesTree;
     }
 
-    @Override
-    public List<ElementTree> getElementTree() {
-        QueryWrapper<SysResource> wrapper = new QueryWrapper<>();
-        wrapper.eq("pid",0)
-                .or()
-                .isNull("pid")
-                .orderByAsc("sort");
-        List<SysResource> resourcesTree = this.list(wrapper);
-        List<ElementTree> elementTrees = new ArrayList<>();
-        if(resourcesTree!=null && resourcesTree.size()>0){
-            resourcesTree.forEach(item ->{
-                ElementTree elementTree = new ElementTree();
-                elementTree.setId(item.getId());
-                elementTree.setLable(item.getName());
-                this.findAllElementChild(item,elementTree);
-            }) ;
-        }
-        return elementTrees;
-    }
 
     @Override
     public List<String> getUserTree(String rid) {
@@ -137,7 +118,6 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, SysResource
         return sysResourceIds;
     }
 
-
     public void findAllChild(SysResource resource){
         QueryWrapper<SysResource> wrapper = new QueryWrapper<>();
         wrapper.eq("pid",resource.getId()).orderByAsc("sort");
@@ -147,21 +127,5 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, SysResource
             resources.forEach(this::findAllChild);
         }
     }
-    public void findAllElementChild(SysResource resource,ElementTree elementTree){
-        QueryWrapper<SysResource> wrapper = new QueryWrapper<>();
-        wrapper.eq("pid",resource.getId()).orderByAsc("sort");
-        List<SysResource> resources = this.list(wrapper);
-        resource.setChildren(resources);
-        List<ElementTree> elementTrees = new ArrayList<>();
-        if(resources!=null && resources.size()>0){
-            resources.forEach(item-> {
-                ElementTree elementTree1 = new ElementTree();
-                elementTree1.setId(item.getId());
-                elementTree1.setLable(item.getName());
-                elementTrees.add(elementTree1);
-                this.findAllElementChild(item,elementTree1);
-            });
-        }
-        elementTree.setChildren(elementTrees);
-    }
+
 }

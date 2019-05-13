@@ -182,6 +182,7 @@ public class AccountServiceImpl  extends ServiceImpl<UserMapper,SysUser> impleme
            route.setRedirect(resource.getRedirect());
            route.setComponent(resource.getComponent());
            Map<String,String> meta = new HashMap<>();
+           route.setHidden(resource.getHidden());
            meta.put("title",resource.getTitle());
            meta.put("icon",resource.getIcon());
            route.setMeta(meta);

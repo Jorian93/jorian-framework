@@ -45,5 +45,4 @@ public interface ResourceService extends IService<SysResource> {
 
     List<String> getUserTree(String rid);
 
-    List<ElementTree> getElementTree();
 }

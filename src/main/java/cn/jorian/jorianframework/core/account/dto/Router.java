@@ -1,5 +1,6 @@
 package cn.jorian.jorianframework.core.account.dto;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Data;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class Router {
     private String redirect;
     private String name;
     private Map<String,String > meta;
+    private Boolean hidden;
     private List<Router> children;
 
 
