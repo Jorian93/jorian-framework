@@ -1,9 +1,9 @@
-#jorian-framework特点
+#jorian-framework特点  
 1.轻量级   
 2.集成shiro+jwt完成登录校验，权限控制，粒度为url级别  
 3.集成MP代码生成器
 3.使用自定义注释完成日志收集  
-在线地址：http://jorianye.cn/
+在线地址：http://jorianye.cn:8085/
 
 #所用技术栈
 1.SpringBoot 2.0  
