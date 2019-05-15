@@ -24,13 +24,17 @@ public class UserAddDTO {
     private String nickname;
 
     @NotBlank(message = "密码不能为空")
-    @Pattern(regexp = "^[a-zA-Z0-9]{4,10}$",message = "密码应为大小写字母及数字组成的4-10位字符！")
+    @Pattern(regexp = "^[a-zA-Z0-9]{6,10}$",message = "密码应为大小写字母及数字组成的6-10位字符！")
     private String password;
 
     @NotBlank(message = "手机号不能为空")
     private String phone;
 
+    private String company;
+
     private Integer status;
+
+    private Integer sex;
 
     @Size(min = 1, message = "请至少选择一个角色")
     private List<SysRole> roles;

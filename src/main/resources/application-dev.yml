@@ -40,11 +40,6 @@ spring:
   aop:
     proxy-target-class: true
     auto: true
-#  mybatis:
-#     type-aliases-package: cn.jorian.jorianframework.core.entity
-#     mapper-locations: classpath:/mappers/*Mapper.xml
-#     configuration:
-#        mapUnderscoreToCamelCase: true
 
 #  #静态页面引擎
   freemarker:

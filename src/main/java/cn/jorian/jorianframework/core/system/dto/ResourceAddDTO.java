@@ -40,7 +40,7 @@ public class ResourceAddDTO {
 
     @NotBlank(message = "权限表达式不能为空")
     private String permission;
-
+    @NotNull
     private Integer sort;
 
     private Boolean isVerify;

@@ -27,7 +27,7 @@ public class UserController {
  private UserService userService;
 
  @ApiOperation(value = "新增用户")
- @RequestMapping(value = "/user", method = RequestMethod.POST)
+ @RequestMapping(value = "/user/add", method = RequestMethod.POST)
  @Log("新增用户")
  public SystemResponse add(@RequestBody @Validated @ApiParam(value = "用户数据") UserAddDTO addDTO) {
   userService.add(addDTO);
@@ -35,7 +35,7 @@ public class UserController {
  }
 
  @ApiOperation("删除用户")
- @RequestMapping(value = "user/{id}", method = RequestMethod.DELETE)
+ @RequestMapping(value = "/user/delete/{id}", method = RequestMethod.DELETE)
  @Log("删除用户")
  public SystemResponse roleDelete(@PathVariable("id") @ApiParam(value = "用户id") String id) {
   userService.delete(id);
@@ -43,7 +43,7 @@ public class UserController {
  }
 
  @ApiOperation("更新用户")
- @RequestMapping(value = "user", method = RequestMethod.PUT)
+ @RequestMapping(value = "/user/update", method = RequestMethod.PUT)
  @Log("更新用户")
  public SystemResponse roleUpdate(@RequestBody @Validated @ApiParam(value = "用户更新数据") SysUser sysUser) {
   userService.update(sysUser);
@@ -51,14 +51,14 @@ public class UserController {
  }
 
  @ApiOperation("用户列表查询")
- @RequestMapping(value = "user/list", method = RequestMethod.GET)
+ @RequestMapping(value = "/user/list", method = RequestMethod.GET)
  @Log("查询用户列表")
  public SystemResponse roleList(UserFindDTO roleFindDTO) {
   return new SystemResponse(ResponseCode.SUCCESS, userService.getList(roleFindDTO));
  }
 
  @ApiOperation("用户树查询")
- @RequestMapping(value = "user/tree", method = RequestMethod.GET)
+ @RequestMapping(value = "/user/tree", method = RequestMethod.GET)
  public SystemResponse roleTree() {
   return new SystemResponse(ResponseCode.SUCCESS, userService.getTree());
 

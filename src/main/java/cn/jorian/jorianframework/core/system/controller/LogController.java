@@ -9,6 +9,7 @@ import cn.jorian.jorianframework.core.system.service.LogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,15 +32,16 @@ public class LogController {
     LogService logService;
 
     @ApiOperation("日志列表查询")
-    @RequestMapping(value = "log/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/log/list", method = RequestMethod.GET)
     @Log("查询日志")
     public SystemResponse roleList(LogFindDTO roleFindDTO) {
         return new SystemResponse(ResponseCode.SUCCESS, logService.getList(roleFindDTO));
     }
 
     @ApiOperation("删除日志")
-    @RequestMapping(value = "log/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "log/delete/{id}", method = RequestMethod.DELETE)
     @Log("删除日志")
+    @RequiresPermissions("[log:list:jorian]")
     public SystemResponse roleList(@PathVariable("id") @ApiParam(value = "日志id")String id) {
         return new SystemResponse(ResponseCode.SUCCESS, logService.removeById(id));
     }

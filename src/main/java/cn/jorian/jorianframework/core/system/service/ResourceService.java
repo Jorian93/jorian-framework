@@ -1,14 +1,10 @@
 package cn.jorian.jorianframework.core.system.service;
 
-import cn.jorian.jorianframework.common.model.ElementTree;
 import cn.jorian.jorianframework.core.system.dto.ResourceAddDTO;
 import cn.jorian.jorianframework.core.system.dto.ResourceFindDTO;
 import cn.jorian.jorianframework.core.system.entity.SysResource;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 

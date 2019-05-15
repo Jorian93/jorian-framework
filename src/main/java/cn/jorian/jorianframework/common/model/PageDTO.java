@@ -12,6 +12,6 @@ public abstract class PageDTO {
 
     private Integer limit = 10;
 
-    private Boolean sort = false;
+    private String sort = "createTime";
 
 }

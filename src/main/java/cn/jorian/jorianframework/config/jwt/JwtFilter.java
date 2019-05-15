@@ -3,7 +3,7 @@ package cn.jorian.jorianframework.config.jwt;
 import cn.jorian.jorianframework.common.exception.ServiceException;
 import cn.jorian.jorianframework.common.response.ResponseCode;
 import cn.jorian.jorianframework.common.response.SystemResponse;
-import cn.jorian.jorianframework.core.account.service.impl.LoginService;
+import cn.jorian.jorianframework.core.account.service.impl.ExecuteLoginService;
 import com.alibaba.fastjson.JSON;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
@@ -67,7 +67,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     }
     @Override
     protected boolean executeLogin(ServletRequest request, ServletResponse response) {
-        return LoginService.executeLogin(request);
+        return ExecuteLoginService.executeLogin(request);
     }
     //
     @Override

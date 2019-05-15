@@ -29,15 +29,15 @@ public class ShiroConfig {
 
         ShiroFilterFactoryBean shiroFilterFactoryBean =new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        shiroFilterFactoryBean.setLoginUrl("/account");
+        shiroFilterFactoryBean.setLoginUrl("/");
         //过滤链
         Map<String, String> filterChainDefinitionMap = new HashMap<>();
         //其余需要拦截
         filterChainDefinitionMap = shiroService.getFilterChainDefinitionMap();
         filterChainDefinitionMap.put("static/**", "anon");//此处放行静态文件
         filterChainDefinitionMap.put("/logout","logout");
+        filterChainDefinitionMap.put("/swagger-ui.html", "anon");//放行swagger
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
-
         //过滤器
         Map<String, Filter> filterMap = new LinkedHashMap<>();
         filterMap.put("perms",new JwtFilter());//是否带token的jwt

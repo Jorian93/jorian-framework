@@ -42,9 +42,9 @@ public class AccountController {
     }
 
     @ApiOperation(value="重置密码")
-    @RequestMapping(value = "/restPassword",method = RequestMethod.PUT)
+    @RequestMapping(value = "/resetPassword",method = RequestMethod.POST)
     @Log("重置密码")
-    public SystemResponse restPassword(@RequestBody @Validated @ApiParam(value = "新旧密码数据",required = true) RestPasswordDTO resetPasswordDTO){
+    public SystemResponse resetPassword(@RequestBody @Validated @ApiParam(value = "新旧密码数据",required = true) RestPasswordDTO resetPasswordDTO){
         accountService.resetPassword(resetPasswordDTO);
         return new SystemResponse(ResponseCode.SUCCESS);
     }

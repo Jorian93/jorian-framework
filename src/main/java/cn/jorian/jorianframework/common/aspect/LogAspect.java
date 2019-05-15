@@ -2,6 +2,7 @@ package cn.jorian.jorianframework.common.aspect;
 
 
 import cn.jorian.jorianframework.common.annotation.Log;
+import cn.jorian.jorianframework.common.utils.JTokenUtil;
 import cn.jorian.jorianframework.common.utils.Tools;
 import cn.jorian.jorianframework.config.jwt.JToken;
 import cn.jorian.jorianframework.core.account.dto.LoginDTO;
@@ -74,11 +75,11 @@ public class LogAspect {
         if(principalCollection!=null){
             JToken jToken = new JToken();
             BeanUtils.copyProperties(principalCollection.getPrimaryPrincipal(),jToken);
-            sysLog.setUsername(jToken.getUsername());
-            sysLog.setNickname(jToken.getUsername());
+            String username = jToken.getUsername()!=null?jToken.getUsername(): JTokenUtil.get(jToken.getToken(),"username");
+            //从token中获取
+            sysLog.setUsername(username);
         }else{
             sysLog.setUsername("游客");
-            sysLog.setNickname("匿名");
         }
         sysLog.setCreateTime(LocalDateTime.now());
         logService.save(sysLog);//保存日志

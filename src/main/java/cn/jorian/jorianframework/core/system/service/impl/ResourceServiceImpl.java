@@ -1,11 +1,9 @@
 package cn.jorian.jorianframework.core.system.service.impl;
 
 import cn.jorian.jorianframework.common.exception.ServiceException;
-import cn.jorian.jorianframework.common.model.ElementTree;
 import cn.jorian.jorianframework.core.system.dto.ResourceAddDTO;
 import cn.jorian.jorianframework.core.system.dto.ResourceFindDTO;
 import cn.jorian.jorianframework.core.system.entity.SysResource;
-import cn.jorian.jorianframework.core.system.entity.SysRole;
 import cn.jorian.jorianframework.core.system.entity.SysRoleResource;
 import cn.jorian.jorianframework.core.system.mapper.ResourceMapper;
 import cn.jorian.jorianframework.core.system.service.ResourceService;
@@ -14,18 +12,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sun.org.apache.bcel.internal.generic.NEWARRAY;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.w3c.dom.ls.LSInput;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @Auther: jorian
@@ -111,11 +105,23 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, SysResource
     @Override
     public List<String> getUserTree(String rid) {
         List<SysRoleResource> sysRoleResources = roleResourceService.list(new QueryWrapper<SysRoleResource>().eq("roleId",rid));
+        List<SysResource> resources = new ArrayList<>();
         List<String> sysResourceIds = new ArrayList<>();
         sysRoleResources.forEach(sysRoleResource -> {
             sysResourceIds.add(sysRoleResource.getResourceId());
+            SysResource resource = this.getById(sysRoleResource.getResourceId());
+            resources.add(resource);
         });
-        return sysResourceIds;
+        List<String> Ids = new ArrayList<>();
+        sysResourceIds.forEach(id->{
+            List<SysResource> children = this.findChildren(id);
+            if(children==null||children.size()==0){
+                Ids.add(id);
+            }
+        });
+
+
+        return Ids;
     }
 
     public void findAllChild(SysResource resource){
@@ -126,6 +132,12 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, SysResource
         if(resources!=null && resources.size()>0){
             resources.forEach(this::findAllChild);
         }
+    }
+
+    //查找集合中有没有儿子
+    public List<SysResource> findChildren(String id){
+       List<SysResource> children = this.list(new QueryWrapper<SysResource>().eq("pid",id));
+       return  children;
     }
 
 }

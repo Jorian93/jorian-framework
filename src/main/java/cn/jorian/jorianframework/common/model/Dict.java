@@ -17,6 +17,9 @@ public enum Dict {
   USER_NOLOCK (0,"用户正常"),
   SEX_MALE (0,"男"),
   SEX_FEMALE (0,"女"),
+  RESOURCE_MENU(1,"菜单"),
+  RESOURCE_BUTTON(1,"按钮"),
+
   /*USER_LOCK (0,"用户锁定"),
   USER_LOCK (0,"用户锁定"),
   USER_LOCK (0,"用户锁定"),

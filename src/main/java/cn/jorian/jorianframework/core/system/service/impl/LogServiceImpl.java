@@ -32,6 +32,7 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, SysLog> implements Lo
         if(!StringUtils.isEmpty(logFindDTO.getUsername())){
             queryWrapper.eq("username",logFindDTO.getUsername());
         }
+        queryWrapper.orderByDesc(logFindDTO.getSort());
         IPage<SysLog> pagedata = this.page(new Page<>(logFindDTO.getPage(),logFindDTO.getLimit()),queryWrapper);
         return pagedata;
 

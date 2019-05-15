@@ -16,8 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  * @Date: 2019/4/17 17:33
  * @Description:
  */
-public class LoginService {
-
+public class ExecuteLoginService {
 
     /**
      * 普通的登入校验

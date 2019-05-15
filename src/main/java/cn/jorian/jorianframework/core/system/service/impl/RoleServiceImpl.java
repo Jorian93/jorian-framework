@@ -71,7 +71,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, SysRole> implements
         roleResourceService.remove(new QueryWrapper<SysRoleResource>().eq("roleId",id));
         //并删除用户角色关系表
         userRoleService.remove(new QueryWrapper<SysUserRole>().eq("rid",id));
-
     }
     @Override
     public void update(SysRole sysRole) {

@@ -17,15 +17,15 @@ import java.util.List;
 @Accessors(chain = true)
 public class SysUser extends BaseModel {
 
-    String nickname;
-    String username;
-    String password;
-    int sex;
-    int status;
-    String company;
-    String phone;
-    String email;
-    String avatar;
+    private String nickname;
+    private String username;
+    private String password;
+    private Integer sex;
+    private Integer status;
+    private String company;
+    private String phone;
+    private String email;
+    private String avatar;
     @TableField(exist = false)
     List<SysRole> roles;
 }

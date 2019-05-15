@@ -61,7 +61,6 @@ public class ShiroService {
         for (String[] strings : permsList) {
             filterChainDefinitionMap.put(strings[0],strings[1]);
         }
-        filterChainDefinitionMap.put("/**", "anon");
         return filterChainDefinitionMap;
     }
 

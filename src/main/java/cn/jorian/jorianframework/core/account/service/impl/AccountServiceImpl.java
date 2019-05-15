@@ -1,6 +1,7 @@
 package cn.jorian.jorianframework.core.account.service.impl;
 
 import cn.jorian.jorianframework.common.exception.ServiceException;
+import cn.jorian.jorianframework.common.model.Dict;
 import cn.jorian.jorianframework.common.response.ResponseCode;
 import cn.jorian.jorianframework.common.utils.EncryptPassword;
 import cn.jorian.jorianframework.common.utils.JTokenUtil;
@@ -22,10 +23,13 @@ import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.subject.Subject;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -51,6 +55,9 @@ public class AccountServiceImpl  extends ServiceImpl<UserMapper,SysUser> impleme
     @Autowired
     UserService userService;
 
+    @Autowired
+    StringRedisTemplate redisTemplate;
+
     @Override
     public String login(LoginDTO loginDTO) {
         if(StringUtils.isEmpty(loginDTO)){
@@ -73,6 +80,9 @@ public class AccountServiceImpl  extends ServiceImpl<UserMapper,SysUser> impleme
         }
         //登陆完成，返回token
         String jToken = ((JToken)SecurityUtils.getSubject().getPrincipal()).getToken();
+       //redis中存一份，便于认证
+        redisTemplate.opsForValue().set("J-Token", jToken);
+        redisTemplate.expire("J-Token",5, TimeUnit.MINUTES);
         return jToken;
     }
 
@@ -97,8 +107,7 @@ public class AccountServiceImpl  extends ServiceImpl<UserMapper,SysUser> impleme
 
     @Override
     public List<Router> getCurrentUserResource() {
-            String token = ((JToken) SecurityUtils.getSubject().getPrincipal()).getToken();
-
+        String token = ((JToken) SecurityUtils.getSubject().getPrincipal()).getToken();
         if(token==null){
             throw new ServiceException("token不存在或者已过期");
         }
@@ -109,10 +118,13 @@ public class AccountServiceImpl  extends ServiceImpl<UserMapper,SysUser> impleme
         List <SysResource> resources = new ArrayList<>();
         userRoles.forEach(userRole -> {
             //根据用户角色表的角色id列表
-            List<SysRoleResource> roleResources = roleResourceService.list(new QueryWrapper<SysRoleResource>().eq("roleId",userRole.getRid()));
+            List<SysRoleResource> roleResources = roleResourceService.list(new QueryWrapper<SysRoleResource>()
+                    .eq("roleId",userRole.getRid()));
             roleResources.forEach(roleResource ->{
-                //根据角色得到多个资源表
-                List <SysResource> resources1 = resourceService.list(new QueryWrapper<SysResource>().eq("id",roleResource.getResourceId()));
+                //根据角色得到多个资源表,只要菜单类型
+                List <SysResource> resources1 = resourceService.list(new QueryWrapper<SysResource>()
+                        .eq("id",roleResource.getResourceId())
+                        .eq("type", Dict.RESOURCE_MENU.key));
                 //定义条件集合,过滤资源表
                 List<String> ids = new ArrayList<>();
                resources.forEach(resource->{
@@ -156,7 +168,7 @@ public class AccountServiceImpl  extends ServiceImpl<UserMapper,SysUser> impleme
         }
         //明文转密文
         String MD5Password = EncryptPassword.ENCRYPT_MD5(resetPasswordDTO.getUsername(),resetPasswordDTO.getNewPassword(),2);
-        userService.update(new UpdateWrapper<SysUser>().set("password",MD5Password));
+        userService.update(new UpdateWrapper<SysUser>().eq("username",findUser.getUsername()).set("password",MD5Password));
     }
 
     public void addChildrenToParrent(List<SysResource> operationList,List<SysResource> allResource){
