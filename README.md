@@ -4,6 +4,7 @@
 3.集成MP代码生成器  
 4.使用自定义注释完成日志收集  
 在线地址：http://jorianye.cn:8085/
+前端项目仓库：https://github.com/Jorian93/jorian-web
 
 # 所用技术栈  
 1.SpringBoot 2.0  
