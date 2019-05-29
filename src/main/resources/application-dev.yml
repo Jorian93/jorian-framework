@@ -58,7 +58,7 @@ spring:
     #设定静态文件路径，js,css等
 files:
   path: ${file-path:d:/files}
-  url: "image.com"
+  url: "jorianye.cn:8084"
 
 
 
