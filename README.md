@@ -4,9 +4,9 @@
 # 相关图片
 1.  
   ![image](https://github.com/Jorian93/hello-word/blob/master/images/2019-05-29_150510.png) 
-1.  
+2.  
   ![image](https://github.com/Jorian93/hello-word/blob/master/images/2019-05-29_150552.png) 
-1.  
+3.  
   ![image](https://github.com/Jorian93/hello-word/blob/master/images/2019-05-29_150617.png) 
 
 # jorian-framework特点  
