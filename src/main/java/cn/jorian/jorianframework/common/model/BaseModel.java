@@ -17,11 +17,15 @@ import java.time.LocalDateTime;
  */
 @Data
 public class BaseModel implements Serializable {
-    private static final long serialVersionUID = 177030063138338860L;
+
+    private static final long serialVersionUID = 1L;
+
     @TableId(value = "id", type = IdType.ID_WORKER_STR)
     private String id;
+
     @TableField("createTime")
     LocalDateTime createTime;
+
     @TableField("updateTime")
     LocalDateTime updateTime;
 }

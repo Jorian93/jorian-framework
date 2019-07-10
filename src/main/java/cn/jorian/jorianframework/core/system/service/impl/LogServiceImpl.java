@@ -1,6 +1,7 @@
 package cn.jorian.jorianframework.core.system.service.impl;
 
 
+import cn.jorian.jorianframework.core.system.dto.LogDeleteDTO;
 import cn.jorian.jorianframework.core.system.dto.LogFindDTO;
 import cn.jorian.jorianframework.core.system.entity.SysLog;
 import cn.jorian.jorianframework.core.system.mapper.LogMapper;
@@ -12,6 +13,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -35,7 +39,21 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, SysLog> implements Lo
         queryWrapper.orderByDesc(logFindDTO.getSort());
         IPage<SysLog> pagedata = this.page(new Page<>(logFindDTO.getPage(),logFindDTO.getLimit()),queryWrapper);
         return pagedata;
+    }
+    @Override
+    public void deleteByDate(LogDeleteDTO logDeleteDTO) {
 
+        List<SysLog> logs = this.list(new QueryWrapper<SysLog>()
+                .between("createTime",logDeleteDTO.getStartDateTime(),logDeleteDTO.getEndDateTime())
+        );
+        List<String > ids = new ArrayList<>();
+        logs.forEach(item->{
+            ids.add(item.getId());
+        });
+        this.removeByIds(ids);
+    }
 
+    public void deleteAllLogs(){
+        System.out.println("删除所有日志");
     }
 }

@@ -194,13 +194,13 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>-->
 
-        <!--热更新工具不起作用时需要设置IDEA的setting-->
-        <dependency>
+        <!--热更新工具不起作用时需要设置IDEA的setting,暂时屏蔽热部署，会导致定时任务类反序列化失败-->
+        <!--<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
             <scope>true</scope>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
     <build>
