@@ -1,10 +1,20 @@
+演示地址：http://jorianye.cn:8085/   
+前端项目传送门：https://github.com/Jorian93/jorian-web 
+
+# 相关图片
+1.  
+  ![image](https://github.com/Jorian93/hello-word/blob/master/images/2019-05-29_150510.png) 
+2.  
+  ![image](https://github.com/Jorian93/hello-word/blob/master/images/2019-05-29_150552.png) 
+3.  
+  ![image](https://github.com/Jorian93/hello-word/blob/master/images/2019-05-29_150617.png) 
+
 # jorian-framework特点  
 1.轻量级   
 2.集成shiro+jwt完成登录校验，权限控制，粒度为url级别  
 3.集成MP代码生成器  
 4.使用自定义注释完成日志收集  
-在线地址：http://jorianye.cn:8085/  
-前端项目仓库：https://github.com/Jorian93/jorian-web
+
 
 # 所用技术栈  
 1.SpringBoot 2.0  
