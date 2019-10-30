@@ -27,7 +27,6 @@ public class redisTest {
     public void strRedis(){
         stringRedisTemplate.opsForValue().set("name","张三aaa");
         String name = stringRedisTemplate.opsForValue().get("name");
-
         String tok = stringRedisTemplate.opsForValue().get("J-Token");
         log.info(name);
         log.info(tok);

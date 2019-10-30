@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +54,21 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, SysLog> implements Lo
         this.removeByIds(ids);
     }
 
-    public void deleteAllLogs(){
-        System.out.println("删除所有日志");
+    /**
+     * 删除当前1月前的日志，用于定时任务
+     */
+    public void deleteLogs1MonthAgo(){
+
+        //一个月前
+        LocalDateTime deleteStartTime = LocalDateTime.now().plusMonths(1);
+        List<SysLog> logs = this.list(new QueryWrapper<SysLog>()
+            .lt("createTime",deleteStartTime)
+        );
+        if (logs != null) {
+            logs.forEach(item->{
+                this.removeById(item.getId());
+            });
+            //System.out.println("已删除1月前所有日志");
+        }
     }
 }

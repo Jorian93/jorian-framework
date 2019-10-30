@@ -14,7 +14,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 @NoArgsConstructor
 @Data
 public class JToken implements AuthenticationToken {
-    private static  final String TOKEN_KEY = "J-Token";
+    public static  final String TOKEN_KEY = "J-Token";
     public String token;
     public String username;
     public String password;

@@ -36,7 +36,7 @@ public class ExecuteLoginService {
             subject.login(jToken);
         }catch (DisabledAccountException e){
             if(e.getMessage().equals("token error")){
-                throw new ServiceException(ResponseCode.TOKEN_EXPIRED.msg,e,false,false);
+                throw new ServiceException(ResponseCode.TOKEN_EXPIRED);
             }
         }
         // 如果没有抛出异常则代表登入成功，返回true

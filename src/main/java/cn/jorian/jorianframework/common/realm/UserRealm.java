@@ -2,8 +2,7 @@ package cn.jorian.jorianframework.common.realm;
 
 import cn.jorian.jorianframework.common.exception.ServiceException;
 import cn.jorian.jorianframework.common.response.ResponseCode;
-import cn.jorian.jorianframework.common.utils.CreateJwtToken;
-import cn.jorian.jorianframework.common.utils.JTokenUtil;
+import cn.jorian.jorianframework.common.utils.JTokenTool;
 import cn.jorian.jorianframework.config.jwt.JToken;
 import cn.jorian.jorianframework.core.system.entity.SysUser;
 import cn.jorian.jorianframework.core.system.service.UserService;
@@ -23,7 +22,7 @@ import org.springframework.util.StringUtils;
 import java.util.Set;
 
 /**
- * @Auther: jorian
+ * @Author: jorian
  * @Date: 2019/4/17 09:50
  * @Description:
  */
@@ -50,7 +49,7 @@ public class UserRealm extends AuthorizingRealm {
         log.info("====Shiro认证执行======");
         JToken jToken =  (JToken) token;
         String tk = jToken.getToken();
-        String username = jToken.getUsername()!=null?jToken.getUsername(): JTokenUtil.get(jToken.getToken(),"username");
+        String username = jToken.getUsername()!=null?jToken.getUsername(): JTokenTool.get(jToken.getToken(),"username");
         SysUser sysUser = new SysUser();
         if(StringUtils.isEmpty(username)){
                 throw new ServiceException(ResponseCode.SIGN_IN_USERNAME_PASSWORD_EMPTY.msg);
@@ -69,12 +68,12 @@ public class UserRealm extends AuthorizingRealm {
             throw new DisabledAccountException(ResponseCode.USER_ISLOCKED.msg);
         }
         //生成token，此时的jToken是明文账号密码+token
-        if(tk==null) tk= new CreateJwtToken().generateToken(sysUser.getId(),sysUser.getUsername(),sysUser.getPassword());
+        if(tk==null) {
+            tk= JTokenTool.generateToken(sysUser.getId(),sysUser.getUsername(),sysUser.getPassword());
+        }
         jToken.setToken(tk);
-        //4.对用户信息进行封装
-        return new SimpleAuthenticationInfo(jToken, //principal(用户身份)
-               sysUser.getPassword(),//hashedCredentials(已经加密的密码)
-               this.getName());//realm name
+        //4.对用户信息进行封装 (principal(用户身份),hashedCredentials(已经加密的密码),realm name)
+        return new SimpleAuthenticationInfo(jToken, sysUser.getPassword(), this.getName());
     }
 
     /**
@@ -87,12 +86,11 @@ public class UserRealm extends AuthorizingRealm {
         log.info("======Shiro授权执行=====");
         JToken jToken = new JToken();
         BeanUtils.copyProperties(principalCollection.getPrimaryPrincipal(),jToken);
-        String username = jToken.getUsername()!=null?jToken.getUsername(): JTokenUtil.get(jToken.getToken(),"username");
+        String username = jToken.getUsername()!=null?jToken.getUsername(): JTokenTool.get(jToken.getToken(),"username");
         if(username!=null){
             SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
             Set<String> pSet = userService.getUserPermissions(username);
             info.setStringPermissions(pSet);
-            //System.out.println(info.getStringPermissions());
                 return info;
         }else{
             throw new DisabledAccountException("用户信息异常，请重新登录！");

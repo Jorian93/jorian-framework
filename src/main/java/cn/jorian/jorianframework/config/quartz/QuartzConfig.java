@@ -9,6 +9,9 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import javax.sql.DataSource;
 import java.io.IOException;
 
+/**
+ * @author jorian
+ */
 @Configuration
 public class QuartzConfig {
 

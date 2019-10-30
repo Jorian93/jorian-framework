@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @Auther: jorian
+ * @Author: jorian
  * @Date: 2019/4/17 17:01
  * @Description:
  */
@@ -51,7 +51,8 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                 }
             }
         }
-        if (null == subject.getPrincipal()) {//无凭证示没有登录，返回登录提示
+        //无凭证示没有登录，返回登录提示
+        if (null == subject.getPrincipal()) {
             writerResponse(response1, ResponseCode.NO_SIGN_IN_FAIL.code, ResponseCode.NO_SIGN_IN_FAIL.msg);
         }else{
             writerResponse(response1, ResponseCode.PERMISSIN_FAIL.code, ResponseCode.PERMISSIN_FAIL.msg);

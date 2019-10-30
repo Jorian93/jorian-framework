@@ -194,6 +194,18 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>-->
 
+        <!-- httpclient -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.3.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>4.3.1</version>
+        </dependency>
+
         <!--热更新工具不起作用时需要设置IDEA的setting,暂时屏蔽热部署，会导致定时任务类反序列化失败-->
         <!--<dependency>
             <groupId>org.springframework.boot</groupId>

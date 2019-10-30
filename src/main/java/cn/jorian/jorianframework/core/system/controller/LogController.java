@@ -44,7 +44,6 @@ public class LogController {
     @ApiOperation("删除日志")
     @RequestMapping(value = "log/delete/{id}", method = RequestMethod.DELETE)
     @Log("删除日志")
-    @RequiresPermissions("[log:list:jorian]")
     public SystemResponse roleList(@PathVariable("id") @ApiParam(value = "日志id")String id) {
         return new SystemResponse(ResponseCode.SUCCESS, logService.removeById(id));
     }
@@ -52,16 +51,13 @@ public class LogController {
     @ApiOperation("按照id批量删除日志")
     @RequestMapping(value = "log/delete/ids", method = RequestMethod.DELETE)
     @Log("删除日志")
-    @RequiresPermissions("[log:delete:jorian]")
     public SystemResponse logDeleteByIds(@ApiParam(value = "日志id集合") List<String > ids) {
         logService.removeByIds(ids);
         return new SystemResponse(ResponseCode.SUCCESS);
     }
-
     @ApiOperation("按起止日期删除日志")
     @RequestMapping(value = "log/delete/date/", method = RequestMethod.DELETE)
     @Log("删除日志")
-    @RequiresPermissions("[log:delete:jorian]")
     public SystemResponse logDeleteByDate(@ApiParam(value = "日志删除起止日期") LogDeleteDTO logDeleteDTO) {
         logService.deleteByDate(logDeleteDTO);
         return new SystemResponse(ResponseCode.SUCCESS);

@@ -1,4 +1,71 @@
+server:
+  port: 8085
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 1024
+  ###若是没有ssl证书，可以注释掉下方代码
+  ssl:
+    key-store: classpath:2493853_jorianye.cn.pfx
+    key-store-password: 0D3vWiTE
+    key-store-type: PKCS12
 spring:
   profiles:
-    active: dev
+    active: site
+  aop:
+    proxy-target-class: true
+    auto: true
+  datasource:
+    ##druid##
+    #druid:
+    #  initialSize: 5
+    # minIdle: 5
+    # maxActive: 20
+    # maxWait: 60000
+    # timeBetweenEvictionRunsMillis: 60000
+    # minEvictableIdleTimeMillis: 300000
+    # validationQuery: SELECT 1
+    # testWhileIdle: true
+    # testOnBorrow: true
+    # testOnReturn: false
+    # poolPreparedStatements: true
+    # maxPoolPreparedStatementPerConnectionSize: 20
+    # filters: stat,wall
+    # connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    # stat-view-servlet:
+    #   allow: 127.0.0.1
+    ##hikari##
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: DatebookHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+
+
+  mail:
+    default-encoding: UTF-8
+    host: smtp.163.com
+    username: jorianye@163.com
+    password: Yjy04160434
+    protocol: smtp
+    test-connection: false
+  #  #静态页面引擎
+  freemarker:
+    # 禁用模板缓存
+    cache: false
+    # 编码格式
+    charset: UTF-8
+    # freemarker模板后缀 默认是 .ftl
+    suffix: .html
+    # 是否为此技术启用MVC视图分辨率。
+    enabled: true
+    # Content-Type值
+    content-type: text/html
+    # #模板加载路径 按需配置 ,默认路径是 classpath:/templates/
+    template-loader-path: classpath:/templates/
+    #设定静态文件路径，js,css等
 

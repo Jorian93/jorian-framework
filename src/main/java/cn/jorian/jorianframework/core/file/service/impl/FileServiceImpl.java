@@ -2,7 +2,14 @@ package cn.jorian.jorianframework.core.file.service.impl;
 
 import cn.jorian.jorianframework.common.model.PicUploadResult;
 import cn.jorian.jorianframework.common.response.ResponseCode;
+import cn.jorian.jorianframework.core.file.dto.FileFindDTO;
+import cn.jorian.jorianframework.core.file.entity.MyFile;
+import cn.jorian.jorianframework.core.file.mapper.FileMapper;
 import cn.jorian.jorianframework.core.file.service.FileService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,17 +19,18 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Random;
 
 /**
- * @Auther: jorian
+ * @Author: jorian
  * @Date: 2019/5/1 09:28
  * @Description:
  */
 @Service
 @Data
-public class FileServiceImpl implements FileService {
+public class FileServiceImpl extends ServiceImpl<FileMapper, MyFile> implements FileService {
 
     @Value("${files.path}")
     private String savePath;
@@ -40,14 +48,17 @@ public class FileServiceImpl implements FileService {
     String type = fileName.substring(fileName.lastIndexOf("."));
 
     //判断是否为正确的图片类型
-		if(!type.matches("^.*(jpg|png|gif)$")){
+	if(!type.matches("^.*(jpeg|jpg|png|gif)$")){
         //表明图片的格式不正确
         result.setError(ResponseCode.UPLOAD_FAIL.code);
         result.setMsg("图片的格式不正确");
         return result;
     }
-
-		try {
+    //生成文件信息
+    MyFile myFile = new MyFile();
+	myFile.setContentType(type);
+    myFile.setSize((int) uploadFile.getSize());
+	try {
         //判断是否为恶意文件
         BufferedImage image = ImageIO.read(uploadFile.getInputStream());
         int height = image.getHeight();
@@ -81,10 +92,10 @@ public class FileServiceImpl implements FileService {
         //形成url访问路径 image.com   /yyyy/MM/dd/HH/123456.jpg
         String imageUrl = urlPath + "/"+datePath + "/"+randomNum + fileName;
         result.setUrl(imageUrl);
-
+        myFile.setUrl(imageUrl);
         //形成本地磁盘路径
         String localPath = savePath + "/"+ datePath;
-
+        myFile.setPath(localPath+"/" + randomNum+fileName);
         //生成文件夹目录
         File file = new File(localPath);
 
@@ -95,6 +106,8 @@ public class FileServiceImpl implements FileService {
 
         //如果文件夹存在则执行些写盘操作
         uploadFile.transferTo(new File(localPath+"/" + randomNum+fileName));
+
+
     } catch (Exception e) {
         e.printStackTrace();
         //表示文件上传失败
@@ -102,7 +115,20 @@ public class FileServiceImpl implements FileService {
         result.setMsg("网络错误！");
         return result;
     }
-        result.setError(ResponseCode.UPLOAD_SUCCESS.code);//成功
+        //成功
+        result.setError(ResponseCode.UPLOAD_SUCCESS.code);
+        //保存信息
+        myFile.setCreateTime(LocalDateTime.now());
+        myFile.setUpdateTime(LocalDateTime.now());
+        myFile.setType(0);
+        this.save(myFile);
+
 		return result;
 }
+
+    @Override
+    public IPage<MyFile> getList(FileFindDTO findDTO) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        return this.page(new Page<>(findDTO.getPage(),findDTO.getLimit()),queryWrapper);
+    }
 }

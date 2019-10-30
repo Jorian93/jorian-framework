@@ -3,8 +3,8 @@ package cn.jorian.jorianframework.core.account.service.impl;
 import cn.jorian.jorianframework.common.exception.ServiceException;
 import cn.jorian.jorianframework.common.model.Dict;
 import cn.jorian.jorianframework.common.response.ResponseCode;
-import cn.jorian.jorianframework.common.utils.EncryptPassword;
-import cn.jorian.jorianframework.common.utils.JTokenUtil;
+import cn.jorian.jorianframework.common.utils.EncryptPasswordTool;
+import cn.jorian.jorianframework.common.utils.JTokenTool;
 import cn.jorian.jorianframework.config.jwt.JToken;
 import cn.jorian.jorianframework.core.account.dto.LoginDTO;
 import cn.jorian.jorianframework.core.account.dto.RestPasswordDTO;
@@ -14,7 +14,6 @@ import cn.jorian.jorianframework.core.account.service.AccountService;
 import cn.jorian.jorianframework.core.system.entity.*;
 import cn.jorian.jorianframework.core.system.mapper.UserMapper;
 import cn.jorian.jorianframework.core.system.service.*;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -37,6 +36,7 @@ import java.util.stream.Collectors;
  * @Date: 2019/4/18 14:08
  * @Description:
  */
+
 @Service
 public class AccountServiceImpl  extends ServiceImpl<UserMapper,SysUser> implements AccountService {
 
@@ -56,43 +56,47 @@ public class AccountServiceImpl  extends ServiceImpl<UserMapper,SysUser> impleme
     UserService userService;
 
     @Autowired
-    StringRedisTemplate redisTemplate;
-
+    RedisTemplate redisTemplate;
+    /**
+     * 签名过期时间一周
+     */
+    private static final long EXPIRE_TIME = 7*12*3600*1000;
     @Override
     public String login(LoginDTO loginDTO) {
         if(StringUtils.isEmpty(loginDTO)){
         }
         if( "".equals(loginDTO.getUsername()) || "".equals(loginDTO.getPassword()) ){
-            throw new ServiceException(ResponseCode.SIGN_IN_USERNAME_PASSWORD_EMPTY.msg);
+            throw new ServiceException(ResponseCode.SIGN_IN_USERNAME_PASSWORD_EMPTY);
         }
         JToken token = new JToken(null,loginDTO.getUsername(),loginDTO.getPassword());
         Subject subject = SecurityUtils.getSubject();
         try{
             subject.login(token);
             if(!subject.isAuthenticated()){
-                throw new ServiceException(ResponseCode.TOKEN_AUTHENTICATION_FAIL.msg);
+                throw new ServiceException(ResponseCode.TOKEN_AUTHENTICATION_FAIL);
             }
         }catch (DisabledAccountException e){
-            throw new ServiceException(e.getMessage(),ResponseCode.SIGN_IN_FAIL.code,e);
+            throw new ServiceException(ResponseCode.SIGN_IN_FAIL);
 
         }catch (Exception e){
-            throw new ServiceException(ResponseCode.SIGN_IN_FAIL.msg,e);
+            throw new ServiceException(ResponseCode.SIGN_IN_FAIL);
         }
         //登陆完成，返回token
         String jToken = ((JToken)SecurityUtils.getSubject().getPrincipal()).getToken();
-       //redis中存一份，便于认证
+        //redis中存一份，便于认证
         redisTemplate.opsForValue().set("J-Token", jToken);
-        redisTemplate.expire("J-Token",5, TimeUnit.MINUTES);
+        redisTemplate.expire("J-Token",EXPIRE_TIME,TimeUnit.MILLISECONDS);
         return jToken;
     }
 
     @Override
     public SysUser getCurrentUser() {
+
         String token = ((JToken)SecurityUtils.getSubject().getPrincipal()).getToken();
         if(token==null){
             throw new ServiceException("token不存在或者已过期");
         }
-        String username = JTokenUtil.get(token,"username");
+        String username = JTokenTool.get(token,"username");
         SysUser findUser = this.getOne(new QueryWrapper<SysUser>().eq("username",username));
         //需给用户加角色表
         List<SysRole> roles = new ArrayList<>();
@@ -107,11 +111,12 @@ public class AccountServiceImpl  extends ServiceImpl<UserMapper,SysUser> impleme
 
     @Override
     public List<Router> getCurrentUserResource() {
+
         String token = ((JToken) SecurityUtils.getSubject().getPrincipal()).getToken();
         if(token==null){
             throw new ServiceException("token不存在或者已过期");
         }
-        String username = JTokenUtil.get(token,"username");
+        String username = JTokenTool.get(token,"username");
         SysUser findUser = this.getOne(new QueryWrapper<SysUser>().eq("username",username));
         //根据用户id查找用户角色列表
         List<SysUserRole> userRoles = userRoleService.list(new QueryWrapper<SysUserRole>().eq("uid",findUser.getId()));
@@ -153,9 +158,8 @@ public class AccountServiceImpl  extends ServiceImpl<UserMapper,SysUser> impleme
         }
          //给爸爸找儿子
         addChildrenToParrent(treeList,resources);
-        //准换成路由树
+        //转换成路由树
         routers = this.toRouterTree(treeList);
-
         return  routers;
     }
 
@@ -167,7 +171,7 @@ public class AccountServiceImpl  extends ServiceImpl<UserMapper,SysUser> impleme
             throw new ServiceException("用户不存在");
         }
         //明文转密文
-        String MD5Password = EncryptPassword.ENCRYPT_MD5(resetPasswordDTO.getUsername(),resetPasswordDTO.getNewPassword(),2);
+        String MD5Password = EncryptPasswordTool.ENCRYPT_MD5(resetPasswordDTO.getUsername(),resetPasswordDTO.getNewPassword(),2);
         userService.update(new UpdateWrapper<SysUser>().eq("username",findUser.getUsername()).set("password",MD5Password));
     }
 

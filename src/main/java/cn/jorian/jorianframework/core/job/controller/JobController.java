@@ -4,7 +4,7 @@ package cn.jorian.jorianframework.core.job.controller;
 import cn.jorian.jorianframework.common.annotation.Log;
 import cn.jorian.jorianframework.common.response.ResponseCode;
 import cn.jorian.jorianframework.common.response.SystemResponse;
-import cn.jorian.jorianframework.common.utils.Tools;
+import cn.jorian.jorianframework.common.utils.SpringTools;
 import cn.jorian.jorianframework.core.job.dto.JobAddDTO;
 import cn.jorian.jorianframework.core.job.dto.JobFindDTO;
 import cn.jorian.jorianframework.core.job.entity.Job;
@@ -72,12 +72,12 @@ public class JobController {
 	@ApiOperation("获得spring中注册的所有bean的name")
 	@GetMapping("/beans")
 	public SystemResponse listAllBeanName() {
-		return new SystemResponse(ResponseCode.SUCCESS, Tools.getBeanNames());
+		return new SystemResponse(ResponseCode.SUCCESS, SpringTools.getBeanNames());
 	}
 	@ApiOperation(value = "springBean的无参方法")
 	@GetMapping("/beans/method/{name}")
 	public SystemResponse listMethodName(@PathVariable String name) {
-		return new SystemResponse(ResponseCode.SUCCESS, Tools.getBeansMethods(name));
+		return new SystemResponse(ResponseCode.SUCCESS, SpringTools.getBeansMethods(name));
 	}
 
 
