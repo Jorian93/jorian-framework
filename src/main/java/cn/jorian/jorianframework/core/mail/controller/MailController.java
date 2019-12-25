@@ -3,7 +3,7 @@ package cn.jorian.jorianframework.core.mail.controller;
 
 import cn.jorian.jorianframework.common.annotation.Log;
 import cn.jorian.jorianframework.common.response.ResponseCode;
-import cn.jorian.jorianframework.common.response.SystemResponse;
+import cn.jorian.jorianframework.common.response.ResponseResult;
 import cn.jorian.jorianframework.core.mail.dto.MailAddDTO;
 import cn.jorian.jorianframework.core.mail.dto.MailFindDTO;
 import cn.jorian.jorianframework.core.mail.entity.MailTo;
@@ -38,27 +38,27 @@ public class MailController {
     @Log("保存邮件")
     @RequestMapping(method = RequestMethod.POST)
     @ApiOperation(value = "保存邮件")
-    public SystemResponse save(@RequestBody @Validated @ApiParam("邮件数据") MailAddDTO mailAddDTO) {
+    public ResponseResult save(@RequestBody @Validated @ApiParam("邮件数据") MailAddDTO mailAddDTO) {
         mailService.saveMail(mailAddDTO);
-        return new SystemResponse(ResponseCode.SUCCESS);
+        return new ResponseResult(ResponseCode.SUCCESS);
     }
 
     @RequestMapping(value = "/{id}",method = RequestMethod.GET)
     @ApiOperation(value = "根据id获取邮件")
-    public SystemResponse get(@PathVariable Long id) {
-        return new SystemResponse(ResponseCode.SUCCESS,mailService.getById(id));
+    public ResponseResult get(@PathVariable Long id) {
+        return new ResponseResult(ResponseCode.SUCCESS,mailService.getById(id));
     }
 
     @RequestMapping(value = "/{id}/to",method = RequestMethod.GET)
     @ApiOperation(value = "根据id获取邮件发送详情")
-    public SystemResponse getMailTo(@PathVariable String id) {
-        return new SystemResponse(ResponseCode.SUCCESS,mailToService.list(new QueryWrapper<MailTo>().eq("mailId",id)));
+    public ResponseResult getMailTo(@PathVariable String id) {
+        return new ResponseResult(ResponseCode.SUCCESS,mailToService.list(new QueryWrapper<MailTo>().eq("mailId",id)));
     }
 
     @GetMapping
     @ApiOperation(value = "邮件列表")
-    public SystemResponse list(MailFindDTO mailFindDTO) {
-       return new SystemResponse(ResponseCode.SUCCESS,mailService.listMails(mailFindDTO));
+    public ResponseResult list(MailFindDTO mailFindDTO) {
+       return new ResponseResult(ResponseCode.SUCCESS,mailService.listMails(mailFindDTO));
     }
 
 }

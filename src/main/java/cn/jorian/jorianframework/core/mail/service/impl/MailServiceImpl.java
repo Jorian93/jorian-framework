@@ -70,8 +70,11 @@ public class MailServiceImpl extends ServiceImpl<MailMapper, Mail> implements Ma
 
         List<String> toUserss = Arrays.asList(tousers);
         toUserss = toUserss.stream().filter(u -> !StringUtils.isBlank(u)).map(u -> u.trim()).collect(Collectors.toList());
-
-        mail.setUserId(accountService.getCurrentUser().getId());
+        mail.setUserId("blog-main-sender");
+        String userid = accountService.getCurrentUser().getId();
+        if(userid!=null){
+            mail.setUserId(userid);
+        }
         mail.setCreateTime(LocalDateTime.now());
         mail.setUpdateTime(LocalDateTime.now());
         this.save(mail);

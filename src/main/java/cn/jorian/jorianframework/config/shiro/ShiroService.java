@@ -1,14 +1,7 @@
 package cn.jorian.jorianframework.config.shiro;
 
-import cn.jorian.jorianframework.common.exception.ServiceException;
-import cn.jorian.jorianframework.common.exception.SystemException;
-import cn.jorian.jorianframework.common.response.ResponseCode;
 import cn.jorian.jorianframework.core.system.entity.SysResource;
 import cn.jorian.jorianframework.core.system.service.ResourceService;
-import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
-import org.apache.shiro.web.filter.mgt.DefaultFilterChainManager;
-import org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver;
-import org.apache.shiro.web.servlet.AbstractShiroFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -65,7 +58,7 @@ public class ShiroService {
     }
 
     public void iterationAllResourceInToFilter(SysResource resource,
-                                               List<String[]> permsList,List<String[]> anonList){
+                                               List<String[]> permsList, List<String[]> anonList){
         if(resource.getChildren()!=null && resource.getChildren().size()>0){
             for (SysResource v : resource.getChildren()) {
                 if(!StringUtils.isEmpty(v.getPath()) && !StringUtils.isEmpty(v.getPermission())){

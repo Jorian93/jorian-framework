@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Auther: jorian
+ * @Author: jorian
  * @Date: 2019/4/18 21:43
  * @Description:
  */
@@ -34,7 +34,7 @@ public class MybatisPlusGeneratorConfig {
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://localhost:3306/jorian_framework?useUnicode=true&useSSL=false&characterEncoding=utf8");
+        dsc.setUrl("jdbc:mysql://localhost:3306/jorian_blog?useUnicode=true&useSSL=false&characterEncoding=utf8");
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.jdbc.Driver");
         dsc.setUsername("root");
@@ -43,8 +43,8 @@ public class MybatisPlusGeneratorConfig {
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setParent("cn.jorian.jorianframework.core.autoentity");
         pc.setModuleName("mail");
+        pc.setParent("cn.jorian.jorianframework.core.autoentity");
         generator.setPackageInfo(pc);
 
         // 自定义配置
@@ -100,12 +100,13 @@ public class MybatisPlusGeneratorConfig {
         StrategyConfig strategy = new StrategyConfig();
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
-        strategy.setSuperEntityClass("cn.jorian.jorianframework.common.model.BaseModel");//设置父实体类
-        String [] superEntityColumns = {"createTime","updateTime"};
+        //设置父实体类
+        strategy.setSuperEntityClass("cn.jorian.jorianframework.common.model.BaseModel");
+        String [] superEntityColumns = {"id","createTime","updateTime"};
         strategy.setSuperEntityColumns(superEntityColumns);
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
-        //strategy.setSuperControllerClass("cn.jorian.jorianframework.common.controller.controller;");//设置父Controller
+        //strategy.setSuperControllerClass("cn.jorian.jorianframework.common.controller.BaseController;");//设置父Controller
         String [] tableName = {"t_mail","t_mail_to"};
         strategy.setInclude(tableName);
 

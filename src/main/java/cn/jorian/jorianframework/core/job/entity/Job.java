@@ -28,6 +28,9 @@ public class Job extends BaseModel {
 	@TableField("isSysJob")
 	private Boolean isSysJob;
 
+	/**
+	 * 1.启动 0.停止
+	 */
 	private int status;
 
 }

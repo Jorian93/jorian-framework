@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @Auther: jorian
+ * @Author: jorian
  * @Date: 2019/4/17 10:09
  * @Description:
  */
@@ -35,9 +35,30 @@ public interface UserService  extends IService<SysUser> {
      */
     SysUser findUserByUsername(String username);
 
+    /**
+     * 获取用户列表
+     * @param userFindDTO
+     * @return
+     */
     IPage<SysUser> getList(UserFindDTO userFindDTO);
 
+    /**
+     * 获取用户树
+     * @return
+     */
     List<SysUser> getTree();
 
+    /**
+     * 获取用户权限
+     * @param username
+     * @return
+     */
     Set<String> getUserPermissions(String username);
+
+    /**
+     * 根据用户名模糊查询
+     * @param name
+     * @return
+     */
+    List<SysUser> serarch(String name);
 }

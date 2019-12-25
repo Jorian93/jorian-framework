@@ -5,12 +5,14 @@ import cn.jorian.jorianframework.common.annotation.Log;
 import cn.jorian.jorianframework.common.utils.JTokenTool;
 import cn.jorian.jorianframework.common.utils.SpringTools;
 import cn.jorian.jorianframework.config.jwt.JToken;
-import cn.jorian.jorianframework.core.account.dto.LoginDTO;
+import cn.jorian.jorianframework.config.rabbitmq.RabbitMQConfig;
 import cn.jorian.jorianframework.core.account.dto.RestPasswordDTO;
+import cn.jorian.jorianframework.core.account.dto.UsernamePasswordDTO;
 import cn.jorian.jorianframework.core.system.dto.UserAddDTO;
 import cn.jorian.jorianframework.core.system.entity.SysLog;
 import cn.jorian.jorianframework.core.system.service.LogService;
 import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
@@ -20,6 +22,7 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,14 +40,17 @@ import java.time.LocalDateTime;
  */
 @Aspect
 @Component
+@Slf4j
 public class LogAspect {
-
+    @Autowired
+    AmqpTemplate amqpTemplate;
     private final LogService logService;
 
     @Autowired
-    public LogAspect( LogService logService) {
+    public LogAspect(LogService logService) {
         this.logService = logService;
     }
+
 
     @Pointcut("@annotation(cn.jorian.jorianframework.common.annotation.Log)")
     public void log(){}
@@ -81,8 +87,17 @@ public class LogAspect {
         }else{
             sysLog.setUsername("游客");
         }
+        //打上时间
         sysLog.setCreateTime(LocalDateTime.now());
-        logService.save(sysLog);//保存日志
+        //保存日志到mysql
+        // 第一个参数：TopicExchange名字
+        // 第二个参数：Route-Key
+        // 第三个参数：要发送的内容
+        this.amqpTemplate.convertAndSend(RabbitMQConfig.TOPIC_EXCHANGE, "log.mysql", sysLog );
+        log.info("【Topic已发送消息】");
+
+
+
     }
 
     private String getMethodSysLogsAnnotationValue(JoinPoint joinPoint){
@@ -102,8 +117,8 @@ public class LogAspect {
         final String filterString = "******";
         if(params.length>0){
             for (int i = 0; i < params.length; i++) {
-                if(params[i] instanceof LoginDTO){
-                    LoginDTO sign = (LoginDTO) params[i];
+                if(params[i] instanceof UsernamePasswordDTO){
+                    UsernamePasswordDTO sign = (UsernamePasswordDTO) params[i];
                     sign.setPassword(filterString);
                     params[i] = sign;
                 }

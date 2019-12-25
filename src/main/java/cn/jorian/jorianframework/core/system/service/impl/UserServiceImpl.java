@@ -197,4 +197,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
         return pSet;
     }
 
+    @Override
+    public List<SysUser> serarch(String name) {
+        return this.list(new QueryWrapper<SysUser>().likeRight("nickname",name));
+    }
+
 }

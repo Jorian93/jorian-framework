@@ -3,7 +3,7 @@ package cn.jorian.jorianframework.core.system.controller;
 
 import cn.jorian.jorianframework.common.annotation.Log;
 import cn.jorian.jorianframework.common.response.ResponseCode;
-import cn.jorian.jorianframework.common.response.SystemResponse;
+import cn.jorian.jorianframework.common.response.ResponseResult;
 import cn.jorian.jorianframework.core.system.dto.LogDeleteDTO;
 import cn.jorian.jorianframework.core.system.dto.LogFindDTO;
 import cn.jorian.jorianframework.core.system.service.LogService;
@@ -37,31 +37,36 @@ public class LogController {
     @ApiOperation("日志列表查询")
     @RequestMapping(value = "/log/list", method = RequestMethod.GET)
     @Log("查询日志")
-    public SystemResponse roleList(LogFindDTO roleFindDTO) {
-        return new SystemResponse(ResponseCode.SUCCESS, logService.getList(roleFindDTO));
+    public ResponseResult logList(@ApiParam(value = "日志查询条件") LogFindDTO logFindDTO) {
+        return new ResponseResult(ResponseCode.SUCCESS, logService.getList(logFindDTO));
     }
 
     @ApiOperation("删除日志")
     @RequestMapping(value = "log/delete/{id}", method = RequestMethod.DELETE)
     @Log("删除日志")
-    public SystemResponse roleList(@PathVariable("id") @ApiParam(value = "日志id")String id) {
-        return new SystemResponse(ResponseCode.SUCCESS, logService.removeById(id));
+    @RequiresPermissions("[log:delete:jorian]")
+    public ResponseResult logDelete(@PathVariable("id") @ApiParam(value = "要删除的日志id")String id) {
+        return new ResponseResult(ResponseCode.SUCCESS, logService.removeById(id));
     }
 
     @ApiOperation("按照id批量删除日志")
     @RequestMapping(value = "log/delete/ids", method = RequestMethod.DELETE)
     @Log("删除日志")
-    public SystemResponse logDeleteByIds(@ApiParam(value = "日志id集合") List<String > ids) {
-        logService.removeByIds(ids);
-        return new SystemResponse(ResponseCode.SUCCESS);
+    @RequiresPermissions("[log:delete:jorian]")
+    public ResponseResult logDeleteByIds(@ApiParam(value = "日志id集合")List<String > ids) {
+        logService.deleteByIds(ids);
+        return new ResponseResult(ResponseCode.SUCCESS);
     }
+
     @ApiOperation("按起止日期删除日志")
     @RequestMapping(value = "log/delete/date/", method = RequestMethod.DELETE)
     @Log("删除日志")
-    public SystemResponse logDeleteByDate(@ApiParam(value = "日志删除起止日期") LogDeleteDTO logDeleteDTO) {
+    @RequiresPermissions("[log:delete:jorian]")
+    public ResponseResult logDeleteByDate(@ApiParam(value = "日志删除起止日期") LogDeleteDTO logDeleteDTO) {
         logService.deleteByDate(logDeleteDTO);
-        return new SystemResponse(ResponseCode.SUCCESS);
+        return new ResponseResult(ResponseCode.SUCCESS);
     }
+
 
 }
 

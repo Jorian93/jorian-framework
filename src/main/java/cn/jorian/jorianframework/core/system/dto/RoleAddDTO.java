@@ -1,7 +1,6 @@
 package cn.jorian.jorianframework.core.system.dto;
 
 import cn.jorian.jorianframework.core.system.entity.SysResource;
-import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;

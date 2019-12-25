@@ -4,8 +4,8 @@ import cn.jorian.jorianframework.common.model.BaseModel;
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.springframework.data.elasticsearch.annotations.Document;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -15,6 +15,7 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
+@Document(indexName = "users",type = "user")
 public class SysUser extends BaseModel {
 
     private String nickname;

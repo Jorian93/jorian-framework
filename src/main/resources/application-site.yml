@@ -14,9 +14,29 @@ spring:
         max-idle: 8
         max-active: 8
         max-wait: -1ms
+  rabbitmq:
+    username: jorian
+    password: jorian
+    host: 120.78.172.59
+    port: 5672
+    virtual-host: /blog
+    listener:
+      simple:
+        concurrency: 10
+        max-concurrency: 20
+        prefetch: 50
+  #responsetory 操作es
+  data:
+    elasticsearch:
+      cluster-nodes: 192.168.200.10:9300
+      cluster-name: elasticsearch
+  # jest方式操作es
+  elasticsearch:
+    jest:
+      uris: http://192.168.200.10:9200
 files:
   path: "/usr/local/src/files"
-  url: "jorianye.cn:8084"
+  url: "http://jorianye.cn:8084"
 
 
 

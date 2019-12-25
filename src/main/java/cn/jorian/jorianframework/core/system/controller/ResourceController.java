@@ -2,7 +2,7 @@ package cn.jorian.jorianframework.core.system.controller;
 
 import cn.jorian.jorianframework.common.annotation.Log;
 import cn.jorian.jorianframework.common.response.ResponseCode;
-import cn.jorian.jorianframework.common.response.SystemResponse;
+import cn.jorian.jorianframework.common.response.ResponseResult;
 import cn.jorian.jorianframework.core.system.dto.ResourceAddDTO;
 import cn.jorian.jorianframework.core.system.dto.ResourceFindDTO;
 import cn.jorian.jorianframework.core.system.entity.SysResource;
@@ -29,42 +29,42 @@ public class ResourceController {
     @ApiOperation("新增资源")
     @RequestMapping(value="/resource/add",method = RequestMethod.POST)
     @Log("新增资源")
-    public SystemResponse resourceAdd(@RequestBody @Validated @ApiParam(value = "资源基础信息")ResourceAddDTO resourceAddDTO){
+    public ResponseResult resourceAdd(@RequestBody @Validated @ApiParam(value = "资源基础信息") ResourceAddDTO resourceAddDTO){
         resourceService.add(resourceAddDTO);
-        return new SystemResponse(ResponseCode.SUCCESS);
+        return new ResponseResult(ResponseCode.SUCCESS);
     }
     @ApiOperation("删除资源")
     @RequestMapping(value="/resource/delete/{id}",method = RequestMethod.DELETE)
     @Log("删除资源")
-    public SystemResponse resourceDelete(@PathVariable("id") @ApiParam(value = "资源id")String id){
+    public ResponseResult resourceDelete(@PathVariable("id") @ApiParam(value = "资源id")String id){
         resourceService.delete(id);
-        return new SystemResponse(ResponseCode.SUCCESS);
+        return new ResponseResult(ResponseCode.SUCCESS);
     }
     @ApiOperation("更新资源")
     @RequestMapping(value="/resource/update",method = RequestMethod.PUT)
     @Log("更新资源")
-    public SystemResponse resourceUpdate(@RequestBody @Validated @ApiParam(value = "资源更新信息")SysResource sysResource){
+    public ResponseResult resourceUpdate(@RequestBody @Validated @ApiParam(value = "资源更新信息")SysResource sysResource){
         resourceService.update(sysResource);
-        return new SystemResponse(ResponseCode.SUCCESS);
+        return new ResponseResult(ResponseCode.SUCCESS);
     }
     @ApiOperation("资源列表查询")
     @RequestMapping(value="/resource/list",method = RequestMethod.GET)
     @Log("查询资源列表")
-    public SystemResponse resourceList(@RequestBody @Validated @ApiParam(value = "资源查询条件")ResourceFindDTO resourceFindDTO){
-        return new SystemResponse(ResponseCode.SUCCESS, resourceService.getList(resourceFindDTO));
+    public ResponseResult resourceList(@RequestBody @Validated @ApiParam(value = "资源查询条件") ResourceFindDTO resourceFindDTO){
+        return new ResponseResult(ResponseCode.SUCCESS, resourceService.getList(resourceFindDTO));
     }
     @ApiOperation("资源树查询")
     @RequestMapping(value="/resource/tree",method = RequestMethod.GET)
     @Log("查询资源树")
-    public SystemResponse resourceTree(){
-        return new SystemResponse(ResponseCode.SUCCESS,resourceService.getTree());
+    public ResponseResult resourceTree(){
+        return new ResponseResult(ResponseCode.SUCCESS,resourceService.getTree());
     }
 
     @ApiOperation("按角色查询资源树")
     @RequestMapping(value="/resource/{rid}",method = RequestMethod.GET)
     @Log("查看角色资源")
-    public SystemResponse resourceUserTree(@PathVariable("rid") String rid){
-        return new SystemResponse(ResponseCode.SUCCESS,resourceService.getUserTree(rid));
+    public ResponseResult resourceUserTree(@PathVariable("rid") String rid){
+        return new ResponseResult(ResponseCode.SUCCESS,resourceService.getUserTree(rid));
     }
 
 

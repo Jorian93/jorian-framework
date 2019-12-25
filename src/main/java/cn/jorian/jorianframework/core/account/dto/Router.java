@@ -1,13 +1,12 @@
 package cn.jorian.jorianframework.core.account.dto;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Data;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * @Auther: jorian
+ * @Author: jorian
  * @Date: 2019/5/1 08:33
  * @Description:
  *
@@ -30,10 +29,21 @@ import java.util.Map;
  */
 @Data
 public class Router {
-
+    /**
+     * 访问路径
+     */
     private String path;
+    /**
+     * 组件路径
+     */
     private String component;
+    /**
+     * 重定向
+     */
     private String redirect;
+    /**
+     * 名称
+     */
     private String name;
     private Map<String,String > meta;
     private Boolean hidden;

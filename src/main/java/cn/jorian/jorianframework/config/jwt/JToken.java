@@ -3,7 +3,6 @@ package cn.jorian.jorianframework.config.jwt;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.UsernamePasswordToken;
 
 
 /**
@@ -14,7 +13,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 @NoArgsConstructor
 @Data
 public class JToken implements AuthenticationToken {
-    public static  final String TOKEN_KEY = "J-Token";
+    private static  final String TOKEN_KEY = "J-Token";
     public String token;
     public String username;
     public String password;

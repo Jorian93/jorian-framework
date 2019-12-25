@@ -7,7 +7,6 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
-import org.springframework.stereotype.Component;
 
 /**
  * redis配置<br>
@@ -19,7 +18,7 @@ import org.springframework.stereotype.Component;
  *  2019年3月10日
  */
 //@EnableRedisHttpSession
-@Component
+@Configuration
 public class RedisTemplateConfig {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

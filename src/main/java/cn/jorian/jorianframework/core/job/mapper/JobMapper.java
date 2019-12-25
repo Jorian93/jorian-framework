@@ -16,14 +16,15 @@ public interface JobMapper extends BaseMapper<Job> {
 	int save(Job job);
 
 	@Select("select * from t_job t where t.id = #{id}")
-    Job getById(Long id);
+	Job getById(Long id);
 
 	@Select("select * from t_job t where t.jobName = #{jobName}")
-    Job getByName(String jobName);
+	Job getByName(String jobName);
 
 	int update(Job job);
 
 	int count(@Param("params") Map<String, Object> params);
 
-
+	List<Job> list(@Param("params") Map<String, Object> params, @Param("offset") Integer offset,
+                   @Param("limit") Integer limit);
 }

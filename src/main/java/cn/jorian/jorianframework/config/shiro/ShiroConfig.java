@@ -1,6 +1,5 @@
 package cn.jorian.jorianframework.config.shiro;
 
-import cn.jorian.jorianframework.common.realm.UserRealm;
 import cn.jorian.jorianframework.config.jwt.JwtFilter;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
@@ -9,6 +8,7 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import javax.servlet.Filter;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -37,6 +37,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("static/**", "anon");//此处放行静态文件
         filterChainDefinitionMap.put("/logout","logout");
         filterChainDefinitionMap.put("/swagger-ui.html", "anon");//放行swagger
+        filterChainDefinitionMap.put("/**", "anon");//放行swagger
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         //过滤器
         Map<String, Filter> filterMap = new LinkedHashMap<>();

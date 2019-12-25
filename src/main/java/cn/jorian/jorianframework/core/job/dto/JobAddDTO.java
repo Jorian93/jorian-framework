@@ -28,7 +28,6 @@ public class JobAddDTO extends PageDTO {
     @NotBlank(message="方法不得为空")
     private String methodName;
 
-
     private Boolean isSysJob;
 
     private int status;

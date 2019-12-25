@@ -16,9 +16,9 @@ import java.util.*;
  */
 public class SpringTools {
 
-
     @Autowired
     private static ApplicationContext applicationContext;
+
     /**
      * 获取客户端IP
      * @param request
@@ -70,16 +70,17 @@ public class SpringTools {
                 list.add(str);
             }
         }
-        Collections.sort(list);// 2018.07.26修改排序
+        //修改排序
+        Collections.sort(list);
         return list;
     }
 
     /**
-     * 获取方法名字
+     * 获取类的方法名集合
      * @param name
      * @return
      */
-    public static Set<String> getBeansMethods(String name){
+    public static Set<String>  getBeansMethods(String name){
         Class<?> clazz = getClass(name);
         Method[] methods = clazz.getDeclaredMethods();
 
@@ -97,6 +98,11 @@ public class SpringTools {
         return names;
     }
 
+    /**
+     * 根据名称获取类
+     * @param name
+     * @return
+     */
     private static Class<?> getClass(String name) {
         Object object = applicationContext.getBean(name);
         Class<?> clazz = object.getClass();

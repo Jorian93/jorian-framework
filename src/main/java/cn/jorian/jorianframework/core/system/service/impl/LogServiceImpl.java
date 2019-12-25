@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,7 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, SysLog> implements Lo
         IPage<SysLog> pagedata = this.page(new Page<>(logFindDTO.getPage(),logFindDTO.getLimit()),queryWrapper);
         return pagedata;
     }
+
     @Override
     public void deleteByDate(LogDeleteDTO logDeleteDTO) {
 
@@ -51,24 +53,28 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, SysLog> implements Lo
         logs.forEach(item->{
             ids.add(item.getId());
         });
+        this.deleteByIds(ids);
+    }
+
+    @Override
+    public void deleteByIds(List<String > ids){
         this.removeByIds(ids);
     }
 
-    /**
-     * 删除当前1月前的日志，用于定时任务
-     */
-    public void deleteLogs1MonthAgo(){
+    public void deleteAllLogs(){
+        System.out.println("删除所有日志");
+    }
+    public void deleteLogs2weekFromNow(){
+        LocalDateTime nowTime = LocalDateTime.now();
+        //2周前
+        LocalDateTime targetTime = nowTime.minus(2L, ChronoUnit.WEEKS);
 
-        //一个月前
-        LocalDateTime deleteStartTime = LocalDateTime.now().plusMonths(1);
-        List<SysLog> logs = this.list(new QueryWrapper<SysLog>()
-            .lt("createTime",deleteStartTime)
-        );
-        if (logs != null) {
-            logs.forEach(item->{
-                this.removeById(item.getId());
+        List<SysLog> logs = this.list(new QueryWrapper<SysLog>().lt("createTime",targetTime));
+        if(!logs.isEmpty()){
+            logs.stream().forEach(log-> {
+                this.removeById(log.getId());
             });
-            //System.out.println("已删除1月前所有日志");
         }
     }
+
 }

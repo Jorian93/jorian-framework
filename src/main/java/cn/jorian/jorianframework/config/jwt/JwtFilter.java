@@ -2,7 +2,7 @@ package cn.jorian.jorianframework.config.jwt;
 
 import cn.jorian.jorianframework.common.exception.ServiceException;
 import cn.jorian.jorianframework.common.response.ResponseCode;
-import cn.jorian.jorianframework.common.response.SystemResponse;
+import cn.jorian.jorianframework.common.response.ResponseResult;
 import cn.jorian.jorianframework.core.account.service.impl.ExecuteLoginService;
 import com.alibaba.fastjson.JSON;
 import org.apache.shiro.subject.Subject;
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @Author: jorian
+ * @Auther: jorian
  * @Date: 2019/4/17 17:01
  * @Description:
  */
@@ -51,8 +51,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                 }
             }
         }
-        //无凭证示没有登录，返回登录提示
-        if (null == subject.getPrincipal()) {
+        if (null == subject.getPrincipal()) {//无凭证示没有登录，返回登录提示
             writerResponse(response1, ResponseCode.NO_SIGN_IN_FAIL.code, ResponseCode.NO_SIGN_IN_FAIL.msg);
         }else{
             writerResponse(response1, ResponseCode.PERMISSIN_FAIL.code, ResponseCode.PERMISSIN_FAIL.msg);
@@ -86,7 +85,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     private void writerResponse(HttpServletResponse response,Integer status,String content){
         response.setHeader("Content-Type", "application/json;charset=utf-8");
         try {
-            response.getWriter().write(JSON.toJSONString(SystemResponse.builder()
+            response.getWriter().write(JSON.toJSONString(ResponseResult.builder()
                     .code(status)
                     .msg(content)
                     .build()));

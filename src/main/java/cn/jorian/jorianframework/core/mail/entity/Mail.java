@@ -3,7 +3,6 @@ package cn.jorian.jorianframework.core.mail.entity;
 import cn.jorian.jorianframework.common.model.BaseModel;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;

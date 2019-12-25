@@ -3,7 +3,6 @@ package cn.jorian.jorianframework.core.system.service.impl;
 import cn.jorian.jorianframework.common.exception.ServiceException;
 import cn.jorian.jorianframework.core.system.dto.RoleAddDTO;
 import cn.jorian.jorianframework.core.system.dto.RoleFindDTO;
-import cn.jorian.jorianframework.core.system.entity.SysResource;
 import cn.jorian.jorianframework.core.system.entity.SysRole;
 import cn.jorian.jorianframework.core.system.entity.SysRoleResource;
 import cn.jorian.jorianframework.core.system.entity.SysUserRole;

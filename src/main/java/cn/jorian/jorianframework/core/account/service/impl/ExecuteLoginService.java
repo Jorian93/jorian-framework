@@ -1,8 +1,8 @@
 package cn.jorian.jorianframework.core.account.service.impl;
 
 import cn.jorian.jorianframework.common.exception.ServiceException;
-import cn.jorian.jorianframework.config.jwt.JToken;
 import cn.jorian.jorianframework.common.response.ResponseCode;
+import cn.jorian.jorianframework.config.jwt.JToken;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.DisabledAccountException;
@@ -12,7 +12,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @Auther: jorian
+ * @Author: jorian
  * @Date: 2019/4/17 17:33
  * @Description:
  */
@@ -35,8 +35,8 @@ public class ExecuteLoginService {
         try {
             subject.login(jToken);
         }catch (DisabledAccountException e){
-            if(e.getMessage().equals("token error")){
-                throw new ServiceException(ResponseCode.TOKEN_EXPIRED);
+            if("token error".equals(e.getMessage())){
+                throw new ServiceException(ResponseCode.TOKEN_EXPIRED.msg,e,false,false);
             }
         }
         // 如果没有抛出异常则代表登入成功，返回true
