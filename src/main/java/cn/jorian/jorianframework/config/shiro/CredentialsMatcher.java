@@ -11,11 +11,11 @@ import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
 
 /**
- * @Auther: jorian
+ * @Author: jorian
  * @Date: 2019/4/19 14:51
  * @Description:
  */
-public class CredentialsMatcher extends SimpleCredentialsMatcher {
+public class CredentialsMatcher extends SimpleCredentialsMatcher{
 
     @Override
     public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {
@@ -23,7 +23,8 @@ public class CredentialsMatcher extends SimpleCredentialsMatcher {
            //获得一个数据库中的密文密码,此处是从认证取到
             Object accountCredentials = getCredentials(info);
             if(jToken.getUsername()!=null){
-                Object tokenCredentials = EncryptPasswordTool.ENCRYPT_MD5(jToken.getUsername(),jToken.getPassword(),2);//明文密码变密文
+                //明文密码变密文
+                Object tokenCredentials = EncryptPasswordTool.ENCRYPT_MD5(jToken.getUsername(),jToken.getPassword());
                 if(!accountCredentials.equals(tokenCredentials)){
                     throw new DisabledAccountException(ResponseCode.SIGN_IN_USERNAME_PASSWORD_FAIL.msg);
                 }

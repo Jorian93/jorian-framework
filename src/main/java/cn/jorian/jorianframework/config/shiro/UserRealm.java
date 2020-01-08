@@ -20,10 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.sound.sampled.Line;
 import java.util.Set;
 
 /**
- * @Auther: jorian
+ * @Author: jorian
  * @Date: 2019/4/17 09:50
  * @Description:
  */
@@ -41,7 +42,7 @@ public class UserRealm extends AuthorizingRealm {
 
     /**
      * 认证
-     * @param token 用户token
+     * @param token 用户token  subject.login(token)
      * @return
      * @throws AuthenticationException
      */
@@ -49,7 +50,7 @@ public class UserRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         log.info("====Shiro认证执行======");
         JToken jToken =  (JToken) token;
-        String tk = jToken.getToken();
+
         String username = jToken.getUsername()!=null?jToken.getUsername(): JTokenTool.get(jToken.getToken(),"username");
         SysUser sysUser = new SysUser();
         if(StringUtils.isEmpty(username)){
@@ -65,16 +66,27 @@ public class UserRealm extends AuthorizingRealm {
         if(sysUser==null){
             throw new DisabledAccountException(ResponseCode.SIGN_IN_USERNAME_PASSWORD_FAIL.msg);
         }
+        //非启用状态
         if(sysUser.getStatus()!=1){
             throw new DisabledAccountException(ResponseCode.USER_ISLOCKED.msg);
         }
-        //生成token，此时的jToken是明文账号密码+token
-        if(tk==null) tk= new CreateJwtTokenTool().generateToken(sysUser.getId(),sysUser.getUsername(),sysUser.getPassword());
+        String tk = jToken.getToken();
+        //生成token
+        if(tk==null){
+            tk= new CreateJwtTokenTool().generateToken(sysUser.getId(),sysUser.getUsername(),sysUser.getPassword());
+        }
+        //此时的jToken是明文账号密码+token
         jToken.setToken(tk);
         //4.对用户信息进行封装
-        return new SimpleAuthenticationInfo(jToken, //principal(用户身份)
-               sysUser.getPassword(),//hashedCredentials(已经加密的密码)
-               this.getName());//realm name
+        AuthenticationInfo info = new SimpleAuthenticationInfo(
+                //principal(用户身份)
+               jToken,
+                //hashedCredentials(已经加密的密码)
+               sysUser.getPassword(),
+                //realm name
+               this.getName()
+        );
+        return info;
     }
 
     /**
@@ -93,23 +105,55 @@ public class UserRealm extends AuthorizingRealm {
             Set<String> pSet = userService.getUserPermissions(username);
             info.setStringPermissions(pSet);
             //System.out.println(info.getStringPermissions());
-                return info;
+             return info;
         }else{
             throw new DisabledAccountException("用户信息异常，请重新登录！");
         }
     }
-//    public void clearAuthByUserId(String uid,Boolean author, Boolean out){
-//        //获取所有session
-//        Cache<Object, Object> cache = cacheManager
-//                .getCache(MyRealm.class.getName()+".authorizationCache");
-//        cache.remove(uid);
-//    }
-//
-//    public void clearAuthByUserIdCollection(List<String> userList, Boolean author, Boolean out){
-//        Cache<Object, Object> cache = cacheManager
-//                .getCache(MyRealm.class.getName()+".authorizationCache");
-//        userList.forEach(cache::remove);
-//    }
+    /**
+     * 重写方法,清除当前用户的的 授权缓存
+     * @param principals
+     */
+    @Override
+    public void clearCachedAuthorizationInfo(PrincipalCollection principals) {
+        super.clearCachedAuthorizationInfo(principals);
+    }
+
+    /**
+     * 重写方法，清除当前用户的 认证缓存
+     * @param principals
+     */
+    @Override
+    public void clearCachedAuthenticationInfo(PrincipalCollection principals) {
+        super.clearCachedAuthenticationInfo(principals);
+    }
+
+    @Override
+    public void clearCache(PrincipalCollection principals) {
+        super.clearCache(principals);
+    }
+
+    /**
+     * 自定义方法：清除所有 授权缓存
+     */
+    public void clearAllCachedAuthorizationInfo() {
+        getAuthorizationCache().clear();
+    }
+
+    /**
+     * 自定义方法：清除所有 认证缓存
+     */
+    public void clearAllCachedAuthenticationInfo() {
+        getAuthenticationCache().clear();
+    }
+
+    /**
+     * 自定义方法：清除所有的  认证缓存  和 授权缓存
+     */
+    public void clearAllCache() {
+        clearAllCachedAuthenticationInfo();
+        clearAllCachedAuthorizationInfo();
+    }
 
 
 }

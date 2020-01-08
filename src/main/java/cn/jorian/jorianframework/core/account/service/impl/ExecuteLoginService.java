@@ -19,16 +19,18 @@ import javax.servlet.http.HttpServletRequest;
 public class ExecuteLoginService {
 
     /**
-     * 普通的登入校验
+     * 普通的登入校验，校验token
      * @param request
      * @return
      */
     public static boolean executeLogin(ServletRequest request){
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        //获取token
         String token = httpServletRequest.getHeader("J-Token");
         if(token==null || "".equals(token.trim())){
             throw new ServiceException(ResponseCode.PERMISSIN_FAIL.msg,new AuthenticationException(),false,true);
         }
+        //构造token传入shiro进行认证
         JToken jToken = new JToken(token,null,null);
         // 提交给realm进行登入，如果错误他会抛出异常并被捕获
         Subject subject = SecurityUtils.getSubject();

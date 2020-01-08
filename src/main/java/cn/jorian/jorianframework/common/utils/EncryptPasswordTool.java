@@ -4,22 +4,25 @@ import org.apache.shiro.util.ByteSource;
 
 
 /**
- * @Auther: jorian
+ * @Author: jorian
  * @Date: 2019/4/18 15:02
- * @Description: 加密工具
- */
+ * @Description: 密码加密工具
+ * */
 public  class EncryptPasswordTool {
-    //MD5 ENCRYPT
-    public static String ENCRYPT_MD5(String salt,String password,int hashIterations){
+    /**
+     *
+     * @param salt 盐值 以账号作为盐值
+     * @param password 密码原值
+     * @return
+     */
+    public static String ENCRYPT_MD5(String salt,String password){
+        //加密方法
         String algorithmName ="MD5";
+        //加密次数
+        int hashIterations = 1024;
+
         String MD5Password = new SimpleHash(algorithmName, password, ByteSource.Util.bytes(salt), hashIterations).toHex();
         return MD5Password;
     }
-    //MD5 DEENCRYPT
-    public static String DEENCRYPT_MD5(String username,String password,int hashIterations){
-        String algorithmName ="MD5";
-        String MD5Password = new SimpleHash(algorithmName, password, ByteSource.Util.bytes(username), hashIterations).toHex();
-        return MD5Password;
-    }
-    //
+
 }

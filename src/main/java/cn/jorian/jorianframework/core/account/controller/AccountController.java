@@ -24,17 +24,16 @@ public class AccountController {
     @Autowired
     AccountService accountService;
 
-    @ApiOperation(value = "登录")
+    @ApiOperation(value = "登入系统")
     @RequestMapping(method = RequestMethod.POST)
-    @Log("登入")
+    @Log("登入系统")
     public ResponseResult login(@RequestBody @Validated @ApiParam(value = "登录数据",required = true) UsernamePasswordDTO loginDTO){
-
         return new ResponseResult(ResponseCode.SIGN_IN_SUCCESS,accountService.login(loginDTO));
     }
 
     @ApiOperation(value="登出")
     @RequestMapping(method = RequestMethod.DELETE)
-    @Log("登出")
+    @Log("登出系统")
     public ResponseResult logout(){
         return new ResponseResult(ResponseCode.SUCCESS);
     }

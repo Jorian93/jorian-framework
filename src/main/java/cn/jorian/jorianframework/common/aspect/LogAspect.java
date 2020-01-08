@@ -35,7 +35,7 @@ import java.time.LocalDateTime;
 
 
 /**
- * @author Licoy
+ * @author jorian
  * @version 2018/4/27/17:19
  */
 @Aspect
@@ -93,10 +93,12 @@ public class LogAspect {
         // 第一个参数：TopicExchange名字
         // 第二个参数：Route-Key
         // 第三个参数：要发送的内容
-        this.amqpTemplate.convertAndSend(RabbitMQConfig.TOPIC_EXCHANGE, "log.mysql", sysLog );
-        log.info("【Topic已发送消息】");
-
-
+        try{
+            this.amqpTemplate.convertAndSend(RabbitMQConfig.TOPIC_EXCHANGE, "log.mysql", sysLog );
+            log.info("【Topic已发送消息】");
+        }catch (Exception e){
+            logService.save(sysLog);
+        }
 
     }
 

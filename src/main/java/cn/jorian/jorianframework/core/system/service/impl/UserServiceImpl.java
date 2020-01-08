@@ -53,7 +53,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
         BeanUtils.copyProperties(userAddDTO,findUser);
         findUser.setCreateTime(LocalDateTime.now());
         findUser.setUpdateTime(LocalDateTime.now());
-        String MD5Password = EncryptPasswordTool.ENCRYPT_MD5(findUser.getUsername(),findUser.getPassword(),2);
+        String MD5Password = EncryptPasswordTool.ENCRYPT_MD5(findUser.getUsername(),findUser.getPassword());
         findUser.setPassword(MD5Password);//密码加密后的user
         try{
             this.save(findUser);

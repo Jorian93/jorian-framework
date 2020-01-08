@@ -1,5 +1,6 @@
 package cn.jorian.jorianframework.core;
 
+import io.swagger.annotations.Api;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @Description:
  */
 @Controller
+@Api(tags = "全局控制器管理")
 public class GlobalController {
     @RequestMapping(value = "/",method = RequestMethod.GET)
     public String index(){

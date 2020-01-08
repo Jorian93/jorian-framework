@@ -6,9 +6,9 @@ import cn.jorian.jorianframework.common.response.ResponseCode;
 import cn.jorian.jorianframework.common.utils.EncryptPasswordTool;
 import cn.jorian.jorianframework.common.utils.JTokenTool;
 import cn.jorian.jorianframework.config.jwt.JToken;
-import cn.jorian.jorianframework.core.account.dto.UsernamePasswordDTO;
 import cn.jorian.jorianframework.core.account.dto.RestPasswordDTO;
 import cn.jorian.jorianframework.core.account.dto.Router;
+import cn.jorian.jorianframework.core.account.dto.UsernamePasswordDTO;
 import cn.jorian.jorianframework.core.account.service.AccountService;
 import cn.jorian.jorianframework.core.system.entity.*;
 import cn.jorian.jorianframework.core.system.mapper.UserMapper;
@@ -70,7 +70,9 @@ public class AccountServiceImpl extends ServiceImpl<UserMapper, SysUser> impleme
         if( "".equals(usernamePasswordDTO.getUsername()) || "".equals(usernamePasswordDTO.getPassword()) ){
             throw new ServiceException(ResponseCode.SIGN_IN_USERNAME_PASSWORD_EMPTY.msg,-1);
         }
+        //登录认证，账号，密码
         JToken token = new JToken(null, usernamePasswordDTO.getUsername(), usernamePasswordDTO.getPassword());
+
         Subject subject = SecurityUtils.getSubject();
         try{
             subject.login(token);
@@ -87,7 +89,7 @@ public class AccountServiceImpl extends ServiceImpl<UserMapper, SysUser> impleme
         String jToken = ((JToken)SecurityUtils.getSubject().getPrincipal()).getToken();
        //redis中存一份，便于认证
         redisTemplate.opsForValue().set("J-Token", jToken);
-        redisTemplate.expire("J-Token",5, TimeUnit.MINUTES);
+        redisTemplate.expire("J-Token",5000*72*60, TimeUnit.MINUTES);
         return jToken;
     }
 
@@ -124,7 +126,7 @@ public class AccountServiceImpl extends ServiceImpl<UserMapper, SysUser> impleme
             throw new ServiceException(ResponseCode.TOKEN_EXPIRED);
         }
 
-        if(token==null){
+        if(token == null){
             throw new ServiceException(ResponseCode.TOKEN_AUTHENTICATION_FAIL);
         }
         String username = JTokenTool.get(token,"username");
@@ -195,7 +197,7 @@ public class AccountServiceImpl extends ServiceImpl<UserMapper, SysUser> impleme
             throw new ServiceException("用户不存在",-1);
         }
         //明文转密文
-        String MD5Password = EncryptPasswordTool.ENCRYPT_MD5(resetPasswordDTO.getUsername(),resetPasswordDTO.getNewPassword(),2);
+        String MD5Password = EncryptPasswordTool.ENCRYPT_MD5(resetPasswordDTO.getUsername(),resetPasswordDTO.getNewPassword());
         userService.update(new UpdateWrapper<SysUser>().eq("username",findUser.getUsername()).set("password",MD5Password));
     }
 

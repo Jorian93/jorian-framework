@@ -6,17 +6,20 @@ import org.apache.shiro.authc.AuthenticationToken;
 
 
 /**
- * @Auther: jorian
+ * @Author: jorian
  * @Date: 2019/4/17 14:33
  * @Description:
  */
 @NoArgsConstructor
 @Data
 public class JToken implements AuthenticationToken {
+
     private static  final String TOKEN_KEY = "J-Token";
+
     public String token;
     public String username;
     public String password;
+
     public JToken(String token, String username, String password) {
         this.token = token;
         this.username = username;
