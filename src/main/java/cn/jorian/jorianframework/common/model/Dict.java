@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 /**
- * @Auther: jorian
+ * @Author: jorian
  * @Date: 2019/4/17 15:47
  * @Description:
  */

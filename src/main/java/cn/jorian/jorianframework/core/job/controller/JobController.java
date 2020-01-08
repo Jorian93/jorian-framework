@@ -18,6 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * @author jorian
+ */
 @Api(tags = "定时任务")
 @RestController
 @RequestMapping("/job")

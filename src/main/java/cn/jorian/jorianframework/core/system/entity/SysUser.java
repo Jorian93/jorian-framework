@@ -9,7 +9,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import java.util.List;
 
 /**
- * @Auther: Administrator
+ * @Author: Administrator
  * @Date: 2019/4/17 08:50
  * @Description:
  */

@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * @Auther: jorian
+ * @Author: jorian
  * @Date: 2019/4/25 17:14
  * @Description:
  */

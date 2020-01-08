@@ -4,7 +4,7 @@ import cn.jorian.jorianframework.core.system.entity.SysRole;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
- * @Auther: jorian
+ * @Author: jorian
  * @Date: 2019/4/17 14:23
  * @Description:
  */

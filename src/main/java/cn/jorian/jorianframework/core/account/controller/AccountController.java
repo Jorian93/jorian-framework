@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * @author jorian
+ * 前端控制器
+ */
 @RestController
 @Api(tags = "账户管理")
 @RequestMapping("/account")

@@ -8,6 +8,9 @@ import org.apache.ibatis.annotations.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author jorian
+ */
 @Mapper
 public interface JobMapper extends BaseMapper<Job> {
 

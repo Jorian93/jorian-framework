@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
- * @Auther: jorian
+ * @Author: jorian
  * @Date: 2019/4/18 15:35
  * @Description:
  */

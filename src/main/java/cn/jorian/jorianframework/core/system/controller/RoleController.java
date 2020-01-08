@@ -15,7 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @Auther: jorian
+ * @Author: jorian
  * @Date: 2019/4/17 09:24
  * @Description:
  */

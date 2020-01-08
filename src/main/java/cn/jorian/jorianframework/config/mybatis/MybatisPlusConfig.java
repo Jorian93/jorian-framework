@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
- * @Auther: jorian
+ * @Author: jorian
  * @Date: 2019/4/25 16:13
  * @Description:
  */

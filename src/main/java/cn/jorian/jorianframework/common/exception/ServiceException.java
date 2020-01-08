@@ -10,7 +10,7 @@ import java.io.Serializable;
 /**
  * @Author: jorian
  * @Date: 2019/4/17 09:30
- * @Description:
+ * @Description: 服务级异常处理
  */
 @Data
 @NoArgsConstructor

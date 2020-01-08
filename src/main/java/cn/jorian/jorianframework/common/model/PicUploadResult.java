@@ -3,7 +3,7 @@ package cn.jorian.jorianframework.common.model;
 import lombok.Data;
 
 /**
- * @Auther: jorian
+ * @Author: jorian
  * @Date: 2019/5/1 09:36
  * @Description:
  */

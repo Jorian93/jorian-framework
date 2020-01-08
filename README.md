@@ -29,7 +29,11 @@
 1.克隆项目  
 2.新建mysql数据库jorian-framework，导入目录下sql文件夹内的jorian-framework.sql   
 3.修改resources下的applicatiion-dev,将redis和数据库连接,rabbitmq,Elasticsearch修改为自己能用的 
-4.启动项目即可 
+4.启动项目即可
+    
+测试账户：test  
+密码：test123
+
 # 相关图片
 1.  
   ![image](https://github.com/Jorian93/hello-word/blob/master/images/2019-05-29_150510.png) 

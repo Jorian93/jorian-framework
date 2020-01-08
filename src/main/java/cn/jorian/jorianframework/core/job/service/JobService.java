@@ -8,6 +8,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.quartz.JobDataMap;
 import org.quartz.SchedulerException;
 
+/**
+ * @author jorian
+ */
 public interface JobService extends IService<Job> {
 	/**
 	 * 定时任务列表查询

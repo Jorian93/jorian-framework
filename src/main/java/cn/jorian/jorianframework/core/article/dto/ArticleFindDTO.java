@@ -4,7 +4,7 @@ import cn.jorian.jorianframework.common.model.PageDTO;
 import lombok.Data;
 
 /**
- * @Auther: jorian
+ * @Author: jorian
  * @Date: 2019/4/25 17:14
  * @Description:
  */
