@@ -1,6 +1,6 @@
 package cn.jorian.jorianframework.core.mail.service.impl;
 
-import cn.jorian.jorianframework.common.utils.MailSendTool;
+import cn.jorian.jorianframework.common.utils.JTool_Mail;
 import cn.jorian.jorianframework.core.account.service.AccountService;
 import cn.jorian.jorianframework.core.mail.dto.MailAddDTO;
 import cn.jorian.jorianframework.core.mail.dto.MailFindDTO;
@@ -44,7 +44,7 @@ public class MailServiceImpl extends ServiceImpl<MailMapper, Mail> implements Ma
     private static final Logger log = LoggerFactory.getLogger("adminLogger");
 
     @Autowired
-    private MailSendTool mailSendTool;
+    private JTool_Mail jToolMail;
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -85,7 +85,7 @@ public class MailServiceImpl extends ServiceImpl<MailMapper, Mail> implements Ma
             int status = 0;
             TransactionStatus statuss = transactionManager.getTransaction(def);//定义点位？
             try {
-                mailSendTool.sendMail(u, mail.getSubject(), mail.getContent());
+                jToolMail.sendMail(u, mail.getSubject(), mail.getContent());
                 status = 1;
             } catch (Exception e) {
                 log.error("发送邮件失败", e);

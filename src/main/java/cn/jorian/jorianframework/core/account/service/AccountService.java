@@ -1,9 +1,10 @@
 package cn.jorian.jorianframework.core.account.service;
 
 
-import cn.jorian.jorianframework.core.account.dto.UsernamePasswordDTO;
 import cn.jorian.jorianframework.core.account.dto.RestPasswordDTO;
 import cn.jorian.jorianframework.core.account.dto.Router;
+import cn.jorian.jorianframework.core.account.dto.UsernamePasswordDTO;
+import cn.jorian.jorianframework.core.system.entity.SysResource;
 import cn.jorian.jorianframework.core.system.entity.SysUser;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -46,4 +47,8 @@ public interface AccountService extends IService<SysUser> {
      * @return
      */
     String wxlogin(String code);
+
+    List addChildrenToParrent(List<SysResource> operationList, List<SysResource> allResource);
+
+    List<Router> toRouterTree(List<SysResource> resourceList);
 }

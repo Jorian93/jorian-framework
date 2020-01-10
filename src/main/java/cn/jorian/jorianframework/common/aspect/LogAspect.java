@@ -2,8 +2,9 @@ package cn.jorian.jorianframework.common.aspect;
 
 
 import cn.jorian.jorianframework.common.annotation.Log;
-import cn.jorian.jorianframework.common.utils.JTokenTool;
-import cn.jorian.jorianframework.common.utils.SpringTools;
+import cn.jorian.jorianframework.common.utils.JTool_HttpInfo;
+import cn.jorian.jorianframework.common.utils.JTool_Spring;
+import cn.jorian.jorianframework.common.utils.JTool_Token;
 import cn.jorian.jorianframework.config.jwt.JToken;
 import cn.jorian.jorianframework.config.rabbitmq.RabbitMQConfig;
 import cn.jorian.jorianframework.core.account.dto.RestPasswordDTO;
@@ -69,8 +70,8 @@ public class LogAspect {
         //获取动作Action释义
         sysLog.setActionName(getMethodSysLogsAnnotationValue(joinPoint));
         //获取IP
-        sysLog.setIp(SpringTools.getClientIp(request));
-        sysLog.setAjax(SpringTools.ajax(request) ? 1 : 0);
+        sysLog.setIp(JTool_HttpInfo.getClientIp(request));
+        sysLog.setAjax(JTool_HttpInfo.ajax(request) ? 1 : 0);
         sysLog.setApi(request.getRequestURI());
         String s = this.paramFilter(joinPoint.getArgs());
         //根据系统需求自定义
@@ -82,7 +83,7 @@ public class LogAspect {
         if(principalCollection!=null){
             JToken jToken = new JToken();
             BeanUtils.copyProperties(principalCollection.getPrimaryPrincipal(),jToken);
-            String username = jToken.getUsername()!=null?jToken.getUsername(): JTokenTool.get(jToken.getToken(),"username");
+            String username = jToken.getUsername()!=null?jToken.getUsername(): JTool_Token.get(jToken.getToken(),"username");
             //从token中获取
             sysLog.setUsername(username);
         }else{

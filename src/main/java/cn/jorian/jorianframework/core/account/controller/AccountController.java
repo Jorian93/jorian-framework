@@ -35,7 +35,7 @@ public class AccountController {
         return new ResponseResult(ResponseCode.SIGN_IN_SUCCESS,accountService.login(loginDTO));
     }
 
-    @ApiOperation(value="登出")
+    @ApiOperation(value="登出系统")
     @RequestMapping(method = RequestMethod.DELETE)
     @Log("登出系统")
     public ResponseResult logout(){

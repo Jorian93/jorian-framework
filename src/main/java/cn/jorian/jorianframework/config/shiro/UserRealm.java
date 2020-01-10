@@ -2,8 +2,7 @@ package cn.jorian.jorianframework.config.shiro;
 
 import cn.jorian.jorianframework.common.exception.ServiceException;
 import cn.jorian.jorianframework.common.response.ResponseCode;
-import cn.jorian.jorianframework.common.utils.CreateJwtTokenTool;
-import cn.jorian.jorianframework.common.utils.JTokenTool;
+import cn.jorian.jorianframework.common.utils.JTool_Token;
 import cn.jorian.jorianframework.config.jwt.JToken;
 import cn.jorian.jorianframework.core.system.entity.SysUser;
 import cn.jorian.jorianframework.core.system.service.UserService;
@@ -20,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.sound.sampled.Line;
 import java.util.Set;
 
 /**
@@ -51,7 +49,7 @@ public class UserRealm extends AuthorizingRealm {
         log.info("====Shiro认证执行======");
         JToken jToken =  (JToken) token;
 
-        String username = jToken.getUsername()!=null?jToken.getUsername(): JTokenTool.get(jToken.getToken(),"username");
+        String username = jToken.getUsername()!=null?jToken.getUsername(): JTool_Token.get(jToken.getToken(),"username");
         SysUser sysUser = new SysUser();
         if(StringUtils.isEmpty(username)){
                 throw new ServiceException(ResponseCode.SIGN_IN_USERNAME_PASSWORD_EMPTY.msg);
@@ -73,7 +71,7 @@ public class UserRealm extends AuthorizingRealm {
         String tk = jToken.getToken();
         //生成token
         if(tk==null){
-            tk= new CreateJwtTokenTool().generateToken(sysUser.getId(),sysUser.getUsername(),sysUser.getPassword());
+            tk= new JTool_Token().generateToken(sysUser.getId(),sysUser.getUsername(),sysUser.getPassword());
         }
         //此时的jToken是明文账号密码+token
         jToken.setToken(tk);
@@ -99,7 +97,7 @@ public class UserRealm extends AuthorizingRealm {
         log.info("======Shiro授权执行=====");
         JToken jToken = new JToken();
         BeanUtils.copyProperties(principalCollection.getPrimaryPrincipal(),jToken);
-        String username = jToken.getUsername()!=null?jToken.getUsername(): JTokenTool.get(jToken.getToken(),"username");
+        String username = jToken.getUsername()!=null?jToken.getUsername(): JTool_Token.get(jToken.getToken(),"username");
         if(username!=null){
             SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
             Set<String> pSet = userService.getUserPermissions(username);

@@ -8,7 +8,8 @@ import org.apache.shiro.util.ByteSource;
  * @Date: 2019/4/18 15:02
  * @Description: 密码加密工具
  * */
-public  class EncryptPasswordTool {
+public  class JTool_EncryptPassword {
+
     /**
      *
      * @param salt 盐值 以账号作为盐值

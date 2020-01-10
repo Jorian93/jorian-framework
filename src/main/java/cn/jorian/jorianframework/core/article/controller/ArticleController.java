@@ -55,7 +55,7 @@ public class ArticleController {
     }
     @ApiOperation(value = "文章详情")
     @RequestMapping(value = "/details/{id}", method = RequestMethod.GET)
-    @Log("文章详情")
+    @Log("查看文章详情")
     public ResponseResult fetchArticle(@PathVariable("id") @ApiParam(value = "文章id") String id) {
         return new ResponseResult(ResponseCode.SUCCESS,articleService.fetchArticleDetails(id));
     }

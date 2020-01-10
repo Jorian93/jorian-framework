@@ -3,8 +3,8 @@ package cn.jorian.jorianframework.core.account.service.impl;
 import cn.jorian.jorianframework.common.exception.ServiceException;
 import cn.jorian.jorianframework.common.model.Dict;
 import cn.jorian.jorianframework.common.response.ResponseCode;
-import cn.jorian.jorianframework.common.utils.EncryptPasswordTool;
-import cn.jorian.jorianframework.common.utils.JTokenTool;
+import cn.jorian.jorianframework.common.utils.JTool_EncryptPassword;
+import cn.jorian.jorianframework.common.utils.JTool_Token;
 import cn.jorian.jorianframework.config.jwt.JToken;
 import cn.jorian.jorianframework.core.account.dto.RestPasswordDTO;
 import cn.jorian.jorianframework.core.account.dto.Router;
@@ -16,6 +16,7 @@ import cn.jorian.jorianframework.core.system.service.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.subject.Subject;
@@ -37,6 +38,7 @@ import java.util.concurrent.TimeUnit;
  * @Date: 2019/4/18 14:08
  * @Description:
  */
+@Slf4j
 @Service
 public class AccountServiceImpl extends ServiceImpl<UserMapper, SysUser> implements AccountService {
 
@@ -61,7 +63,7 @@ public class AccountServiceImpl extends ServiceImpl<UserMapper, SysUser> impleme
     /**
      * 顶级菜单的ID=0
      */
-    private  final static String MENU_ROOT_ID = "0";
+    private final String MENU_ROOT_ID = "0";
 
     @Override
     public String login(UsernamePasswordDTO usernamePasswordDTO) {
@@ -129,7 +131,7 @@ public class AccountServiceImpl extends ServiceImpl<UserMapper, SysUser> impleme
         if(token == null){
             throw new ServiceException(ResponseCode.TOKEN_AUTHENTICATION_FAIL);
         }
-        String username = JTokenTool.get(token,"username");
+        String username = JTool_Token.get(token,"username");
         SysUser findUser = this.getOne(new QueryWrapper<SysUser>().eq("username",username));
         //需给用户加角色表
         List<SysRole> roles = new ArrayList<>();
@@ -148,8 +150,9 @@ public class AccountServiceImpl extends ServiceImpl<UserMapper, SysUser> impleme
         if(token == null){
             throw new ServiceException("token不存在或者已过期",-1);
         }
-        String username = JTokenTool.get(token,"username");
-        SysUser findUser = this.getOne(new QueryWrapper<SysUser>().eq("username",username));
+        String username = JTool_Token.get(token,"username");
+        SysUser findUser = this.getOne(new QueryWrapper<SysUser>().eq("username",username).select("id,username,status,password"));
+        log.info("当前用户id："+findUser.getId());
         //根据用户id查找用户角色列表
         List<SysUserRole> userRoles = userRoleService.list(new QueryWrapper<SysUserRole>().eq("uid",findUser.getId()));
         List <SysResource> resources = new ArrayList<>();
@@ -171,22 +174,23 @@ public class AccountServiceImpl extends ServiceImpl<UserMapper, SysUser> impleme
                 });
             }
         });
-        //组织成树结构
-        List<SysResource> treeList = new ArrayList<>();
 
         if(!resources.isEmpty()){
-            resources.forEach(item ->{
+            //组织成树结构
+            List<SysResource> treeList = new ArrayList<>();
+            for(SysResource sysResource : resources){
                 //添加一级,layout
-                if(MENU_ROOT_ID.equals(item.getPid())){
-                    treeList.add(item);
+                if(sysResource != null && "0".equals(sysResource.getPid())){
+                    treeList.add(sysResource);
                 }
-            });
+            }
+            //给爸爸找儿子
+            treeList = this.addChildrenToParrent(treeList,resources);
+            //转换成路由树
+            List<Router> routers = this.toRouterTree(treeList);
+            return  routers;
         }
-         //给爸爸找儿子
-        addChildrenToParrent(treeList,resources);
-        //准换成路由树
-        List<Router> routers = this.toRouterTree(treeList);
-        return  routers;
+      return null;
     }
 
     @Override
@@ -197,26 +201,44 @@ public class AccountServiceImpl extends ServiceImpl<UserMapper, SysUser> impleme
             throw new ServiceException("用户不存在",-1);
         }
         //明文转密文
-        String MD5Password = EncryptPasswordTool.ENCRYPT_MD5(resetPasswordDTO.getUsername(),resetPasswordDTO.getNewPassword());
+        String MD5Password = JTool_EncryptPassword.ENCRYPT_MD5(resetPasswordDTO.getUsername(),resetPasswordDTO.getNewPassword());
         userService.update(new UpdateWrapper<SysUser>().eq("username",findUser.getUsername()).set("password",MD5Password));
     }
 
 
-
-    public void addChildrenToParrent(List<SysResource> operationList, List<SysResource> allResource){
+    /**
+     * 顶级树找儿子
+     * @param operationList 顶级树
+     * @param allResource 资源池
+     */
+    @Override
+    public List<SysResource> addChildrenToParrent(List<SysResource> operationList, List<SysResource> allResource){
+        if(allResource == null || operationList == null){
+            throw new ServiceException("用户未绑定角色，或角色未配置权限",-1);
+        }
         //得到二级
         operationList.forEach(item ->{
             List<SysResource> children = new ArrayList<>();
             allResource.forEach(r ->{
-                if(item.getId().equals(r.getPid())){
-                    children.add(r);
+                if(item != null && r != null){
+                    if(item.getId().equals(r.getPid())){
+                        children.add(r);
+                    }
                 }
+
             });
             this.addChildrenToParrent(children,allResource);
             item.setChildren(children);
         });
+        return operationList;
     }
 
+    /**
+     * 将树形结构整理为element框架渲染需要的字段
+     * @param resourceList
+     * @return
+     */
+    @Override
     public List<Router> toRouterTree(List<SysResource> resourceList){
        List<Router> res = new ArrayList<>();
         resourceList.forEach(resource -> {
@@ -237,7 +259,9 @@ public class AccountServiceImpl extends ServiceImpl<UserMapper, SysUser> impleme
             route.setChildren(children);
             res.add(route);
         });
+        log.info("用户菜单拉取完成");
         return res;
+
     }
 
 

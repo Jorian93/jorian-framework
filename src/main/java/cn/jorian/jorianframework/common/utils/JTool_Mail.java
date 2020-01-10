@@ -10,8 +10,12 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.List;
 
+/***
+ * @author jorian
+ * 邮件工具
+ */
 @Service
-public class MailSendTool {
+public class JTool_Mail {
 
 	@Autowired
 	private JavaMailSender javaMailSender;
@@ -20,6 +24,12 @@ public class MailSendTool {
 	private String serverMail;
 
 
+	/**
+	 * 多收件人
+	 * @param toUser
+	 * @param subject
+	 * @param text
+	 */
 	public  void sendMail(List<String> toUser, String subject, String text) {
 		MimeMessage message = javaMailSender.createMimeMessage();
 
@@ -37,6 +47,13 @@ public class MailSendTool {
 
 	}
 
+	/**
+	 * 单一收件人
+	 * @param toUser
+	 * @param subject
+	 * @param text
+	 * @throws MessagingException
+	 */
 	public void sendMail(String toUser, String subject, String text) throws MessagingException {
 		MimeMessage message = javaMailSender.createMimeMessage();
 

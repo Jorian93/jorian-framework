@@ -1,12 +1,9 @@
 package cn.jorian.jorianframework.EncryptPasswordTest;
 
-import cn.jorian.jorianframework.common.utils.EncryptPasswordTool;
-import cn.jorian.jorianframework.config.mybatis.MybatisPlusGeneratorConfig;
+import cn.jorian.jorianframework.common.utils.JTool_EncryptPassword;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * @author: jorian
@@ -19,10 +16,10 @@ public class EncryptPasswordTest {
 
     @Test
     public void encryptPassword(){
-        String username = "test";
-        String password = "test123";
+        String username = "jorian1";
+        String password = "jorian1";
 
-        System.out.println(EncryptPasswordTool.ENCRYPT_MD5(username,password));
+        System.out.println(JTool_EncryptPassword.ENCRYPT_MD5(username,password));
     }
 
 }

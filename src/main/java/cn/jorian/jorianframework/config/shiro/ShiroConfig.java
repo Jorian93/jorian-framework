@@ -39,17 +39,17 @@ public class ShiroConfig {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         shiroFilterFactoryBean.setLoginUrl("/");
-        //过滤链
-        Map<String, String> filterChainDefinitionMap = new HashMap<>();
+
         //其余需要拦截
-        filterChainDefinitionMap = shiroService.getFilterChainDefinitionMap();
+        //过滤链
+        Map<String, String> filterChainDefinitionMap = shiroService.getFilterChainDefinitionMap();
         //此处放行静态文件
         filterChainDefinitionMap.put("static/**", "anon");
         filterChainDefinitionMap.put("/logout","logout");
         //放行swagger
         filterChainDefinitionMap.put("/swagger-ui.html", "anon");
         //放行登录
-        filterChainDefinitionMap.put("/account", "anon");
+        /*filterChainDefinitionMap.put("/account", "anon");*/
         //主要这行代码必须放在所有权限设置的最后，不然会导致所有 url 都被拦截 剩余的都需要认证
         /*filterChainDefinitionMap.put("/**", "authc");*/
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

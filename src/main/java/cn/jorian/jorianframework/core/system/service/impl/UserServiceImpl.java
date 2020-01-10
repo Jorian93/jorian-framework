@@ -1,7 +1,7 @@
 package cn.jorian.jorianframework.core.system.service.impl;
 
 import cn.jorian.jorianframework.common.exception.ServiceException;
-import cn.jorian.jorianframework.common.utils.EncryptPasswordTool;
+import cn.jorian.jorianframework.common.utils.JTool_EncryptPassword;
 import cn.jorian.jorianframework.core.system.dto.UserAddDTO;
 import cn.jorian.jorianframework.core.system.dto.UserFindDTO;
 import cn.jorian.jorianframework.core.system.entity.*;
@@ -53,7 +53,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
         BeanUtils.copyProperties(userAddDTO,findUser);
         findUser.setCreateTime(LocalDateTime.now());
         findUser.setUpdateTime(LocalDateTime.now());
-        String MD5Password = EncryptPasswordTool.ENCRYPT_MD5(findUser.getUsername(),findUser.getPassword());
+        String MD5Password = JTool_EncryptPassword.ENCRYPT_MD5(findUser.getUsername(),findUser.getPassword());
         findUser.setPassword(MD5Password);//密码加密后的user
         try{
             this.save(findUser);
