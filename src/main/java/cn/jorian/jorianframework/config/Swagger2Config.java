@@ -31,7 +31,7 @@ public class Swagger2Config {
                 .title("jorian-framework API")
                 .description("API of jorian-framework , simple and fast")
                 .version("1.0")
-                .contact(new Contact("jorian","jorianye.cn","jorianye@163.com"))
+                .contact(new Contact("jorian<jorianye@163.com>","jorianye.cn","jorianye@163.com"))
                 .build();
     }
 }
