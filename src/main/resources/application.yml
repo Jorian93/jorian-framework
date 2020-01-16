@@ -1,16 +1,12 @@
-server:
-  port: 8085
-  compression:
-    enabled: true
-    mime-types: application/json,application/xml,text/html,text/xml,text/plain
-    min-response-size: 1024
-  ssl:
-    key-store: classpath:2493853_jorianye.cn.pfx
-    key-store-password: 0D3vWiTE
-    key-store-type: PKCS12
 spring:
   profiles:
-    active: pro
+    active: dev
+  activiti:
+    check-process-definitions: true #自动检查、部署流程定义文件
+    database-schema-update: true #自动更新数据库结构
+    #流程定义文件存放目录
+    process-definition-location-prefix: classpath:/processes/
+    #process-definition-location-suffixes: #流程文件格式
   aop:
     proxy-target-class: true
     auto: true
@@ -77,7 +73,16 @@ spring:
     # #模板加载路径 按需配置 ,默认路径是 classpath:/templates/
     template-loader-path: classpath:/templates/
     #设定静态文件路径，js,css等
-
+server:
+  port: 8085
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 1024
+  ssl:
+    key-store: classpath:2493853_jorianye.cn.pfx
+    key-store-password: 0D3vWiTE
+    key-store-type: PKCS12
 # 日志框架
 logging:
   file: ../logs/jorian-log.log

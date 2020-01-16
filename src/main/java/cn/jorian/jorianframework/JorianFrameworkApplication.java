@@ -9,6 +9,9 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+/**
+ * @author jorian
+ */
 @Slf4j
 @SpringBootApplication
 @EnableConfigurationProperties
