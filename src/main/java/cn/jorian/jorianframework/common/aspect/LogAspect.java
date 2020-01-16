@@ -117,7 +117,7 @@ public class LogAspect {
     }
 
     private String paramFilter(Object[] params){
-        //判断是否含有密码敏感数据
+        //判断是否含有密码敏感数据，将含有密码的地方替换为*
         final String filterString = "******";
         if(params.length>0){
             for (int i = 0; i < params.length; i++) {

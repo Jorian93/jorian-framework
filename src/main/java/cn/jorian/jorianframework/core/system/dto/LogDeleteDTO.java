@@ -11,10 +11,15 @@ import java.time.LocalDateTime;
  * @Description:
  */
 @Data
-public class LogDeleteDTO extends PageDTO {
+public class LogDeleteDTO {
 
+    /**
+     * 开始时间
+     */
     private LocalDateTime startDateTime;
+    /**
+     * 结束时间
+     */
     private LocalDateTime endDateTime;
-
 
 }

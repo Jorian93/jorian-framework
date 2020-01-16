@@ -10,7 +10,7 @@ server:
     key-store-type: PKCS12
 spring:
   profiles:
-    active: dev
+    active: pro
   aop:
     proxy-target-class: true
     auto: true

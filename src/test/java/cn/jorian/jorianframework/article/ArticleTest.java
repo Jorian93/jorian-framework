@@ -18,14 +18,13 @@ public class ArticleTest {
 
     @Test
     public void articleget(){
-
         CountDownLatch countDownLatch =new CountDownLatch(1000);
 
         for(int i = 1000;i>0;i--){
-            new Thread();
-        }
+                new Thread();
+                }
 
-    }
+                }
 
 
-}
+                }
