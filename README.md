@@ -38,11 +38,11 @@
 
 # 相关图片
 1.  
-  ![image](https://github.com/Jorian93/hello-word/blob/master/images/2019-05-29_150510.png) 
+  ![image1](https://github.com/Jorian93/hello-word/blob/master/images/2019-05-29_150510.png)   
 2.  
-  ![image](https://github.com/Jorian93/hello-word/blob/master/images/2019-05-29_150552.png) 
+  ![image2](https://github.com/Jorian93/hello-word/blob/master/images/2019-05-29_150552.png)   
 3.  
-  ![image](https://github.com/Jorian93/hello-word/blob/master/images/2019-05-29_150617.png) 
+  ![image3](https://github.com/Jorian93/hello-word/blob/master/images/2019-05-29_150617.png)   
 # 联系我  
 如有任何疑问，请通过以下方式联系我：  
 * 邮件(1977474361@qq.com ; jorianye@163.com)    
