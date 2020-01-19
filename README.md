@@ -1,4 +1,4 @@
-演示地址：https://jorianye.cn:8088/framework-web  
+演示地址：http://jorianye.cn:8088/framework-web  
 测试账户：test  
 密码：test123
 前端项目传送门：https://github.com/Jorian93/jorian-web.git 
