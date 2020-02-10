@@ -31,7 +31,7 @@
 # 使用步骤  
 1.克隆项目  
 2.新建mysql数据库jorian-framework，导入目录下sql文件夹内的jorian-framework.sql   
-3.修改resources下的applicatiion-dev,将redis和数据库连接,rabbitmq,Elasticsearch修改为自己能用的 
+3.修改resources下的applicatiion-dev,修改redis和数据库连接,rabbitmq,Elasticsearch配置为自己的   
 4.启动项目即可
     
 
