@@ -1,7 +1,7 @@
 package cn.jorian.jorianframework.core.article.controller;
 
 
-import cn.jorian.jorianframework.common.annotation.Log;
+import cn.jorian.jorianframework.common.annotation.JLog;
 import cn.jorian.jorianframework.common.response.ResponseCode;
 import cn.jorian.jorianframework.common.response.ResponseResult;
 import cn.jorian.jorianframework.core.article.dto.CommontAddDTO;
@@ -32,7 +32,7 @@ public class CommontController {
 
     @ApiOperation(value = "新增评论")
     @RequestMapping(value = "/commont", method = RequestMethod.POST)
-    @Log("新增评论")
+    @JLog("新增评论")
     public ResponseResult addQuestion(@RequestBody @Validated @ApiParam(value = "评论数据") CommontAddDTO addDTO) {
         commontService.add(addDTO);
         return new ResponseResult(ResponseCode.SUCCESS);
@@ -40,7 +40,7 @@ public class CommontController {
 
     @ApiOperation("删除评论")
     @RequestMapping(value = "/commont/{id}", method = RequestMethod.DELETE)
-    @Log("删除评论")
+    @JLog("删除评论")
     public ResponseResult deleteQuestion(@PathVariable("id") @ApiParam(value = "评论id") String id) {
         commontService.delete(id);
         return new ResponseResult(ResponseCode.SUCCESS);
@@ -48,7 +48,7 @@ public class CommontController {
 
     @ApiOperation("更新评论")
     @RequestMapping(value = "/commonts", method = RequestMethod.POST)
-    @Log("更新评论")
+    @JLog("更新评论")
     public ResponseResult updateQuestion(@RequestBody @Validated @ApiParam(value = "评论更新数据") CommontUpdateDTO updateDTO) {
         commontService.update(updateDTO);
         return new ResponseResult(ResponseCode.SUCCESS);
@@ -56,14 +56,14 @@ public class CommontController {
 
     @ApiOperation(value = "评论详情")
     @RequestMapping(value = "/commont/{id}", method = RequestMethod.GET)
-    @Log("评论详情")
+    @JLog("评论详情")
     public ResponseResult fetchQuestion(@PathVariable("id") @ApiParam(value = "评论id") String id) {
         return new ResponseResult(ResponseCode.SUCCESS,commontService.getById(id));
     }
 
     @ApiOperation("评论列表查询")
     @RequestMapping(value = "/commonts", method = RequestMethod.GET)
-    @Log("查询评论列表")
+    @JLog("查询评论列表")
     public ResponseResult listQuestion(CommontFindDTO findDTO) {
         return new ResponseResult(ResponseCode.SUCCESS, commontService.getList(findDTO));
     }

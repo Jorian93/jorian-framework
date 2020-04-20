@@ -3,6 +3,7 @@ package cn.jorian.jorianframework.config.jwt;
 import cn.jorian.jorianframework.common.exception.ServiceException;
 import cn.jorian.jorianframework.common.response.ResponseCode;
 import cn.jorian.jorianframework.common.response.ResponseResult;
+import cn.jorian.jorianframework.config.rabbitmq.RabbitMQProviderConfig;
 import cn.jorian.jorianframework.core.account.service.impl.ExecuteLoginService;
 import com.alibaba.fastjson.JSON;
 import org.apache.shiro.subject.Subject;
@@ -33,7 +34,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
      */
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-        log.info("===权限filter执行=====");
+        log.info("【已进入JWT_filter...】");
         HttpServletResponse response1 = (HttpServletResponse)response;
         if(!this.isLoginAttempt(request,response)){
             this.writerResponse(response1, ResponseCode.PERMISSIN_FAIL.code, ResponseCode.PERMISSIN_FAIL.msg);

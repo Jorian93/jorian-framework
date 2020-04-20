@@ -46,7 +46,7 @@ public class UserRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        log.info("====Shiro认证执行======");
+        log.info("【已经入Shiro认证...】");
         JToken jToken =  (JToken) token;
 
         String username = jToken.getUsername()!=null?jToken.getUsername(): JTool_Token.get(jToken.getToken(),"username");
@@ -84,6 +84,7 @@ public class UserRealm extends AuthorizingRealm {
                 //realm name
                this.getName()
         );
+        log.info("【Shiro认证完成】");
         return info;
     }
 
@@ -94,7 +95,7 @@ public class UserRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        log.info("======Shiro授权执行=====");
+        log.info("【已进入Shiro授权...】");
         JToken jToken = new JToken();
         BeanUtils.copyProperties(principalCollection.getPrimaryPrincipal(),jToken);
         String username = jToken.getUsername()!=null?jToken.getUsername(): JTool_Token.get(jToken.getToken(),"username");
@@ -103,10 +104,12 @@ public class UserRealm extends AuthorizingRealm {
             Set<String> pSet = userService.getUserPermissions(username);
             info.setStringPermissions(pSet);
             //System.out.println(info.getStringPermissions());
-             return info;
+            log.info("【Shiro授权完成】");
+            return info;
         }else{
             throw new DisabledAccountException("用户信息异常，请重新登录！");
         }
+
     }
     /**
      * 重写方法,清除当前用户的的 授权缓存

@@ -1,10 +1,12 @@
 package cn.jorian.jorianframework.common.utils;
 
 
+import cn.jorian.jorianframework.config.jwt.JToken;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.UnsupportedEncodingException;
@@ -15,9 +17,10 @@ import java.util.Date;
  * @Date: 2019/4/17 14:46
  * @Description:
  */
+@Slf4j
 public class JTool_Token {
 
-    private static final long EXPIRE_TIME = 7*24*3600;
+
     @Autowired
     private org.springframework.data.redis.core.RedisTemplate RedisTemplate;
 
@@ -29,7 +32,8 @@ public class JTool_Token {
      * @return
      */
     public String generateToken(String uid,String username,String secret){
-        Date date = new Date(System.currentTimeMillis()+EXPIRE_TIME);
+        Date expiredDate = new Date(System.currentTimeMillis()+ JToken.EXPIRE_TIME);
+        log.info("【J-Token过期时间:{}...】",expiredDate);
         Algorithm algorithm = null;
         try {
             //加密盐
@@ -40,7 +44,7 @@ public class JTool_Token {
         return JWT.create()
                 .withClaim("uid",uid)
                 .withClaim("username",username)
-                .withExpiresAt(date)
+                .withExpiresAt(expiredDate)
                 .sign(algorithm);
     }
 

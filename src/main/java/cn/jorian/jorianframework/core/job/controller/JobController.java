@@ -1,7 +1,7 @@
 package cn.jorian.jorianframework.core.job.controller;
 
 
-import cn.jorian.jorianframework.common.annotation.Log;
+import cn.jorian.jorianframework.common.annotation.JLog;
 import cn.jorian.jorianframework.common.response.ResponseCode;
 import cn.jorian.jorianframework.common.response.ResponseResult;
 import cn.jorian.jorianframework.common.utils.JTool_Spring;
@@ -29,7 +29,7 @@ public class JobController {
 	@Autowired
 	private JobService jobService;
 
-	@Log("新增定时任务")
+	@JLog("新增定时任务")
 	@ApiOperation("添加定时任务")
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public ResponseResult add(@RequestBody @Validated @ApiParam(value = "定时任务基础信息") JobAddDTO jobAddDTO) {
@@ -38,7 +38,7 @@ public class JobController {
 		return new ResponseResult(ResponseCode.SUCCESS);
 	}
 
-	@Log("更新定时任务")
+	@JLog("更新定时任务")
 	@ApiOperation("更新定时任务")
 	@RequestMapping(value = "/update", method = RequestMethod.PUT)
 	public ResponseResult update(@RequestBody @ApiParam(value = "定时任务基础信息") Job job) {
@@ -46,7 +46,7 @@ public class JobController {
 		return new ResponseResult(ResponseCode.SUCCESS);
 	}
 
-	@Log("逻辑删除定时任务")
+	@JLog("逻辑删除定时任务")
 	@ApiOperation("删除定时任务")
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
 	public ResponseResult delete(@PathVariable @ApiParam(value = "定时任务id") String id) throws SchedulerException{

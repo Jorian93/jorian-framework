@@ -1,6 +1,6 @@
 package cn.jorian.jorianframework.core.account.controller;
 
-import cn.jorian.jorianframework.common.annotation.Log;
+import cn.jorian.jorianframework.common.annotation.JLog;
 import cn.jorian.jorianframework.common.response.ResponseCode;
 import cn.jorian.jorianframework.common.response.ResponseResult;
 import cn.jorian.jorianframework.core.account.dto.UsernamePasswordDTO;
@@ -30,21 +30,21 @@ public class AccountController {
 
     @ApiOperation(value = "登入系统")
     @RequestMapping(method = RequestMethod.POST)
-    @Log("登入系统")
+    @JLog("登入系统")
     public ResponseResult login(@RequestBody @Validated @ApiParam(value = "登录数据",required = true) UsernamePasswordDTO loginDTO){
         return new ResponseResult(ResponseCode.SIGN_IN_SUCCESS,accountService.login(loginDTO));
     }
 
     @ApiOperation(value="登出系统")
     @RequestMapping(method = RequestMethod.DELETE)
-    @Log("登出系统")
+    @JLog("登出系统")
     public ResponseResult logout(){
         return new ResponseResult(ResponseCode.SUCCESS);
     }
 
     @ApiOperation(value="重置密码")
     @RequestMapping(value = "/resetPassword",method = RequestMethod.POST)
-    @Log("重置密码")
+    @JLog("重置密码")
     public ResponseResult resetPassword(@RequestBody @Validated @ApiParam(value = "新旧密码数据",required = true) RestPasswordDTO resetPasswordDTO){
         accountService.resetPassword(resetPasswordDTO);
         return new ResponseResult(ResponseCode.SUCCESS);

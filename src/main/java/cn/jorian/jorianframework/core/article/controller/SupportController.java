@@ -1,7 +1,7 @@
 package cn.jorian.jorianframework.core.article.controller;
 
 
-import cn.jorian.jorianframework.common.annotation.Log;
+import cn.jorian.jorianframework.common.annotation.JLog;
 import cn.jorian.jorianframework.common.response.ResponseCode;
 import cn.jorian.jorianframework.common.response.ResponseResult;
 import cn.jorian.jorianframework.core.article.dto.SupportAddDTO;
@@ -29,7 +29,7 @@ public class SupportController {
     SupportService supportService;
     @ApiOperation(value = "新增点赞")
     @RequestMapping(value = "/support", method = RequestMethod.POST)
-    @Log("新增点赞")
+    @JLog("新增点赞")
     public ResponseResult addQuestion(@RequestBody @Validated @ApiParam(value = "点赞数据") SupportAddDTO addDTO) {
         supportService.add(addDTO);
         return new ResponseResult(ResponseCode.SUCCESS);
@@ -37,7 +37,7 @@ public class SupportController {
 
     @ApiOperation("删除点赞")
     @RequestMapping(value = "/support/{id}", method = RequestMethod.DELETE)
-    @Log("删除点赞")
+    @JLog("删除点赞")
     public ResponseResult deleteQuestion(@PathVariable("id") @ApiParam(value = "点赞id") String id) {
         supportService.delete(id);
         return new ResponseResult(ResponseCode.SUCCESS);

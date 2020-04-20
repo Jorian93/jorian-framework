@@ -1,6 +1,18 @@
+server:
+  port: 8085
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 1024
+  ssl:
+    key-store: classpath:2493853_jorianye.cn.pfx
+    key-store-password: 0D3vWiTE
+    key-store-type: PKCS12
+  servlet:
+    context-path: ""
 spring:
   profiles:
-    active: pro
+    active: dev
   activiti:
     check-process-definitions: true #自动检查、部署流程定义文件
     database-schema-update: true #自动更新数据库结构
@@ -73,19 +85,18 @@ spring:
     # #模板加载路径 按需配置 ,默认路径是 classpath:/templates/
     template-loader-path: classpath:/templates/
     #设定静态文件路径，js,css等
-server:
-  port: 8085
-  compression:
-    enabled: true
-    mime-types: application/json,application/xml,text/html,text/xml,text/plain
-    min-response-size: 1024
-  ssl:
-    key-store: classpath:2493853_jorianye.cn.pfx
-    key-store-password: 0D3vWiTE
-    key-store-type: PKCS12
-# 日志框架
-logging:
-  file: ../logs/jorian-log.log
-  level:
-    root: info
+
+# JWT
+jwt:
+  token:
+    name: "J-Token"
+    expired-time: 2*60*60*1000
+
+
+#mybatis-plus:
+#  global-config:
+#    db-config:
+      #logic-delete-field: flag  #全局逻辑删除字段值 3.3.0开始支持，详情看下面。
+      #logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      #logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
 

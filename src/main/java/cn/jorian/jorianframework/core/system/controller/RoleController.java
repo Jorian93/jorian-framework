@@ -1,6 +1,6 @@
 package cn.jorian.jorianframework.core.system.controller;
 
-import cn.jorian.jorianframework.common.annotation.Log;
+import cn.jorian.jorianframework.common.annotation.JLog;
 import cn.jorian.jorianframework.common.response.ResponseCode;
 import cn.jorian.jorianframework.common.response.ResponseResult;
 import cn.jorian.jorianframework.core.system.dto.RoleAddDTO;
@@ -28,28 +28,28 @@ public class RoleController {
 
     @ApiOperation("新增角色")
     @RequestMapping(value="/role/add",method = RequestMethod.POST)
-    @Log("新增角色")
+    @JLog("新增角色")
     public ResponseResult roleAdd(@RequestBody @Validated @ApiParam(value = "角色基础信息") RoleAddDTO roleAddDTO){
         roleService.add(roleAddDTO);
         return new ResponseResult(ResponseCode.SUCCESS);
     }
     @ApiOperation("删除角色")
     @RequestMapping(value="/role/delete/{id}",method = RequestMethod.DELETE)
-    @Log("删除角色")
+    @JLog("删除角色")
     public ResponseResult roleDelete(@PathVariable("id") @ApiParam(value = "角色id")String id){
         roleService.delete(id);
         return new ResponseResult(ResponseCode.SUCCESS);
     }
     @ApiOperation("更新角色")
     @RequestMapping(value="/role/update",method = RequestMethod.PUT)
-    @Log("更新角色")
+    @JLog("更新角色")
     public ResponseResult roleUpdate(@RequestBody @Validated @ApiParam(value = "角色更新数据") SysRole sysRole){
         roleService.update(sysRole);
         return new ResponseResult(ResponseCode.SUCCESS);
     }
     @ApiOperation("角色列表查询")
     @RequestMapping(value="/role/list",method = RequestMethod.GET)
-    @Log("角色列表查询")
+    @JLog("角色列表查询")
     public ResponseResult roleList(RoleFindDTO roleFindDTO){
         return new ResponseResult(ResponseCode.SUCCESS, roleService.getList(roleFindDTO));
     }

@@ -9,12 +9,9 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 
 /**
- * <p>
- *
- * </p>
- *
- * @author jorian
- * @since 2019-04-24
+ * @Author: jorian
+ * @Date: 2019/4/18 15:56
+ * @Description:
  */
 @Data
 @Accessors(chain = true)

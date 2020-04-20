@@ -37,7 +37,10 @@ spring:
 files:
   path: ${file-path:d:/files}
   url: "http://localhost:8084"
-
+logging:
+  file: ../logs/jorian-log.log
+  level:
+    root: info
 
 
 

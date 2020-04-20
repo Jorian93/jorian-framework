@@ -1,12 +1,5 @@
 package cn.jorian.jorianframework.common.utils;
 
-import com.alibaba.fastjson.JSONObject;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.web.client.RestTemplate;
-
 import javax.servlet.http.HttpServletRequest;
 
 /**

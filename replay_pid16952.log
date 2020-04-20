@@ -843,7 +843,7 @@ instanceKlass com/mysql/jdbc/RowData
 instanceKlass com/mysql/jdbc/ResultSetRow
 instanceKlass com/mysql/jdbc/DatabaseMetaData
 instanceKlass com/mysql/jdbc/TimeUtil
-instanceKlass com/mysql/jdbc/log/LogFactory
+instanceKlass com/mysql/jdbc/JLog/LogFactory
 instanceKlass com/mysql/jdbc/Collation
 instanceKlass com/mysql/jdbc/MysqlCharset
 instanceKlass com/mysql/jdbc/CharsetMapping
@@ -854,9 +854,9 @@ instanceKlass com/mysql/jdbc/PerConnectionLRUFactory
 instanceKlass com/mysql/jdbc/PerVmServerConfigCacheFactory
 instanceKlass com/mysql/jdbc/CacheAdapterFactory
 instanceKlass com/mysql/jdbc/JDBC4MySQLConnection
-instanceKlass com/mysql/jdbc/log/NullLogger
+instanceKlass com/mysql/jdbc/JLog/NullLogger
 instanceKlass com/mysql/jdbc/ConnectionPropertiesImpl$ConnectionProperty
-instanceKlass com/mysql/jdbc/log/StandardLogger
+instanceKlass com/mysql/jdbc/JLog/StandardLogger
 instanceKlass com/mysql/jdbc/StatementInterceptorV2
 instanceKlass com/mysql/jdbc/IterateBlock
 instanceKlass com/mysql/jdbc/ConnectionPropertiesImpl
@@ -884,7 +884,7 @@ instanceKlass com/mysql/jdbc/Buffer
 instanceKlass com/mysql/jdbc/StatementImpl
 instanceKlass com/mysql/jdbc/Statement
 instanceKlass com/mysql/jdbc/Wrapper
-instanceKlass com/mysql/jdbc/log/Log
+instanceKlass com/mysql/jdbc/JLog/Log
 instanceKlass com/mysql/jdbc/MySQLConnection
 instanceKlass com/mysql/jdbc/Connection
 instanceKlass com/mysql/jdbc/ConnectionProperties

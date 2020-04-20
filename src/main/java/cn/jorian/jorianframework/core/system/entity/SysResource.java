@@ -7,14 +7,10 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.util.List;
-
 /**
- * <p>
- *
- * </p>
- *
- * @author jorian
- * @since 2019-04-24
+ * @Author: jorian
+ * @Date: 2019/4/18 15:56
+ * @Description:
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

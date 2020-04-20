@@ -1,5 +1,6 @@
 package cn.jorian.jorianframework.common.exception;
 
+import cn.jorian.jorianframework.common.utils.JTool_EncryptPassword;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
 /**

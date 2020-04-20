@@ -9,8 +9,8 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import java.util.List;
 
 /**
- * @Author: Administrator
- * @Date: 2019/4/17 08:50
+ * @Author: jorian
+ * @Date: 2019/4/18 15:56
  * @Description:
  */
 @Data

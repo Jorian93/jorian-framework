@@ -29,7 +29,7 @@ public class MybatisPlusGeneratorConfig {
         gc.setOutputDir(projectPath + "/src/main/java");
         gc.setAuthor("jorian");
         gc.setOpen(false);
-        // gc.setSwagger2(true); 实体属性 Swagger2 注解
+        gc.setSwagger2(true); //实体属性 Swagger2 注解
         generator.setGlobalConfig(gc);
 
         // 数据源配置
@@ -54,6 +54,16 @@ public class MybatisPlusGeneratorConfig {
                 // to do nothing
             }
         };
+        // 配置模板
+        TemplateConfig templateConfig = new TemplateConfig();
+
+        // 配置自定义输出模板
+        //指定自定义模板路径，注意不要带上.ftl/.vm, 会根据使用的模板引擎自动识别
+        // templateConfig.setEntity("templates/entity2.java");
+        // templateConfig.setService();
+        // templateConfig.setController();
+        templateConfig.setXml(null);
+        generator.setTemplate(templateConfig);
 
         // 如果模板引擎是 freemarker
         //String templatePath = "/templates/mapper.xml.ftl";
@@ -71,35 +81,15 @@ public class MybatisPlusGeneratorConfig {
                         + "/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
             }
         });
-        /*
-        cfg.setFileCreate(new IFileCreate() {
-            @Override
-            public boolean isCreate(ConfigBuilder configBuilder, FileType fileType, String filePath) {
-                // 判断自定义文件夹是否需要创建
-                checkDir("调用默认方法创建的目录");
-                return false;
-            }
-        });
-        */
+
         cfg.setFileOutConfigList(focList);
         generator.setCfg(cfg);
-
-        // 配置模板
-        TemplateConfig templateConfig = new TemplateConfig();
-
-        // 配置自定义输出模板
-        //指定自定义模板路径，注意不要带上.ftl/.vm, 会根据使用的模板引擎自动识别
-        // templateConfig.setEntity("templates/entity2.java");
-        // templateConfig.setService();
-        // templateConfig.setController();
-
-        templateConfig.setXml(null);
-        generator.setTemplate(templateConfig);
 
         // 数据库表策略配置
         StrategyConfig strategy = new StrategyConfig();
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
+
         //设置父实体类
         strategy.setSuperEntityClass("cn.jorian.jorianframework.common.model.BaseModel");
         String [] superEntityColumns = {"id","createTime","updateTime"};

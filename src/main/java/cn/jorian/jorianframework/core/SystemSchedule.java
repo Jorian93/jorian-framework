@@ -19,11 +19,11 @@ import javax.annotation.PostConstruct;
 @Slf4j
 @Configuration
 public class SystemSchedule {
+
     @Autowired
     private JobService jobService;
     @Autowired
     private TaskExecutor taskExecutor;
-
     /**
      * 初始化一个定时删除日志的任务，随系统启动
      */
