@@ -23,20 +23,22 @@ public class ServiceException extends RuntimeException implements Serializable{
     public ServiceException(String message){
         super(message);
     }
-    public ServiceException(Throwable e){
-        super(e);
+    public ServiceException(String message, Throwable e){
+        super(message,e);
     }
     public ServiceException(String message, Integer status){
         this.message = message;
         this.status = status;
     }
+    public ServiceException(Throwable e){
+        super(e);
+    }
+
     public ServiceException(ResponseCode responseCode){
         this.message = responseCode.msg;
         this.status = responseCode.code;
     }
-    public ServiceException(String message, Throwable e){
-        super(message,e);
-    }
+
     public ServiceException(String message, Throwable e, boolean enableSuppression, boolean writableStackTrace){
         super(message,e,enableSuppression,writableStackTrace);
     }

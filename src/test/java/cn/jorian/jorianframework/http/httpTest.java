@@ -1,6 +1,6 @@
 package cn.jorian.jorianframework.http;
 
-import cn.jorian.jorianframework.common.utils.JTool_HttpClient;
+import cn.jorian.jorianframework.common.utils.ToolHttpClient;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -20,7 +20,7 @@ public class httpTest {
 
     @Test
     public void httpGetTest(){
-        JTool_HttpClient httpClient = new JTool_HttpClient();
+        ToolHttpClient httpClient = new ToolHttpClient();
         Map parmas = new HashMap<String,String>();
         parmas.put("name","好久不见");
         String s = httpClient.send("https://api.apiopen.top/searchMusic", parmas,"GET");
@@ -29,7 +29,7 @@ public class httpTest {
 
     @Test
     public void httpGetTest2(){
-        JTool_HttpClient httpClient = new JTool_HttpClient();
+        ToolHttpClient httpClient = new ToolHttpClient();
         Map parmas = new HashMap<String,String>();
 
         Map m = new HashMap<String,String >();

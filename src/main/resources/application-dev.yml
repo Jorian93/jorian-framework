@@ -14,26 +14,26 @@ spring:
         max-idle: 8
         max-active: 8
         max-wait: -1ms
-  rabbitmq:
-    username: jorian
-    password: jorian
-    host: 192.168.200.9
-    port: 5672
-    virtual-host: /
-    listener:
-      simple:
-        concurrency: 10
-        max-concurrency: 20
-        prefetch: 50
+  # rabbitmq:
+  #   username: jorian
+  #   password: jorian
+  #   host: 192.168.200.9
+  #   port: 5672
+  #   virtual-host: /
+  #   listener:
+  #     simple:
+  #       concurrency: 10
+  #       max-concurrency: 20
+  #       prefetch: 50
   #responsetory 操作es
-  data:
-    elasticsearch:
-      cluster-nodes: 192.168.200.10:9300
-      cluster-name: elasticsearch
-  # jest方式操作es
-  elasticsearch:
-    jest:
-      uris: http://192.168.200.10:9200
+  # data:
+  #   elasticsearch:
+  #     cluster-nodes: 192.168.200.10:9300
+  #     cluster-name: elasticsearch
+  # # jest方式操作es
+  # elasticsearch:
+  #   jest:
+  #     uris: http://192.168.200.10:9200
 files:
   path: ${file-path:d:/files}
   url: "http://localhost:8084"

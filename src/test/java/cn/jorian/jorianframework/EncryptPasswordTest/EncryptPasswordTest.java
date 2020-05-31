@@ -1,9 +1,11 @@
 package cn.jorian.jorianframework.EncryptPasswordTest;
 
-import cn.jorian.jorianframework.common.utils.JTool_EncryptPassword;
+import cn.jorian.jorianframework.common.utils.ToolEncryptPassword;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * @author: jorian
@@ -11,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @description: this is  description for the class
  */
 @Slf4j
+@RunWith(SpringRunner.class)
 @SpringBootTest
 public class EncryptPasswordTest {
 
@@ -19,7 +22,7 @@ public class EncryptPasswordTest {
         String username = "jorian1";
         String password = "jorian1";
 
-        System.out.println(JTool_EncryptPassword.ENCRYPT_MD5(username,password));
+        System.out.println(ToolEncryptPassword.ENCRYPT_MD5(username,password));
     }
 
 }

@@ -1,7 +1,7 @@
 package cn.jorian.jorianframework.core.system.controller;
 
 
-import cn.jorian.jorianframework.common.annotation.JLog;
+import cn.jorian.jorianframework.common.annotation.Jlog;
 import cn.jorian.jorianframework.common.response.ResponseCode;
 import cn.jorian.jorianframework.common.response.ResponseResult;
 import cn.jorian.jorianframework.core.system.dto.LogDeleteDTO;
@@ -36,14 +36,14 @@ public class LogController {
 
     @ApiOperation("日志列表查询")
     @RequestMapping(value = "/log/list", method = RequestMethod.GET)
-    @JLog("查询日志")
+    @Jlog("查询日志")
     public ResponseResult logList(@ApiParam(value = "日志查询条件") LogFindDTO logFindDTO) {
         return new ResponseResult(ResponseCode.SUCCESS, logService.getList(logFindDTO));
     }
 
     @ApiOperation("删除日志")
     @RequestMapping(value = "log/delete/{id}", method = RequestMethod.DELETE)
-    @JLog("删除日志")
+    @Jlog("删除日志")
     @RequiresPermissions("[log:delete:jorian]")
     public ResponseResult logDelete(@PathVariable("id") @ApiParam(value = "要删除的日志id")String id) {
         return new ResponseResult(ResponseCode.SUCCESS, logService.removeById(id));
@@ -51,7 +51,7 @@ public class LogController {
 
     @ApiOperation("按照id批量删除日志")
     @RequestMapping(value = "log/delete/ids", method = RequestMethod.DELETE)
-    @JLog("删除日志")
+    @Jlog("删除日志")
     @RequiresPermissions("[log:delete:jorian]")
     public ResponseResult logDeleteByIds(@ApiParam(value = "日志id集合")List<String > ids) {
         logService.deleteByIds(ids);
@@ -60,7 +60,7 @@ public class LogController {
 
     @ApiOperation("按起止日期删除日志")
     @RequestMapping(value = "log/delete/date/", method = RequestMethod.DELETE)
-    @JLog("删除日志")
+    @Jlog("删除日志")
     @RequiresPermissions("[log:delete:jorian]")
     public ResponseResult logDeleteByDate(@ApiParam(value = "日志删除起止日期") LogDeleteDTO logDeleteDTO) {
         logService.deleteByDate(logDeleteDTO);

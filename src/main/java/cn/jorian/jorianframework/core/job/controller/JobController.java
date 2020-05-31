@@ -1,10 +1,10 @@
 package cn.jorian.jorianframework.core.job.controller;
 
 
-import cn.jorian.jorianframework.common.annotation.JLog;
+import cn.jorian.jorianframework.common.annotation.Jlog;
 import cn.jorian.jorianframework.common.response.ResponseCode;
 import cn.jorian.jorianframework.common.response.ResponseResult;
-import cn.jorian.jorianframework.common.utils.JTool_Spring;
+import cn.jorian.jorianframework.common.utils.ToolSpring;
 import cn.jorian.jorianframework.core.job.dto.JobAddDTO;
 import cn.jorian.jorianframework.core.job.dto.JobFindDTO;
 import cn.jorian.jorianframework.core.job.entity.Job;
@@ -29,7 +29,7 @@ public class JobController {
 	@Autowired
 	private JobService jobService;
 
-	@JLog("新增定时任务")
+	@Jlog("新增定时任务")
 	@ApiOperation("添加定时任务")
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public ResponseResult add(@RequestBody @Validated @ApiParam(value = "定时任务基础信息") JobAddDTO jobAddDTO) {
@@ -38,7 +38,7 @@ public class JobController {
 		return new ResponseResult(ResponseCode.SUCCESS);
 	}
 
-	@JLog("更新定时任务")
+	@Jlog("更新定时任务")
 	@ApiOperation("更新定时任务")
 	@RequestMapping(value = "/update", method = RequestMethod.PUT)
 	public ResponseResult update(@RequestBody @ApiParam(value = "定时任务基础信息") Job job) {
@@ -46,7 +46,7 @@ public class JobController {
 		return new ResponseResult(ResponseCode.SUCCESS);
 	}
 
-	@JLog("逻辑删除定时任务")
+	@Jlog("逻辑删除定时任务")
 	@ApiOperation("删除定时任务")
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
 	public ResponseResult delete(@PathVariable @ApiParam(value = "定时任务id") String id) throws SchedulerException{
@@ -75,12 +75,12 @@ public class JobController {
 	@ApiOperation("获得spring中注册的所有bean的name")
 	@GetMapping("/beans")
 	public ResponseResult listAllBeanName() {
-		return new ResponseResult(ResponseCode.SUCCESS, JTool_Spring.getBeanNames());
+		return new ResponseResult(ResponseCode.SUCCESS, ToolSpring.getBeanNames());
 	}
 	@ApiOperation(value = "springBean的无参方法")
 	@GetMapping("/beans/method/{name}")
 	public ResponseResult listMethodName(@PathVariable String name) {
-		return new ResponseResult(ResponseCode.SUCCESS, JTool_Spring.getBeansMethods(name));
+		return new ResponseResult(ResponseCode.SUCCESS, ToolSpring.getBeansMethods(name));
 	}
 
 

@@ -25,13 +25,19 @@ public class BaseModel implements Serializable {
     @TableId(value = "id", type = IdType.ID_WORKER_STR)
     private String id;
 
+
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @TableField("createTime")
     LocalDateTime createTime;
 
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @TableField("updateTime")
-    LocalDateTime updateTime;
+    LocalDateTime updatedTime;
+
+    String updatedBy;
+    
+    String createBy;
+
+
+
 }

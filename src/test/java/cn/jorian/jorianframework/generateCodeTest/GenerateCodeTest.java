@@ -17,7 +17,7 @@ public class GenerateCodeTest {
 
     @Test
     public void generateCode(){
-        MybatisPlusGeneratorConfig mybatisPlusGeneratorConfig =new MybatisPlusGeneratorConfig();
-        mybatisPlusGeneratorConfig.generatorCode();
+        //MybatisPlusGeneratorConfig mybatisPlusGeneratorConfig =new MybatisPlusGeneratorConfig();
+        //mybatisPlusGeneratorConfig.generatorCode();
     }
 }

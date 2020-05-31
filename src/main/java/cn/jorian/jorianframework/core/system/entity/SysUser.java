@@ -1,12 +1,12 @@
 package cn.jorian.jorianframework.core.system.entity;
 
-import cn.jorian.jorianframework.common.model.BaseModel;
+import java.util.List;
+
 import com.baomidou.mybatisplus.annotation.TableField;
+
+import cn.jorian.jorianframework.common.model.BaseModel;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.springframework.data.elasticsearch.annotations.Document;
-
-import java.util.List;
 
 /**
  * @Author: jorian
@@ -15,7 +15,6 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-@Document(indexName = "users",type = "user")
 public class SysUser extends BaseModel {
 
     private String nickname;
@@ -27,6 +26,7 @@ public class SysUser extends BaseModel {
     private String phone;
     private String email;
     private String avatar;
+
     @TableField(exist = false)
     List<SysRole> roles;
 }

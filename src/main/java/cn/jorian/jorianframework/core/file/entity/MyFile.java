@@ -18,7 +18,7 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName("file_info")
+@TableName("t_file")
 public class MyFile extends BaseModel {
 
     @TableField("contentType")

@@ -1,6 +1,6 @@
 package cn.jorian.jorianframework.core.mail.service.impl;
 
-import cn.jorian.jorianframework.common.utils.JTool_Mail;
+import cn.jorian.jorianframework.common.utils.ToolMail;
 import cn.jorian.jorianframework.core.account.service.AccountService;
 import cn.jorian.jorianframework.core.mail.dto.MailAddDTO;
 import cn.jorian.jorianframework.core.mail.dto.MailFindDTO;
@@ -29,9 +29,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.mail.MessagingException;
+
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author jorian
@@ -40,11 +42,10 @@ import java.util.stream.Collectors;
 @Service
 public class MailServiceImpl extends ServiceImpl<MailMapper, Mail> implements MailService {
 
-
     private static final Logger log = LoggerFactory.getLogger("adminLogger");
 
     @Autowired
-    private JTool_Mail jToolMail;
+    private ToolMail jToolMail;
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -53,51 +54,50 @@ public class MailServiceImpl extends ServiceImpl<MailMapper, Mail> implements Ma
     @Autowired
     private DataSourceTransactionManager transactionManager;
 
-
     @Override
     @Transactional
     public void saveMail(MailAddDTO addDTO) {
         Mail mail = new Mail();
-        BeanUtils.copyProperties(addDTO,mail);
+        BeanUtils.copyProperties(addDTO, mail);
         String toUsers = mail.getToUsers().trim();
         if (StringUtils.isBlank(toUsers)) {
             throw new IllegalArgumentException("收件人不能为空");
         }
-        //过滤收件人
+        // 过滤收件人
         toUsers = toUsers.replace(" ", "");
         toUsers = toUsers.replace("；", ";");
         String[] tousers = toUsers.split(";");
 
         List<String> toUserss = Arrays.asList(tousers);
-        toUserss = toUserss.stream().filter(u -> !StringUtils.isBlank(u)).map(u -> u.trim()).collect(Collectors.toList());
-        mail.setUserId("blog-main-sender");
+        toUserss = toUserss.stream().filter(u -> !StringUtils.isBlank(u)).map(u -> u.trim())
+                .collect(Collectors.toList());
+
+        mail.setUserId("admain-sender");
         String userid = accountService.getCurrentUser().getId();
-        if(userid!=null){
+        if (userid != null) {
             mail.setUserId(userid);
         }
         mail.setCreateTime(LocalDateTime.now());
-        mail.setUpdateTime(LocalDateTime.now());
+        mail.setUpdatedTime(LocalDateTime.now());
         this.save(mail);
         toUserss.forEach(u -> {
             DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-            // explicitly setting the transaction name is something that can only be done programmatically
+            // explicitly setting the transaction name is something that can only be done
+            // programmatically
             def.setName("hh");
             int status = 0;
-            TransactionStatus statuss = transactionManager.getTransaction(def);//定义点位？
+
             try {
                 jToolMail.sendMail(u, mail.getSubject(), mail.getContent());
                 status = 1;
-            } catch (Exception e) {
-                log.error("发送邮件失败", e);
-                transactionManager.rollback(statuss);//手动回滚
+            } catch (MessagingException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
-            MailTo mailTo = MailTo.builder()
-                    .mailId(mail.getId())
-                    .toUser(u)
-                    .status(status)
-                    .build();
+            
+            MailTo mailTo = MailTo.builder().mailId(mail.getId()).toUser(u).status(status).build();
             mailTo.setCreateTime(LocalDateTime.now());
-            mailTo.setUpdateTime(LocalDateTime.now());
+            mailTo.setUpdatedTime(LocalDateTime.now());
             mailToService.save(mailTo);
         });
 

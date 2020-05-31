@@ -43,7 +43,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, SysRole> implements
         findRole = new SysRole();
         BeanUtils.copyProperties(roleAddDTO,findRole);
         findRole.setCreateTime(LocalDateTime.now());
-        findRole.setUpdateTime(LocalDateTime.now());
+        findRole.setUpdatedTime(LocalDateTime.now());
         this.save(findRole);
         //保存角色资源表
         roleAddDTO.getResources().forEach((item)->{

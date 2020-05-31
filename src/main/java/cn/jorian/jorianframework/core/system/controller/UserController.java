@@ -1,6 +1,11 @@
+/*
+ * @Description: 
+ * @Author: jorian
+ * @Date: 2020-05-15 22:49:11
+ */ 
 package cn.jorian.jorianframework.core.system.controller;
 
-import cn.jorian.jorianframework.common.annotation.JLog;
+import cn.jorian.jorianframework.common.annotation.Jlog;
 import cn.jorian.jorianframework.common.response.ResponseCode;
 import cn.jorian.jorianframework.common.response.ResponseResult;
 import cn.jorian.jorianframework.core.system.dto.UserAddDTO;
@@ -28,7 +33,7 @@ public class UserController {
 
  @ApiOperation(value = "新增用户")
  @RequestMapping(value = "/user/add", method = RequestMethod.POST)
- @JLog("新增用户")
+ @Jlog("新增用户")
  public ResponseResult add(@RequestBody @Validated @ApiParam(value = "用户数据") UserAddDTO addDTO) {
   userService.add(addDTO);
   return new ResponseResult(ResponseCode.SUCCESS);
@@ -36,7 +41,7 @@ public class UserController {
 
  @ApiOperation("删除用户")
  @RequestMapping(value = "/user/delete/{id}", method = RequestMethod.DELETE)
- @JLog("删除用户")
+ @Jlog("删除用户")
  public ResponseResult roleDelete(@PathVariable("id") @ApiParam(value = "用户id") String id) {
   userService.delete(id);
   return new ResponseResult(ResponseCode.SUCCESS);
@@ -44,7 +49,7 @@ public class UserController {
 
  @ApiOperation("更新用户")
  @RequestMapping(value = "/user/update", method = RequestMethod.PUT)
- @JLog("更新用户")
+ @Jlog("更新用户")
  public ResponseResult roleUpdate(@RequestBody @Validated @ApiParam(value = "用户更新数据") SysUser sysUser) {
   userService.update(sysUser);
   return new ResponseResult(ResponseCode.SUCCESS);
@@ -52,7 +57,7 @@ public class UserController {
 
  @ApiOperation("用户列表查询")
  @RequestMapping(value = "/user/list", method = RequestMethod.GET)
- @JLog("查询用户列表")
+ @Jlog("查询用户列表")
  public ResponseResult roleList(UserFindDTO roleFindDTO) {
   return new ResponseResult(ResponseCode.SUCCESS, userService.getList(roleFindDTO));
  }

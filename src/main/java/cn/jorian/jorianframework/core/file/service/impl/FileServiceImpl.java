@@ -119,7 +119,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, MyFile> implements 
         result.setError(ResponseCode.UPLOAD_SUCCESS.code);
         //保存信息
         myFile.setCreateTime(LocalDateTime.now());
-        myFile.setUpdateTime(LocalDateTime.now());
+        myFile.setUpdatedTime(LocalDateTime.now());
         myFile.setType(0);
         this.save(myFile);
 

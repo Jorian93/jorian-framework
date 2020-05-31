@@ -1,7 +1,7 @@
 package cn.jorian.jorianframework.core.system.service.impl;
 
 import cn.jorian.jorianframework.common.exception.ServiceException;
-import cn.jorian.jorianframework.common.utils.JTool_EncryptPassword;
+import cn.jorian.jorianframework.common.utils.ToolEncryptPassword;
 import cn.jorian.jorianframework.core.system.dto.UserAddDTO;
 import cn.jorian.jorianframework.core.system.dto.UserFindDTO;
 import cn.jorian.jorianframework.core.system.entity.*;
@@ -52,53 +52,51 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
         findUser = new SysUser();
         BeanUtils.copyProperties(userAddDTO,findUser);
         findUser.setCreateTime(LocalDateTime.now());
-        findUser.setUpdateTime(LocalDateTime.now());
-        String MD5Password = JTool_EncryptPassword.ENCRYPT_MD5(findUser.getUsername(),findUser.getPassword());
-        findUser.setPassword(MD5Password);//密码加密后的user
-        try{
+        findUser.setUpdatedTime(LocalDateTime.now());
+        String MD5Password = ToolEncryptPassword.ENCRYPT_MD5(findUser.getUsername(), findUser.getPassword());
+        findUser.setPassword(MD5Password);// 密码加密后的user
+        try {
             this.save(findUser);
-            //插入用户角色表
-            try{
-                userAddDTO.getRoles().forEach((item)->{
-                    SysUser newUser = this.getOne(new QueryWrapper<SysUser>().eq("username",userAddDTO.getUsername()));
-                    userRoleService.save(new SysUserRole()
-                            .setUid(newUser.getId())
-                            .setRid(item.getId()));
+            // 插入用户角色表
+            try {
+                userAddDTO.getRoles().forEach((item) -> {
+                    SysUser newUser = this.getOne(new QueryWrapper<SysUser>().eq("username", userAddDTO.getUsername()));
+                    userRoleService.save(new SysUserRole().setUid(newUser.getId()).setRid(item.getId()));
                 });
-            }catch (Exception e){
-                throw new ServiceException("用户角色表修改失败",e);
+            } catch (Exception e) {
+                throw new ServiceException("用户角色表修改失败", e);
             }
-        }catch(Exception e){
-            throw new ServiceException("用户保存失败",e);
+        } catch (Exception e) {
+            throw new ServiceException("用户保存失败", e);
         }
     }
 
     @Override
     public void delete(String id) {
-        if(id==null){
+        if (id == null) {
             throw new ServiceException("请输入要删除的用户id");
         }
         SysUser findUser = this.getById(id);
-        //this.getById(id);
-        if(findUser == null) {
+        // this.getById(id);
+        if (findUser == null) {
             throw new ServiceException("要删除的用户不存在");
         }
         this.removeById(id);
-        //并删除用户角色关系表
-        userRoleService.remove(new QueryWrapper<SysUserRole>().eq("Uid",id));
+        // 并删除用户角色关系表
+        userRoleService.remove(new QueryWrapper<SysUserRole>().eq("Uid", id));
     }
 
     @Override
     public void update(SysUser sysUser) {
-        if(sysUser==null){
+        if (sysUser == null) {
             throw new ServiceException("不能保存空的资源");
         }
         SysUser findUser = this.getById(sysUser.getId());
-        if(findUser ==null) {
+        if (findUser == null) {
             throw new ServiceException("更新的资源不存在");
         }
-        BeanUtils.copyProperties(sysUser,findUser);
-        findUser.setUpdateTime(LocalDateTime.now());
+        BeanUtils.copyProperties(sysUser, findUser);
+        findUser.setUpdatedTime(LocalDateTime.now());
         this.updateById(findUser);
         //先删除再保存角色关系表
         userRoleService.remove(new QueryWrapper<SysUserRole>().eq("uid",sysUser.getId()));

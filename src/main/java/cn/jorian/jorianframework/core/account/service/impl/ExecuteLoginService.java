@@ -19,27 +19,27 @@ import javax.servlet.http.HttpServletRequest;
 public class ExecuteLoginService {
 
     /**
-     * 普通的登入校验，校验token
+     * 登入校验，校验token，token为空判断
      * @param request
      * @return
      */
     public static boolean executeLogin(ServletRequest request){
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         //获取token
-        String token = httpServletRequest.getHeader("J-Token");
+        String token = httpServletRequest.getHeader(new JToken().TOKEN_KEY);
         if(token==null || "".equals(token.trim())){
             throw new ServiceException(ResponseCode.PERMISSIN_FAIL.msg,new AuthenticationException(),false,true);
         }
-        //构造token传入shiro进行认证
+        //构造token利用shiro进行认证
         JToken jToken = new JToken(token,null,null);
-        // 提交给realm进行登入，如果错误他会抛出异常并被捕获
+        // 把token提交给realm进行登入，如果错误他会抛出异常并被捕获
         Subject subject = SecurityUtils.getSubject();
         try {
             subject.login(jToken);
-        }catch (DisabledAccountException e){
-            if("token error".equals(e.getMessage())){
-                throw new ServiceException(ResponseCode.TOKEN_EXPIRED.msg,e,false,false);
-            }
+        }catch (ServiceException e){
+            
+            throw new ServiceException(e);
+            
         }
         // 如果没有抛出异常则代表登入成功，返回true
         return true;

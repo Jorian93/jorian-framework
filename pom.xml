@@ -24,6 +24,7 @@
         <druid.version>1.1.9</druid.version>
         <poi.version>3.17</poi.version>
         <jwt.version>0.9.0</jwt.version>
+        <mybatis-plus.version>3.3.0</mybatis-plus.version>
     </properties>
 
     <dependencies>
@@ -48,13 +49,13 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.1.0</version>
+            <version>${mybatis-plus.version}</version>
         </dependency>
-        <!--mpplus 3.x后需单独添加代码生成器-->
+        <!--mp-plus 3.x后需单独添加代码生成器-->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-generator</artifactId>
-            <version>3.1.0</version>
+            <version>${mybatis-plus.version}</version>
         </dependency>
 
         <!--velocity 代码生成器需要模板引擎-->
@@ -194,28 +195,28 @@
             <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
         <!--mq-->
-        <dependency>
+        <!-- <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
-        </dependency>
+        </dependency> -->
         <!-- https://mvnrepository.com/artifact/org.springframework.retry/spring-retry -->
         <dependency>
             <groupId>org.springframework.retry</groupId>
             <artifactId>spring-retry</artifactId>
             <version>1.1.2.RELEASE</version>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
-        </dependency>
-        <dependency>
+        </dependency> -->
+        <!-- <dependency>
             <groupId>io.searchbox</groupId>
             <artifactId>jest</artifactId>
         </dependency>
         <dependency>
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna</artifactId>
-        </dependency>
+        </dependency> -->
         <!--日志框架-->
         <dependency>
             <groupId>org.slf4j</groupId>

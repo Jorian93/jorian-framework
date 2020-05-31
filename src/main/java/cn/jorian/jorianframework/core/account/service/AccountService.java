@@ -24,6 +24,11 @@ public interface AccountService extends IService<SysUser> {
     String login(UsernamePasswordDTO usernamePasswordDTO);
 
     /**
+     * 退出登陆
+     * @param uid
+     */
+    void logOut();
+    /**
      * 获取当前用户
      * @return
      */

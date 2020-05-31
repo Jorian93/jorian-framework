@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -28,6 +29,7 @@ import java.util.List;
  * @since 2019-05-07
  */
 @Service
+@Transactional
 public class LogServiceImpl extends ServiceImpl<LogMapper, SysLog> implements LogService {
 
     @Override

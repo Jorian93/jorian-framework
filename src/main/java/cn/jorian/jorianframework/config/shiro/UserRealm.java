@@ -1,13 +1,16 @@
 package cn.jorian.jorianframework.config.shiro;
 
-import cn.jorian.jorianframework.common.exception.ServiceException;
-import cn.jorian.jorianframework.common.response.ResponseCode;
-import cn.jorian.jorianframework.common.utils.JTool_Token;
-import cn.jorian.jorianframework.config.jwt.JToken;
-import cn.jorian.jorianframework.core.system.entity.SysUser;
-import cn.jorian.jorianframework.core.system.service.UserService;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import org.apache.shiro.authc.*;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.DisabledAccountException;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -16,10 +19,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
-import java.util.Set;
+import cn.jorian.jorianframework.common.exception.ServiceException;
+import cn.jorian.jorianframework.common.model.LoginUser;
+import cn.jorian.jorianframework.common.model.RedisDB;
+import cn.jorian.jorianframework.common.response.ResponseCode;
+import cn.jorian.jorianframework.common.utils.ResponseTool;
+import cn.jorian.jorianframework.common.utils.ToolJWT;
+import cn.jorian.jorianframework.config.jwt.JToken;
+import cn.jorian.jorianframework.core.system.entity.SysUser;
+import cn.jorian.jorianframework.core.system.service.UserService;
 
 /**
  * @Author: jorian
@@ -31,88 +42,122 @@ public class UserRealm extends AuthorizingRealm {
     private Logger log = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private UserService userService;
+    @Autowired
+    private RedisTemplate<String,Object> redisTemplate;
 
     @Override
     public boolean supports(AuthenticationToken token) {
         return token instanceof JToken;
     }
 
-
     /**
      * 认证
-     * @param token 用户token  subject.login(token)
+     * 
+     * @param token 用户token subject.login(token)
      * @return
      * @throws AuthenticationException
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         log.info("【已经入Shiro认证...】");
-        JToken jToken =  (JToken) token;
-
-        String username = jToken.getUsername()!=null?jToken.getUsername(): JTool_Token.get(jToken.getToken(),"username");
         SysUser sysUser = new SysUser();
-        if(StringUtils.isEmpty(username)){
+        JToken jToken = (JToken) token;
+        String jwt = jToken.getJwt();
+        String username = jToken.getUsername();
+
+        /**
+         * 1.如果账号密码登录，则jwt必然为空，代表用户首次登入，给jwt指向一个新的令牌 2.如果jwt登录，则账号密码必然为空，代表普通的登入认证
+         */
+        if (jwt == null) {
+            // 首次登陆账号密码验证
+            if (StringUtils.isEmpty(username)) {
+               
                 throw new ServiceException(ResponseCode.SIGN_IN_USERNAME_PASSWORD_EMPTY.msg);
+            }
+            try {
+                sysUser = userService.getOne(
+                        new QueryWrapper<SysUser>().eq("username", username).select("id,username,status,password"));
+            } catch (ServiceException e) {
+                throw new DisabledAccountException(e.getMessage());
+            }
+            if (sysUser == null) {
+                throw new DisabledAccountException(ResponseCode.SIGN_IN_USERNAME_PASSWORD_FAIL.msg);
+            }
+            // 非启用状态
+            if (sysUser.getStatus() == ResponseCode.USER_ISLOCKED.code) {
+                throw new DisabledAccountException(ResponseCode.USER_ISLOCKED.msg);
+            }
+            // 生成新的jwt
+            jwt = new ToolJWT().generateJWT(sysUser.getId(), sysUser.getUsername());
+
+        } else {
+            // 走token验证
+            String dbkey = RedisDB.getDBKey(RedisDB.TABLE_USER) + ToolJWT.get(jwt, "uid");
+           try{
+            LoginUser cacheUser = (LoginUser)redisTemplate.opsForValue().get(dbkey);  
+            if(cacheUser == null){
+                throw new ServiceException(ResponseCode.TOKEN_EXPIRED);
+            }   
+            log.debug("cache user:{}",cacheUser);
+            long curTime = System.currentTimeMillis();
+            // 刷新缓存里的user
+            if(JToken.REFRESH_TIME > 0){
+                if(cacheUser.getExpiredAt()-curTime < JToken.REFRESH_TIME){
+                    cacheUser.setExpiredAt(curTime + JToken.EXPIRE_TIME*1000);//重设过期时间点
+                    redisTemplate.opsForValue().set(dbkey, cacheUser,JToken.EXPIRE_TIME, TimeUnit.SECONDS); //刷新token过期时间
+                    // TODO: 重新签发jwt？
+                }
+            }
+           }catch(Exception e){
+                throw new DisabledAccountException(ResponseCode.TOKEN_AUTHENTICATION_FAIL.msg);
+               // throw new ServiceException(ResponseCode.TOKEN_AUTHENTICATION_FAIL);
+           }
+
         }
-        try {
-                sysUser = userService.getOne(new QueryWrapper<SysUser>()
-                        .eq("username",username)
-                        .select("id,username,status,password"));
-        }catch (ServiceException e){
-            throw new DisabledAccountException(e.getMessage());
-        }
-        if(sysUser==null){
-            throw new DisabledAccountException(ResponseCode.SIGN_IN_USERNAME_PASSWORD_FAIL.msg);
-        }
-        //非启用状态
-        if(sysUser.getStatus()!=1){
-            throw new DisabledAccountException(ResponseCode.USER_ISLOCKED.msg);
-        }
-        String tk = jToken.getToken();
-        //生成token
-        if(tk==null){
-            tk= new JTool_Token().generateToken(sysUser.getId(),sysUser.getUsername(),sysUser.getPassword());
-        }
-        //此时的jToken是明文账号密码+token
-        jToken.setToken(tk);
-        //4.对用户信息进行封装
+
+        jToken.setJwt(jwt);
+        JToken jt = new JToken();
+        BeanUtils.copyProperties(jToken, jt);
+        // 4.对用户信息进行封装
         AuthenticationInfo info = new SimpleAuthenticationInfo(
-                //principal(用户身份)
-               jToken,
-                //hashedCredentials(已经加密的密码)
-               sysUser.getPassword(),
-                //realm name
-               this.getName()
-        );
-        log.info("【Shiro认证完成】");
+                // principal(用户身份)
+                jt,
+                // hashedCredentials(已经加密的密码)
+                sysUser.getPassword(),
+                // realm name
+                this.getName());
+        log.debug("【===Shiro认证完成===】");
         return info;
     }
 
     /**
      * 授权
-     * @param principalCollection  用户凭证
+     * 
+     * @param principalCollection 用户凭证
      * @return
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        log.info("【已进入Shiro授权...】");
+        log.info("【===已进入Shiro授权===】");
         JToken jToken = new JToken();
-        BeanUtils.copyProperties(principalCollection.getPrimaryPrincipal(),jToken);
-        String username = jToken.getUsername()!=null?jToken.getUsername(): JTool_Token.get(jToken.getToken(),"username");
-        if(username!=null){
+        BeanUtils.copyProperties(principalCollection.getPrimaryPrincipal(), jToken);
+        String username = jToken.getUsername() != null ? jToken.getUsername()
+                : ToolJWT.get(jToken.getJwt(), "username");
+        if (username != null) {
             SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
             Set<String> pSet = userService.getUserPermissions(username);
             info.setStringPermissions(pSet);
-            //System.out.println(info.getStringPermissions());
-            log.info("【Shiro授权完成】");
+            log.info("【===Shiro授权完成===】");
             return info;
-        }else{
+        } else {
             throw new DisabledAccountException("用户信息异常，请重新登录！");
         }
 
     }
+
     /**
      * 重写方法,清除当前用户的的 授权缓存
+     * 
      * @param principals
      */
     @Override
@@ -122,6 +167,7 @@ public class UserRealm extends AuthorizingRealm {
 
     /**
      * 重写方法，清除当前用户的 认证缓存
+     * 
      * @param principals
      */
     @Override
@@ -149,12 +195,11 @@ public class UserRealm extends AuthorizingRealm {
     }
 
     /**
-     * 自定义方法：清除所有的  认证缓存  和 授权缓存
+     * 自定义方法：清除所有的 认证缓存 和 授权缓存
      */
     public void clearAllCache() {
         clearAllCachedAuthenticationInfo();
         clearAllCachedAuthorizationInfo();
     }
-
 
 }

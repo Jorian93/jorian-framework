@@ -4,10 +4,10 @@ server:
     enabled: true
     mime-types: application/json,application/xml,text/html,text/xml,text/plain
     min-response-size: 1024
-  ssl:
-    key-store: classpath:2493853_jorianye.cn.pfx
-    key-store-password: 0D3vWiTE
-    key-store-type: PKCS12
+  # ssl:
+  #   key-store: classpath:2493853_jorianye.cn.pfx
+  #   key-store-password: 0D3vWiTE
+  #   key-store-type: PKCS12
   servlet:
     context-path: ""
 spring:
@@ -24,33 +24,32 @@ spring:
     auto: true
   datasource:
     ##druid##
-    druid:
-      initialSize: 5
-      minIdle: 5
-      maxActive: 20
-      maxWait: 60000
-      timeBetweenEvictionRunsMillis: 60000
-      minEvictableIdleTimeMillis: 300000
-      validationQuery: SELECT 1
-      testWhileIdle: true
-      testOnBorrow: true
-      testOnReturn: false
-      poolPreparedStatements: true
-      maxPoolPreparedStatementPerConnectionSize: 20
-      filters: stat,wall
-      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
-      stat-view-servlet:
-        allow: 127.0.0.1
+    # druid:
+    #   initialSize: 5
+    #   minIdle: 5
+    #   maxActive: 20
+    #   maxWait: 60000
+    #   timeBetweenEvictionRunsMillis: 60000
+    #   minEvictableIdleTimeMillis: 300000
+    #   validationQuery: SELECT 1
+    #   testWhileIdle: true
+    #   testOnBorrow: true
+    #   testOnReturn: false
+    #   poolPreparedStatements: true
+    #   maxPoolPreparedStatementPerConnectionSize: 20
+    #   filters: stat,wall
+    #   connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    #   stat-view-servlet:
+    #     allow: 127.0.0.1
     ##hikari##
-#    hikari:
-#      minimum-idle: 5
-#      maximum-pool-size: 15
-#      auto-commit: true
-#      idle-timeout: 30000
-#      pool-name: DatebookHikariCP
-#      max-lifetime: 1800000
-#      connection-timeout: 30000
-#      connection-test-query: SELECT 1
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: DatebookHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
 
   mail:
     default-encoding: UTF-8
@@ -86,11 +85,13 @@ spring:
     template-loader-path: classpath:/templates/
     #设定静态文件路径，js,css等
 
-# JWT
-jwt:
-  token:
-    name: "J-Token"
-    expired-time: 2*60*60*1000
+# token setup
+token:
+  name: J-Token
+  expired: 21600  #单位S
+  refresh: 300  #单位S
+  jwt:
+    secret: Jorian@xs1932(ye)@ # 令牌加密私钥 请勿随意修改，会导致用户的密码匹配错误
 
 
 #mybatis-plus:

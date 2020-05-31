@@ -2,10 +2,14 @@ package cn.jorian.jorianframework.core.account.service.impl;
 
 import cn.jorian.jorianframework.common.exception.ServiceException;
 import cn.jorian.jorianframework.common.model.Dict;
+import cn.jorian.jorianframework.common.model.LoginUser;
+import cn.jorian.jorianframework.common.model.RedisDB;
 import cn.jorian.jorianframework.common.response.ResponseCode;
-import cn.jorian.jorianframework.common.utils.JTool_EncryptPassword;
-import cn.jorian.jorianframework.common.utils.JTool_Token;
+import cn.jorian.jorianframework.common.utils.RedisTool;
+import cn.jorian.jorianframework.common.utils.ToolEncryptPassword;
+import cn.jorian.jorianframework.common.utils.ToolJWT;
 import cn.jorian.jorianframework.config.jwt.JToken;
+import cn.jorian.jorianframework.config.shiro.UserRealm;
 import cn.jorian.jorianframework.core.account.dto.RestPasswordDTO;
 import cn.jorian.jorianframework.core.account.dto.Router;
 import cn.jorian.jorianframework.core.account.dto.UsernamePasswordDTO;
@@ -20,10 +24,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
@@ -40,6 +47,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Service
+@Transactional
 public class AccountServiceImpl extends ServiceImpl<UserMapper, SysUser> implements AccountService {
 
     @Autowired
@@ -58,13 +66,17 @@ public class AccountServiceImpl extends ServiceImpl<UserMapper, SysUser> impleme
     UserService userService;
 
     @Autowired
-    StringRedisTemplate redisTemplate;
+    StringRedisTemplate strRedisTemplate;
+
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    UserRealm userRealm;
 
     /**
-     * 顶级菜单的ID=0
+     * 用户名密码登录
      */
-    private final String MENU_ROOT_ID = "0";
-
     @Override
     public String login(UsernamePasswordDTO usernamePasswordDTO) {
         if(StringUtils.isEmpty(usernamePasswordDTO)){
@@ -72,14 +84,14 @@ public class AccountServiceImpl extends ServiceImpl<UserMapper, SysUser> impleme
         if( "".equals(usernamePasswordDTO.getUsername()) || "".equals(usernamePasswordDTO.getPassword()) ){
             throw new ServiceException(ResponseCode.SIGN_IN_USERNAME_PASSWORD_EMPTY.msg,-1);
         }
-        //登录认证，账号，密码
+        //封装token进行登录认证，（token=null，账号，密码）
         JToken token = new JToken(null, usernamePasswordDTO.getUsername(), usernamePasswordDTO.getPassword());
 
         Subject subject = SecurityUtils.getSubject();
         try{
             subject.login(token);
             if(!subject.isAuthenticated()){
-                throw new ServiceException(ResponseCode.TOKEN_AUTHENTICATION_FAIL.msg,-1);
+                throw new ServiceException(ResponseCode.TOKEN_AUTHENTICATION_FAIL);
             }
         }catch (DisabledAccountException e){
             throw new ServiceException(e.getMessage(), ResponseCode.SIGN_IN_FAIL.code,e);
@@ -88,11 +100,19 @@ public class AccountServiceImpl extends ServiceImpl<UserMapper, SysUser> impleme
             throw new ServiceException(ResponseCode.SIGN_IN_FAIL.msg,e);
         }
         //登陆完成，返回token
-        String jToken = ((JToken)SecurityUtils.getSubject().getPrincipal()).getToken();
-       //redis中存一份，便于认证
-        redisTemplate.opsForValue().set("J-Token", jToken);
-        redisTemplate.expire("J-Token",5000*72*60, TimeUnit.MINUTES);
-        return jToken;
+        String jwt = ((JToken)SecurityUtils.getSubject().getPrincipal()).getJwt();
+        // redis中存一份，控制令牌有效期
+        token.setJwt(jwt);
+        token.setExpiredAt(System.currentTimeMillis()+JToken.EXPIRE_TIME*1000); //设置过期时间点
+        // 缓存一个user
+        LoginUser loginuser = new LoginUser();
+        BeanUtils.copyProperties(token, loginuser);
+        String dbkey = RedisDB.getDBKey(RedisDB.TABLE_USER) + ToolJWT.get(jwt, "uid");
+        redisTemplate.opsForValue().set(dbkey, loginuser);
+        if(JToken.EXPIRE_TIME > 0){
+            redisTemplate.expire(dbkey, JToken.EXPIRE_TIME, TimeUnit.SECONDS);
+        }      
+        return jwt;
     }
 
     @Override
@@ -121,18 +141,16 @@ public class AccountServiceImpl extends ServiceImpl<UserMapper, SysUser> impleme
 
     @Override
     public SysUser getCurrentUser() {
-        String token = null;
-        try{
-            token = ((JToken)SecurityUtils.getSubject().getPrincipal()).getToken();
-        }catch (Exception e){
-            throw new ServiceException(ResponseCode.TOKEN_EXPIRED);
-        }
-
-        if(token == null){
-            throw new ServiceException(ResponseCode.TOKEN_AUTHENTICATION_FAIL);
-        }
-        String username = JTool_Token.get(token,"username");
-        SysUser findUser = this.getOne(new QueryWrapper<SysUser>().eq("username",username));
+        JToken token = null;
+         try{
+            token = (JToken)SecurityUtils.getSubject().getPrincipal();
+         }catch (Exception e){
+             throw new ServiceException(ResponseCode.TOKEN_EXPIRED);
+         }
+         if(token == null){
+             throw new ServiceException(ResponseCode.TOKEN_AUTHENTICATION_FAIL);
+         }
+        SysUser findUser = this.getOne(new QueryWrapper<SysUser>().eq("username",token.getUsername()));
         //需给用户加角色表
         List<SysRole> roles = new ArrayList<>();
         List<SysUserRole> sysUserRoleLsit = userRoleService.list(new QueryWrapper<SysUserRole>().eq("uid",findUser.getId()));
@@ -144,13 +162,22 @@ public class AccountServiceImpl extends ServiceImpl<UserMapper, SysUser> impleme
         return findUser;
     }
 
+    /**
+     * 
+     */
     @Override
     public List<Router> getCurrentUserResource() {
-        String token = ((JToken) SecurityUtils.getSubject().getPrincipal()).getToken();
-        if(token == null){
-            throw new ServiceException("token不存在或者已过期",-1);
+
+        JToken token = null;
+        try{
+           token = (JToken)SecurityUtils.getSubject().getPrincipal();
+        }catch (Exception e){
+            throw new ServiceException(ResponseCode.TOKEN_EXPIRED);
         }
-        String username = JTool_Token.get(token,"username");
+        if(token == null){
+            throw new ServiceException(ResponseCode.TOKEN_AUTHENTICATION_FAIL);
+        }
+        String username = token.getUsername();
         SysUser findUser = this.getOne(new QueryWrapper<SysUser>().eq("username",username).select("id,username,status,password"));
         log.info("当前用户id："+findUser.getId());
         //根据用户id查找用户角色列表
@@ -195,13 +222,13 @@ public class AccountServiceImpl extends ServiceImpl<UserMapper, SysUser> impleme
 
     @Override
     public void resetPassword(RestPasswordDTO resetPasswordDTO) {
-
-        SysUser findUser = this.getOne(new QueryWrapper<SysUser>().eq("username",resetPasswordDTO.getUsername()));
+        SysUser findUser = this.getOne(new QueryWrapper<SysUser>()
+        .eq("username",resetPasswordDTO.getUsername()));
         if(findUser == null) {
             throw new ServiceException("用户不存在",-1);
         }
         //明文转密文
-        String MD5Password = JTool_EncryptPassword.ENCRYPT_MD5(resetPasswordDTO.getUsername(),resetPasswordDTO.getNewPassword());
+        String MD5Password = ToolEncryptPassword.ENCRYPT_MD5(resetPasswordDTO.getUsername(),resetPasswordDTO.getNewPassword());
         userService.update(new UpdateWrapper<SysUser>().eq("username",findUser.getUsername()).set("password",MD5Password));
     }
 
@@ -262,6 +289,17 @@ public class AccountServiceImpl extends ServiceImpl<UserMapper, SysUser> impleme
         log.info("用户菜单拉取完成");
         return res;
 
+    }
+
+    @Override
+    public void logOut() {
+        
+        //2.清理redis/
+        JToken jtoken = (JToken)SecurityUtils.getSubject().getPrincipal();
+        String dbkey = RedisDB.getDBKey(RedisDB.TABLE_USER) + ToolJWT.get(jtoken.getJwt(),"uid");
+        redisTemplate.delete(dbkey);
+        //1.清理shiro
+        //userRealm.clearAllCache();
     }
 
 

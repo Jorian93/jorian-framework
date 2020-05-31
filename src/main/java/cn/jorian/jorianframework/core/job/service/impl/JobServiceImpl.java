@@ -47,7 +47,7 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
 		BeanUtils.copyProperties(jobFindDTO, job);
 		QueryWrapper<Job> queryWrapper =new QueryWrapper<>();
 		if(!StringUtils.isEmpty(jobFindDTO.getJobName())){
-			queryWrapper.eq("jobName",jobFindDTO.getJobName());
+			queryWrapper.eq("job_name",jobFindDTO.getJobName());
 		}
 		queryWrapper.orderByDesc(jobFindDTO.getSort());
 		IPage<Job> pagedata = this.page(new Page<>(jobFindDTO.getPage(),jobFindDTO.getLimit()),queryWrapper);
@@ -99,44 +99,37 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
 				scheduler.addJob(jobDetail, true);
 			}
 			//更新任务
-			findJob.setUpdateTime(LocalDateTime.now());
+			findJob.setUpdatedTime(LocalDateTime.now());
 			this.updateById(findJob);
 
 		} catch (SchedulerException e) {
 			log.error("修改job异常", e);
 		}
 
-
 	}
 
 	@Override
 	public void saveJob(JobAddDTO jobAddDTO) {
 
-		Job findJob = this.getOne(new QueryWrapper<Job>().eq("jobName", jobAddDTO.getJobName()));
+		Job findJob = this.getOne(new QueryWrapper<Job>().eq("job_name", jobAddDTO.getJobName()));
 		if (findJob != null) {
 			throw new IllegalArgumentException(jobAddDTO.getJobName() + "任务已存在");
 		}
 		findJob = new Job();
-		BeanUtils.copyProperties(jobAddDTO,findJob);
+		BeanUtils.copyProperties(jobAddDTO, findJob);
 		checkJobModel(findJob);
 
 		String name = findJob.getJobName();
 		JobKey jobKey = JobKey.jobKey(name);
-		//任务详情
-		JobDetail jobDetail = JobBuilder.newJob(SpringBeanJob.class)
-				.storeDurably()
-				.withDescription(findJob.getDescription())
-				.withIdentity(jobKey)
-				.build();
+		// 任务详情
+		JobDetail jobDetail = JobBuilder.newJob(SpringBeanJob.class).storeDurably()
+				.withDescription(findJob.getDescription()).withIdentity(jobKey).build();
 
 		jobDetail.getJobDataMap().put(JOB_DATA_KEY, findJob);
 		// cron触发器配置
 		CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(findJob.getCron());
-		CronTrigger cronTrigger = TriggerBuilder.newTrigger()
-				.withIdentity(name)
-				.withSchedule(cronScheduleBuilder)
-				.forJob(jobKey)
-				.build();
+		CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(name).withSchedule(cronScheduleBuilder)
+				.forJob(jobKey).build();
 
 		try {
 			boolean exists = scheduler.checkExists(jobKey);
@@ -146,10 +139,10 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
 			} else {
 				scheduler.scheduleJob(jobDetail, cronTrigger);
 			}
-			//启动
+			// 启动
 			findJob.setStatus(1);
 			findJob.setCreateTime(LocalDateTime.now());
-			findJob.setUpdateTime(LocalDateTime.now());
+			findJob.setUpdatedTime(LocalDateTime.now());
 			this.save(findJob);
 			log.info("系统定时任务启动："+findJob.getJobName());
 		} catch (SchedulerException e) {
@@ -231,8 +224,7 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
 		scheduler.deleteJob(jobKey);
         //此处删除
 		this.removeById(findjob.getId());
-		/*findjob.setStatus(0);
-		this.updateById(findjob);*/
+
 	}
 
 }

@@ -19,7 +19,11 @@ import java.util.List;
 @Configuration
 public class MybatisPlusGeneratorConfig {
 
-    public void generatorCode(){
+    public static void main(String []args){
+        generatorCode();
+    }
+
+    public static void generatorCode() {
         // 代码生成器
         AutoGenerator generator  = new AutoGenerator();
 
@@ -42,10 +46,10 @@ public class MybatisPlusGeneratorConfig {
         generator.setDataSource(dsc);
 
         // 包配置
-        PackageConfig pc = new PackageConfig();
-        pc.setModuleName("mail");
-        pc.setParent("cn.jorian.jorianframework.core.autoentity");
-        generator.setPackageInfo(pc);
+        PackageConfig packageConfig = new PackageConfig();
+        packageConfig.setModuleName("mail");
+        packageConfig.setParent("cn.jorian.jorianframework.core.autoentity");
+        generator.setPackageInfo(packageConfig);
 
         // 自定义配置
         InjectionConfig cfg = new InjectionConfig() {
@@ -58,26 +62,27 @@ public class MybatisPlusGeneratorConfig {
         TemplateConfig templateConfig = new TemplateConfig();
 
         // 配置自定义输出模板
-        //指定自定义模板路径，注意不要带上.ftl/.vm, 会根据使用的模板引擎自动识别
+        //指定自定义模板的路径，注意不要带上.ftl/.vm, 会根据使用的模板引擎自动识别
         // templateConfig.setEntity("templates/entity2.java");
         // templateConfig.setService();
         // templateConfig.setController();
-        templateConfig.setXml(null);
+        // templateConfig.setXml(null);
         generator.setTemplate(templateConfig);
 
         // 如果模板引擎是 freemarker
         //String templatePath = "/templates/mapper.xml.ftl";
+       
         // 如果模板引擎是 velocity
         String templatePath = "/templates/mapper.xml.vm";
 
         // 自定义输出配置
         List<FileOutConfig> focList = new ArrayList<>();
-        // 自定义配置会被优先输出
+        // 自定义配置会被优先输出，此处自定义mapper.xml的输出路径
         focList.add(new FileOutConfig(templatePath) {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
-                return projectPath + "/src/main/resources/mapper/" + pc.getModuleName()
+                return projectPath + "/src/main/resources/mapper/" + packageConfig.getModuleName()
                         + "/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
             }
         });
@@ -87,12 +92,13 @@ public class MybatisPlusGeneratorConfig {
 
         // 数据库表策略配置
         StrategyConfig strategy = new StrategyConfig();
-        strategy.setNaming(NamingStrategy.underline_to_camel);
-        strategy.setColumnNaming(NamingStrategy.underline_to_camel);
+        strategy.setNaming(NamingStrategy.underline_to_camel); //表下划线映射为驼峰
+        strategy.setColumnNaming(NamingStrategy.underline_to_camel); //字段下划线映射为驼峰
+        strategy.setTablePrefix(packageConfig.getModuleName() + "_"); //表前缀
 
         //设置父实体类
         strategy.setSuperEntityClass("cn.jorian.jorianframework.common.model.BaseModel");
-        String [] superEntityColumns = {"id","createTime","updateTime"};
+        String [] superEntityColumns = {"id","createTime","updatedTime"};
         strategy.setSuperEntityColumns(superEntityColumns);
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
@@ -101,7 +107,7 @@ public class MybatisPlusGeneratorConfig {
         strategy.setInclude(tableName);
 
         strategy.setControllerMappingHyphenStyle(true);
-        strategy.setTablePrefix(pc.getModuleName() + "_");
+        
         generator.setStrategy(strategy);
         //generator.setTemplateEngine(new FreemarkerTemplateEngine());//非默认引擎需设置
 

@@ -41,7 +41,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, SysResource
         findReource = new SysResource();
         BeanUtils.copyProperties(resourceAddDTO,findReource);
         findReource.setCreateTime(LocalDateTime.now());
-        findReource.setUpdateTime(LocalDateTime.now());
+        findReource.setUpdatedTime(LocalDateTime.now());
         this.save(findReource);
     }
     @Override

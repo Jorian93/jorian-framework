@@ -1,7 +1,12 @@
+/*
+ * @Description: 
+ * @Author: jorian
+ * @Date: 2020-05-15 22:49:11
+ */ 
 package cn.jorian.jorianframework.core.mail.controller;
 
 
-import cn.jorian.jorianframework.common.annotation.JLog;
+import cn.jorian.jorianframework.common.annotation.Jlog;
 import cn.jorian.jorianframework.common.response.ResponseCode;
 import cn.jorian.jorianframework.common.response.ResponseResult;
 import cn.jorian.jorianframework.core.mail.dto.MailAddDTO;
@@ -35,7 +40,7 @@ public class MailController {
     @Autowired
     private MailToService mailToService;
 
-    @JLog("保存邮件")
+    @Jlog("保存邮件")
     @RequestMapping(method = RequestMethod.POST)
     @ApiOperation(value = "保存邮件")
     public ResponseResult save(@RequestBody @Validated @ApiParam("邮件数据") MailAddDTO mailAddDTO) {
