@@ -1,5 +1,6 @@
 package cn.jorian.jorianframework.common.model;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -28,14 +29,18 @@ public class BaseModel implements Serializable {
 
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @TableField(fill = FieldFill.INSERT)
     LocalDateTime createTime;
 
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @TableField(fill = FieldFill.UPDATE)
     LocalDateTime updatedTime;
-
+    
+    @TableField(fill = FieldFill.UPDATE)
     String updatedBy;
     
+    @TableField(fill = FieldFill.INSERT)
     String createBy;
 
 
