@@ -2,13 +2,13 @@
 测试账户：test  
 密码：test123
 ## 重要提示！！
-由于许多人没有elasticsearch和rabbitmq,所以特别建立了branch v1.0,v1.0去除了es,mq相关代码，但是功能保持不变，需要纯净版的请拉branch v1.0,
+由于许多同志没有elasticsearch和rabbitmq,所以特别建立了branch v1.0,v1.0去除了es,mq相关代码，但是功能保持不变，需要纯净版的请拉branch v1.0,
 # jorian-framework特点  
 1.轻量级   
 2.集成shiro+jwt完成登录校验，权限控制，粒度为url级别  
-3.集成mybatis-plus及代码生成器  
+3.集成mybatis-plus及代码生成器以及SQL拦截技术  
 4.使用自定义注释完成日志收集,消息队列异步完成存储  
-5.包含有文件中心,邮件中心,监控中心等基础功能  
+5.包含有定时任务,文件中心,邮件中心,监控中心等基础功能  
 6.集成了rabbitmq,elasticsearch ,适用于学习和轻量级项目开发  
 
 
