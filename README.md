@@ -2,7 +2,7 @@
 测试账户：test  
 密码：test123
 ## 重要提示！！
-由于许多同志没有elasticsearch和rabbitmq,所以特别建立了branch v1.0,v1.0去除了es,mq相关代码，但是功能保持不变，需要纯净版的请拉branch v1.0,
+由于许多同学没有elasticsearch和rabbitmq,所以特别建立了branch v1.0,v1.0去除了es,mq相关代码，但是功能保持不变，需要纯净版的请check out branch v1.0,
 # jorian-framework特点  
 1.轻量级   
 2.集成shiro+jwt完成登录校验，权限控制，粒度为url级别  
